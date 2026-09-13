@@ -51,8 +51,11 @@ const { doc, lang, prev, next } = Astro.props as {
   prev: CollectionEntry<"docs"> | null;
   next: CollectionEntry<"docs"> | null;
 };
-const { Content } = await render(doc);
+const { Content, headings } = await render(doc);
 const en = lang === "en";
+
+// 阅读目录在构建期由渲染后的标题生成，避免客户端构造 DOM 造成闪入
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
 
 const ymd = doc.data.publishDate.toISOString().slice(0, 10);
 const dateText = formatDate(doc.data.publishDate, lang);
@@ -65,7 +68,12 @@ const prevHref = docLink(prev);
 const nextHref = docLink(next);
 ---
 
-<OfficialLayout title={doc.data.title} description={doc.data.description}>
+<OfficialLayout
+  title={doc.data.title}
+  description={doc.data.description}
+  type="article"
+  publishedTime={doc.data.publishDate.toISOString()}
+>
   <div class="mx-auto max-w-6xl gap-x-12 px-4 py-10 md:px-6 md:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem]">
     <div class="min-w-0">
       <article class="article-prose">
@@ -78,7 +86,10 @@ const nextHref = docLink(next);
             <img
               src={doc.data.image}
               alt=""
+              width="1200"
+              height="525"
               loading="eager"
+              fetchpriority="high"
               decoding="async"
               class="absolute inset-0 h-full w-full object-cover"
             />
@@ -153,70 +164,65 @@ const nextHref = docLink(next);
         <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-text-muted">
           {en ? "On this page" : "阅读目录"}
         </p>
-        <nav data-toc-list class="space-y-1 text-sm" />
+        <nav data-toc-list class="space-y-1 text-sm">
+          {
+            tocHeadings.map((h) => (
+              <a
+                href={`#${h.slug}`}
+                class:list={[
+                  "toc-link block truncate rounded px-2 py-1 transition-colors",
+                  h.depth === 3 && "pl-5",
+                  h.depth === 4 && "pl-8",
+                ]}
+              >
+                {h.text}
+              </a>
+            ))
+          }
+        </nav>
       </div>
     </aside>
   </div>
 </OfficialLayout>
 
 <script>
+  // 目录链接已在构建期渲染，这里只做滚动高亮（原生锚点负责跳转）
   document.addEventListener("DOMContentLoaded", () => {
     const list = document.querySelector("[data-toc-list]") as HTMLElement | null;
-    const box = list?.closest(".article-toc") as HTMLElement | null;
-    const prose = document.querySelector(
-      "article.article-prose .prose",
-    ) as HTMLElement | null;
-    if (!list || !box || !prose) return;
+    if (!list) return;
 
-    const headings = Array.from(prose.querySelectorAll<HTMLElement>("h2, h3, h4"));
-    if (headings.length === 0) return; // 无小节时保持为空（短小篇目）
-
-    const sortItems: { el: HTMLElement; a: HTMLAnchorElement }[] = [];
-    headings.forEach((el, i) => {
-      const a = document.createElement("a");
-      const raw = el.textContent || "";
-      const short = raw.replace(/[#*`]/g, "").trim();
-      a.textContent = short.length > 60 ? short.slice(0, 60) + "…" : short;
-      a.href = `#toc-${i}`;
-      a.className = "toc-link block truncate rounded px-2 py-1 transition-colors";
-      if (el.tagName === "H3") a.classList.add("ml-4");
-      if (el.tagName === "H4") a.classList.add("ml-8");
-      a.addEventListener("click", (e) => {
-        e.preventDefault();
-        const top = el.getBoundingClientRect().top + window.scrollY - 88;
-        window.scrollTo({ top, behavior: "smooth" });
-        setActive(i);
-      });
-      list.appendChild(a);
-      sortItems.push({ el, a });
-    });
+    const entries = Array.from(list.querySelectorAll<HTMLAnchorElement>("a"))
+      .map((a) => {
+        const id = decodeURIComponent(a.hash.slice(1));
+        return { a, el: id ? document.getElementById(id) : null };
+      })
+      .filter((e): e is { a: HTMLAnchorElement; el: HTMLElement } => e.el !== null);
+    if (entries.length === 0) return;
 
     const setActive = (idx: number) => {
-      sortItems.forEach(({ a }, i) =>
-        a.classList.toggle("toc-active", i === idx),
-      );
+      entries.forEach(({ a }, i) => a.classList.toggle("toc-active", i === idx));
     };
 
     let ticking = false;
     const pick = () => {
       ticking = false;
-      let cur = -1;
-      const vp = 96;
-      for (let i = 0; i < sortItems.length; i++) {
-        const rect = sortItems[i].el.getBoundingClientRect();
-        const far = rect.top; // 每节首行到视口顶
-        if (far <= vp) cur = i;
+      let cur = 0;
+      for (let i = 0; i < entries.length; i++) {
+        if (entries[i].el.getBoundingClientRect().top <= 96) cur = i;
         else break;
       }
-      if (cur === -1 && sortItems.length) cur = 0;
       setActive(cur);
     };
-    window.addEventListener("scroll", () => {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(pick);
-      }
-    }, { passive: true });
+    window.addEventListener(
+      "scroll",
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(pick);
+        }
+      },
+      { passive: true },
+    );
     pick();
   });
 </script>
@@ -225,6 +231,10 @@ const nextHref = docLink(next);
   /* 单篇 markdown 正文（收窄左列内）：prose 非侵入优化 */
   article.article-prose :where(h2) {
     margin-top: 2.25rem;
+  }
+  /* 锚点跳转时避开吸顶导航 */
+  article.article-prose :where(h2, h3, h4) {
+    scroll-margin-top: 5.5rem;
   }
   article.article-prose :where(blockquote) {
     border-inline-start: 3px solid var(--primary);

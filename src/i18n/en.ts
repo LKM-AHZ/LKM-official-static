@@ -24,10 +24,35 @@ export const en = {
   "common.footer.privacy": "Privacy Policy",
   "common.footer.terms": "Terms of Use",
   "common.aria.main_nav": "Main navigation",
+  "common.aria.menu": "Open navigation menu",
+  "common.aria.mobile_nav": "Mobile main navigation",
+  "common.aria.language": "Language",
   "common.aria.github": "GitHub",
   "common.aria.rss": "RSS",
   "common.aria.page_toc": "Table of contents",
   "common.site.description": "LiKeLi (LKM) Official Website",
+  "seo.home":
+    "LiKeLi (LKM) — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
+  "seo.news":
+    "Official announcements, tech news and popular-science content from LiKeLi.",
+  "seo.team":
+    "Meet the LiKeLi management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
+  "seo.communities":
+    "Browse LiKeLi's QQ communities: general group, grade and subject groups, interest clubs and recurring events.",
+  "seo.about":
+    "About LiKeLi: a science & technology enthusiast community founded in 2014, breaking down professional barriers so science is within everyone's reach.",
+  "seo.contact":
+    "Contact LiKeLi: join the community, propose collaborations, report issues, or reach us directly.",
+  "seo.pricing":
+    "Support LiKeLi: a non-profit science & technology community — many ways to take part.",
+  "seo.resources":
+    "Curated external resources from LiKeLi: academic institutes, research tools and literature sites.",
+  "seo.projects":
+    "LiKeLi Project Hub: incubated and co-created community projects.",
+  "seo.privacy":
+    "LiKeLi Privacy Policy: how we collect and protect your personal information.",
+  "seo.terms":
+    "LiKeLi Terms of Service: please read before using our site and community services.",
   "home.title": "LiKeLi — For Science & Tech Enthusiasts",
   "home.hero_title": "LiKeLi!",
   "home.hero_subtitle": "A community for science & tech enthusiasts",
@@ -95,8 +120,6 @@ export const en = {
   "team.alumni_title": "Members Who Have Left",
   "team.alumni_desc":
     "The members below once contributed to LiKeLi but can no longer be reached. No matter what, LiKeLi's doors will always be open to you.",
-  "team.project_title": "Project Team — LiKeLi",
-  "team.project_empty": "No members yet — join us!",
   "about.title": "About",
   "about.description": "About the LiKeLi community",
   "about.hero_title": "About LiKeLi",
@@ -120,6 +143,8 @@ export const en = {
     "Whether you want to learn, create, or join our team, LiKeLi welcomes you.",
   "about.cta_services": "Learn About Services",
   "communities.title": "QQ Community — LiKeLi",
+  "communities.copy": "Copy group number",
+  "communities.copy_channel": "Copy channel ID",
   "communities.sidebar_general": "General Group",
   "communities.sidebar_grades": "Grade Groups",
   "communities.sidebar_groups": "Category Groups",
@@ -177,22 +202,6 @@ export const en = {
   "pricing.cta_body":
     "Join our community and, together with like-minded friends, help tech reach further.",
   "pricing.cta_contact": "Contact Us",
-  "funding.title": "Funding System — LiKeLi",
-  "funding.heading": "System in preparation",
-  "funding.para_1":
-    "LiKeLi is committed to sustainable development once income and expenses are balanced.",
-  "funding.para_2":
-    "Since it launched, the platform's operating costs (servers, domains, etc.) have been covered by the management team out of pocket.",
-  "funding.para_3":
-    "We plan to launch a formal funding system once the platform is running stably.",
-  "funding.costs_title": "About operating costs",
-  "funding.cost_server": "Server and domain fees",
-  "funding.cost_storage": "File storage and CDN bandwidth",
-  "funding.cost_sms": "SMS and email services",
-  "funding.thanks": "Thank you to everyone supporting LiKeLi",
-  "funding.thanks_note":
-    "We promise transparent use of all funds and regular financial reports. If you'd like to sponsor us, please reach out.",
-  "funding.button": "Not yet available",
   "contact.title": "Contact Us",
   "contact.hero_title": "We'd love to hear from you!",
   "contact.section_message": "Leave us a message",

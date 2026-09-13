@@ -1,5 +1,5 @@
 ---
-import { SUPPORTED_LANGS } from "../i18n/index";
+import { SUPPORTED_LANGS, t } from "../i18n/index";
 import type { Lang } from "../i18n/index";
 
 // 当前语言：Astro.currentLocale（在 [lang] 路由下由内置 i18n 提供）
@@ -19,20 +19,23 @@ function localizedHref(target: Lang): string {
   return withLang === "/en/" ? "/en/" : withLang;
 }
 ---
-<div class="flex items-center gap-1 text-sm" aria-label="语言切换">
+<nav class="flex items-center gap-1 text-sm" aria-label={t(current, "common.aria.language")}>
   {
     SUPPORTED_LANGS.map((lang) => (
       <a
         href={localizedHref(lang)}
+        hreflang={lang}
+        lang={lang}
+        aria-current={lang === current ? "true" : undefined}
         class:list={[
           "px-2 py-1 rounded-md font-semibold transition-colors",
           lang === current
             ? "text-[var(--primary)]"
-            : "text-neutral-500 hover:text-[var(--primary)]",
+            : "text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)]",
         ]}
       >
         {label[lang]}
       </a>
     ))
   }
-</div>
+</nav>

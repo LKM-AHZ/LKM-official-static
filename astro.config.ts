@@ -7,6 +7,16 @@ export default defineConfig({
   // 纯静态输出：构建产物只含静态 HTML/CSS/JS，不依赖 node adapter
   output: "static",
   site: "https://lkm-ahz.icu",
+  // 站内链接视口内预取，加快导航
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "viewport",
+  },
+  compressHTML: true,
+  build: {
+    // 体积较小的样式表内联进 HTML，减少阻塞请求
+    inlineStylesheets: "auto",
+  },
   i18n: {
     defaultLocale: "zh",
     locales: ["zh", "en"],

@@ -8,7 +8,11 @@ import { getStaticPathsForLang } from "../../i18n/paths";
 export const getStaticPaths = getStaticPathsForLang;
 ---
 
-<OfficialLayout title={t(lang, "privacy.title")} currentPath="/privacy">
+<OfficialLayout
+  title={t(lang, "privacy.title")}
+  description={t(lang, "seo.privacy")}
+  currentPath="/privacy"
+>
   <article class="prose prose-neutral max-w-3xl mx-auto py-12 md:py-16">
     <h1 class="mb-2">{t(lang, "privacy.title")}</h1>
     <p class="text-sm text-text-muted !mt-0"><em>{t(lang, "privacy.updated")}</em></p>

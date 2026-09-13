@@ -11,7 +11,7 @@ const message = t(lang, "notfound.message");
 const back = t(lang, "notfound.back");
 const backHref = langUrl(lang, "/");
 ---
-<OfficialLayout title={title} currentPath="/404">
+<OfficialLayout title={title} currentPath="/404" noindex>
   <section class="py-24 text-center">
     <h1 class="font-heading text-2xl font-bold mb-4">404</h1>
     <p class="text-[#7a7a7a]">{message}</p>

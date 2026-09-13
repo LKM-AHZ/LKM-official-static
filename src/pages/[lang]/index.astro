@@ -89,7 +89,12 @@ const faqItems = [
 ];
 ---
 
-<OfficialLayout title={t(lang, "home.title")} currentPath="/">
+<OfficialLayout
+  title={t(lang, "home.title")}
+  description={t(lang, "seo.home")}
+  includeWebsiteJsonLd
+  currentPath="/"
+>
   {/* ========== Hero ========== */}
   <section class="relative not-prose h-screen min-h-screen flex flex-col justify-center overflow-hidden" data-hero-section>
     <div class="relative z-10 pointer-events-none max-w-7xl mx-auto px-4 sm:px-6">
@@ -97,11 +102,11 @@ const faqItems = [
         <div class="text-center pb-10 md:pb-[80px] max-w-5xl mx-auto">
           <h1 class="font-heading leading-tighter tracking-tighter text-[40px] md:text-[56px] font-semibold mb-4">
             <span class="flex flex-col gap-4">
-              <span class="text-[#6C2AD8] text-[40px] md:text-[56px] font-semibold leading-[1.07] tracking-[-0.005em]" style="text-shadow:0 0 1px transparent">
+              <span class="text-[#6C2AD8] text-[40px] md:text-[56px] font-semibold leading-[1.07] tracking-[-0.005em]">
 
                 {t(lang, "home.hero_title")}
               </span>
-              <span class="block mb-1 font-semibold tracking-[-0.005em] text-deep-text font-heading" style="text-shadow:0 0 1px transparent">
+              <span class="block mb-1 font-semibold tracking-[-0.005em] text-deep-text font-heading">
                 {t(lang, "home.hero_subtitle")}
               </span>
             </span>
@@ -147,7 +152,7 @@ const faqItems = [
         <a href={langUrl(lang, "/resources")} class="profile-card group inline-block w-full sm:w-auto">
           <div class="profile-inner p-8 flex flex-col items-center gap-4">
             <span class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-2xl">📚</span>
-            <h3 class="text-xl font-bold text-deep-text group-hover:text-primary transition-colors">{t(lang, "home.section_resources")}</h3>
+            <h2 class="text-xl font-bold text-deep-text group-hover:text-primary transition-colors">{t(lang, "home.section_resources")}</h2>
             <p class="text-sm text-text-muted max-w-md">{t(lang, "home.resources_sub")}</p>
             <span class="mt-2 inline-flex items-center gap-1 text-sm text-primary font-medium">
               {t(lang, "home.resources_btn")}
@@ -263,7 +268,8 @@ const faqItems = [
             </div>
           </div>
 
-          <div class="ct-clock-col" data-ct-clock-col>
+          {/* 钟面为可视化索引，其交互（切换当前条目）已由下方上一/下一按钮提供键盘入口，故对辅助技术隐藏 */}
+          <div class="ct-clock-col" data-ct-clock-col aria-hidden="true">
             <div class="clock-face">
               <div class="clock-pointer" data-ct-pointer>
                 <div class="clock-pointer-line"></div>

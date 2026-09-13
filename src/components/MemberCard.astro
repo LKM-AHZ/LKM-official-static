@@ -13,10 +13,13 @@ interface Props {
   dream?: string;
   quote?: string;
   size?: "sm" | "lg";
+  /** 标题层级：部门直属于 section(h2) 下用 3；子分组(h3)内用 4 */
+  level?: 3 | 4;
 }
 
-const { name, avatarKey, role, desc, dream, quote, size = "sm" } = Astro.props;
+const { name, avatarKey, role, desc, dream, quote, size = "sm", level = 3 } = Astro.props;
 const isLg = size === "lg";
+const HeadingTag = level === 4 ? "h4" : "h3";
 
 // avatarKey（如 "七月千寻.jpg"）→ 源文件名；avatar-map 存按 key 的映射。
 const avatarName = avatarKey
@@ -37,6 +40,8 @@ const avatarSize = isLg
         <img
           src={avatarSrc}
           alt={name}
+          width={192}
+          height={192}
           class={`${avatarSize} rounded-full object-cover`}
           loading="lazy"
           decoding="async"
@@ -50,11 +55,14 @@ const avatarSize = isLg
       )}
     </div>
     <div class="flex-1 min-w-0">
-      {isLg ? (
-        <h2 class="text-[21px] font-semibold text-deep-text">{name}</h2>
-      ) : (
-        <h4 class="font-bold text-lg text-deep-text">{name}</h4>
-      )}
+      <HeadingTag
+        class:list={[
+          isLg ? "text-[21px] font-semibold" : "font-bold text-lg",
+          "text-deep-text",
+        ]}
+      >
+        {name}
+      </HeadingTag>
       {role && (
         <span class={isLg ? "text-primary font-semibold" : "text-xs text-text-muted"}>
           {role}
@@ -65,7 +73,7 @@ const avatarSize = isLg
         <p class="text-xs text-secondary mt-1 italic">{dream}</p>
       )}
       {quote && (
-        <p class="text-xs text-primary/70 mt-1">{quote}</p>
+        <p class="text-xs text-primary mt-1">{quote}</p>
       )}
     </div>
   </div>

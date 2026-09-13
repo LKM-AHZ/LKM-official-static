@@ -6,6 +6,7 @@ import { t } from "../i18n/index";
 import type { TranslationKey } from "../i18n/index";
 import { langUrl } from "../i18n/paths";
 import LanguageSwitcher from "../components/LanguageSwitcher.astro";
+import Seo from "../components/Seo.astro";
 
 /**
  * 官网首页布局（官方壳）：顶部导航 + 主内容 + Footer，无侧边栏。
@@ -16,11 +17,28 @@ interface Props {
   description?: string;
   /** 当前路径，用于顶栏激活态 */
   currentPath?: string;
+  /** 分享图站点内路径或绝对 URL */
+  image?: string;
+  type?: "website" | "article";
+  /** 重定向桩/404 等设为 true */
+  noindex?: boolean;
+  /** 仅语言首页输出 WebSite 结构化数据 */
+  includeWebsiteJsonLd?: boolean;
+  /** 文章页发布时间（ISO 字符串） */
+  publishedTime?: string;
 }
 
 const lang = (Astro.currentLocale ?? "zh") as string;
-const { title, description = t(lang, "common.site.description"), currentPath = "/" } =
-  Astro.props;
+const {
+  title,
+  description,
+  currentPath = "/",
+  image,
+  type,
+  noindex,
+  includeWebsiteJsonLd,
+  publishedTime,
+} = Astro.props;
 
 // 顶栏导航（静态站现有页面）
 const navLinks: { href: string; key: TranslationKey }[] = [
@@ -69,8 +87,16 @@ const footerCols: {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
-    {description && <meta name="description" content={description} />}
     <meta name="generator" content={Astro.generator} />
+    <Seo
+      title={title}
+      description={description}
+      image={image}
+      type={type}
+      noindex={noindex}
+      includeWebsiteJsonLd={includeWebsiteJsonLd}
+      publishedTime={publishedTime}
+    />
   </head>
   <body class="bg-white text-base-content antialiased tracking-tight">
     <div class="sticky top-0 z-50">
@@ -103,9 +129,41 @@ const footerCols: {
         </nav>
 
         <div class="flex items-center gap-2">
-          <a href={langUrl(lang, "/communities")} class="md:hidden rounded-lg h-11 px-4 font-bold flex items-center text-sm text-[var(--primary)] hover:bg-black/5 transition-colors">
-            {t(lang, "common.nav_communities")}
-          </a>
+          <details class="md:hidden relative" data-mobile-nav>
+            <summary
+              class="list-none rounded-lg h-11 w-11 flex items-center justify-center text-neutral-700 hover:bg-black/5 transition-colors cursor-pointer"
+              aria-label={t(lang, "common.aria.menu")}
+            >
+              <span data-menu-icon><Icon name="menu" class="w-6 h-6" /></span>
+              <span data-close-icon class="hidden"><Icon name="close" class="w-6 h-6" /></span>
+            </summary>
+            <nav
+              class="fixed right-4 top-[4.75rem] z-50 w-56 rounded-xl border border-surface-3 bg-white dark:bg-[oklch(0.23_0.015_var(--hue))] shadow-lg p-2 flex flex-col"
+              aria-label={t(lang, "common.aria.mobile_nav")}
+            >
+              {
+                navLinks.map((l) => (
+                  <a
+                    href={langUrl(lang, l.href)}
+                    class:list={[
+                      "rounded-lg px-3 py-2.5 font-bold text-sm transition-colors",
+                      currentPath === l.href
+                        ? "text-[var(--primary)] bg-black/5"
+                        : "text-neutral-700 dark:text-neutral-200 hover:text-[var(--primary)] hover:bg-black/5",
+                    ]}
+                  >
+                    {t(lang, l.key)}
+                  </a>
+                ))
+              }
+              <a
+                href={langUrl(lang, "/communities")}
+                class="rounded-lg px-3 py-2.5 font-bold text-sm text-neutral-700 dark:text-neutral-200 hover:text-[var(--primary)] hover:bg-black/5 transition-colors"
+              >
+                {t(lang, "common.nav_communities")}
+              </a>
+            </nav>
+          </details>
           <LanguageSwitcher />
         </div>
       </div>
@@ -164,5 +222,48 @@ const footerCols: {
         </div>
       </div>
     </footer>
+
+    <style>
+      [data-mobile-nav] summary {
+        list-style: none;
+      }
+      [data-mobile-nav] summary::-webkit-details-marker {
+        display: none;
+      }
+    </style>
+
+    <script>
+      // 移动端导航：details/summary 原生可键盘操作，这里只补 Esc/点外关闭与断点收起
+      document.addEventListener("DOMContentLoaded", () => {
+        const details = document.querySelector<HTMLDetailsElement>("[data-mobile-nav]");
+        if (!details) return;
+        const summary = details.querySelector("summary");
+        const menuIcon = details.querySelector("[data-menu-icon]");
+        const closeIcon = details.querySelector("[data-close-icon]");
+
+        const sync = () => {
+          const open = details.open;
+          menuIcon?.classList.toggle("hidden", open);
+          closeIcon?.classList.toggle("hidden", !open);
+        };
+        details.addEventListener("toggle", sync);
+        sync();
+
+        document.addEventListener("click", (e) => {
+          if (details.open && !details.contains(e.target as Node)) details.open = false;
+        });
+        details.addEventListener("keydown", (e) => {
+          if (e.key === "Escape" && details.open) {
+            details.open = false;
+            (summary as HTMLElement | null)?.focus();
+          }
+        });
+
+        const mq = window.matchMedia("(min-width: 768px)");
+        mq.addEventListener("change", (e) => {
+          if (e.matches) details.open = false;
+        });
+      });
+    </script>
   </body>
 </html>

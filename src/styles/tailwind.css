@@ -14,6 +14,11 @@
   .dark .text-deep-text {
     color: oklch(0.85 0.01 var(--hue, 250));
   }
+  /* 统一可见焦点环，保证键盘导航可感知 */
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
 }
 
 /* 暗色模式变体 — 使用 :root.dark / [data-theme='dark'] */

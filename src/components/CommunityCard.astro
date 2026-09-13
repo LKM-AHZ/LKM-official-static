@@ -1,4 +1,6 @@
 ---
+import { t } from "../i18n/index";
+
 /**
  * 社群卡：名称 + QQ 群号徽标（点击复制）+ desc。
  */
@@ -10,22 +12,26 @@ interface Props {
 }
 
 const { name, qqGroup, desc, isQQChannel = false } = Astro.props;
+const lang = (Astro.currentLocale ?? "zh") as string;
+const copyLabel = `${t(lang, isQQChannel ? "communities.copy_channel" : "communities.copy")} ${qqGroup ?? ""}`.trim();
 ---
 
 <div class="profile-card">
   <div class="profile-inner p-5 flex flex-col gap-3">
     <div class="flex items-center justify-between gap-2">
-      <h4 class="font-bold text-base text-deep-text">{name}</h4>
+      <h3 class="font-bold text-base text-deep-text">{name}</h3>
       {qqGroup && (
-        <span
+        <button
+          type="button"
           class="inline-flex items-center gap-1.5 shrink-0 text-xs font-mono bg-surface-3 text-text-muted rounded-[6px] px-2.5 py-1 cursor-pointer select-none hover:bg-primary hover:text-on-primary transition-colors"
           data-copy={qqGroup}
-          title="点击复制"
+          title={copyLabel}
+          aria-label={copyLabel}
         >
           {isQQChannel && "频道 ID："}
           {qqGroup}
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        </span>
+        </button>
       )}
     </div>
     {desc && <p class="text-xs text-text-muted leading-relaxed">{desc}</p>}

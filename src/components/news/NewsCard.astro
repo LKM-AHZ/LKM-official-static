@@ -34,6 +34,8 @@ const gradient = coverGradient(title);
       <img
         src={image}
         alt=""
+        width={1200}
+        height={630}
         loading="lazy"
         decoding="async"
         class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -47,9 +49,9 @@ const gradient = coverGradient(title);
   </div>
 
   <div class="flex flex-1 flex-col p-6 pt-5">
-    <h3 class="text-lg font-bold leading-snug text-deep-text transition-colors group-hover:text-primary">
+    <h2 class="text-lg font-bold leading-snug text-deep-text transition-colors group-hover:text-primary">
       {title}
-    </h3>
+    </h2>
 
     {desc && <p class="mt-2 text-sm leading-relaxed text-text-muted line-clamp-3">{desc}</p>}
 
