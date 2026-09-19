@@ -13,8 +13,8 @@
   --duration-base: 200ms;
   --duration-slow: 300ms;
 
-  /* 顶栏高度（悬浮胶囊导航 + 上边距），主内容据此留白 */
-  --nav-h: 88px;
+  /* 顶栏高度（贴顶刘海高度 + 少量余量），主内容据此留白 */
+  --nav-h: 72px;
 
   /* 首屏滚动进度：由 HeroTyper 写入，驱动 body::after 侧辉光 */
   --hero-progress: 0;

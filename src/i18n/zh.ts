@@ -93,6 +93,7 @@ export const zh = {
   "team.sidebar_advisors": "顾问团",
   "team.sidebar_professional": "专业委员会",
   "team.sidebar_tech": "技术委员会",
+  "team.sidebar_project": "项目团队",
   "team.sidebar_alumni": "已离开成员",
   "team.sidebar_textbooks": "教材项目组",
   "team.sidebar_science": "科普项目组",
@@ -119,6 +120,10 @@ export const zh = {
   "team.tech_title": "技术委员会",
   "team.tech_desc":
     "该团队部门职责是负责各平台、各活动的相应技术上的技术开发与维护，未来将给大家带来更多实用性更强更好的开源项目。需要有编程知识，网站搭建等能。",
+  "team.project_title": "项目团队",
+  "team.project_desc":
+    "由社区成员围绕具体产出目标组建的项目组，把知识整理成教材与科普内容，持续输出给更多需要的人。",
+  "team.subgroup_empty": "暂无成员，期待你的加入",
   "team.alumni_title": "已离开或失联成员",
   "team.alumni_desc":
     "以下成员曾为理科迷作出贡献，因各种原因现无法联系，不管如何理科迷的大门永远向你们打开。",

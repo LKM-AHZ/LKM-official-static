@@ -103,6 +103,7 @@ export const en = {
   "team.sidebar_advisors": "Advisors",
   "team.sidebar_professional": "Professional Committee",
   "team.sidebar_tech": "Technical Committee",
+  "team.sidebar_project": "Project Teams",
   "team.sidebar_alumni": "Alumni",
   "team.sidebar_textbooks": "Textbook Project",
   "team.sidebar_science": "Science Project",
@@ -129,6 +130,10 @@ export const en = {
   "team.tech_title": "Technical Committee",
   "team.tech_desc":
     "This committee develops and maintains the technology behind our platforms and activities, and will bring more practical and better open-source projects in the future. Programming and web-building skills are needed.",
+  "team.project_title": "Project Teams",
+  "team.project_desc":
+    "Member-formed project groups built around concrete deliverables, turning knowledge into textbooks and science content for a wider audience.",
+  "team.subgroup_empty": "No members yet — you are welcome to join.",
   "team.alumni_title": "Members Who Have Left",
   "team.alumni_desc":
     "The members below once contributed to LiKeMi but can no longer be reached. No matter what, LiKeMi's doors will always be open to you.",

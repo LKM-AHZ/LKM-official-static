@@ -237,7 +237,7 @@
     border: 1px solid var(--ghost-edge);
     backdrop-filter: blur(14px);
     text-decoration: none;
-    font-size: 0.875rem;
+    font-size: 1rem;
     transition: all 0.3s ease;
   }
   .btn-ghost-pill:hover {
@@ -245,12 +245,19 @@
     transform: translateY(-2px);
   }
 
-  /* ---------- 悬浮导航 ---------- */
+  /* ---------- 刘海式顶栏 ---------- */
   .nav-shell {
     border: 1px solid var(--nav-edge);
+    /* 贴顶悬挂：顶边不描边，只留两侧与下缘 */
+    border-top: 0;
+    border-radius: 0 0 1.75rem 1.75rem;
+    /* 带刘海/状态栏的机型上让出安全区 */
+    padding-top: env(safe-area-inset-top, 0px);
     background: var(--nav-bg);
     box-shadow: var(--nav-shadow);
     backdrop-filter: blur(18px);
+    /* 裁掉下缘圆角外的下拉面板背景 */
+    overflow: hidden;
     transition:
       background 0.4s ease,
       border-color 0.4s ease,
@@ -260,10 +267,10 @@
     background: var(--nav-bg-scrolled);
   }
 
+  /* 移动端下拉：与刘海同宽连体，用顶部分隔线区分层次 */
   .nav-mobile-panel {
-    border: 1px solid var(--nav-edge);
+    border-top: 1px solid var(--nav-edge);
     background: var(--nav-mobile-bg);
-    backdrop-filter: blur(18px);
     overflow: hidden;
     transition:
       max-height 0.3s ease,

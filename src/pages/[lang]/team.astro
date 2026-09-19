@@ -5,7 +5,11 @@ import DepartmentSection from "../../components/DepartmentSection.astro";
 import { teamData as zhTeam } from "../../data/team-data";
 import { teamData as enTeam } from "../../data/en/team-data";
 import { pickByLocale, t } from "../../i18n/index";
-import type { MemberLists, SubGroupMaps, TeamData } from "../../data/team-types";
+import type {
+  MemberLists,
+  SubGroupMaps,
+  TeamData,
+} from "../../data/team-types";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 
@@ -17,13 +21,30 @@ const team = pickByLocale<TeamData>(lang, zhTeam, enTeam);
 
 const sidebarItems = [
   { text: t(lang, "team.sidebar_founder"), href: "#founder", icon: "star" },
-  { text: t(lang, "team.sidebar_general"), href: "#general", icon: "buildingSkyscraper" },
+  {
+    text: t(lang, "team.sidebar_general"),
+    href: "#general",
+    icon: "buildingSkyscraper",
+  },
   { text: t(lang, "team.sidebar_affairs"), href: "#affairs", icon: "users" },
-  { text: t(lang, "team.sidebar_events"), href: "#events", icon: "calendarEvent" },
+  {
+    text: t(lang, "team.sidebar_events"),
+    href: "#events",
+    icon: "calendarEvent",
+  },
   { text: t(lang, "team.sidebar_news"), href: "#news", icon: "news" },
-  { text: t(lang, "team.sidebar_advisors"), href: "#advisors", icon: "userCheck" },
-  { text: t(lang, "team.sidebar_professional"), href: "#professional", icon: "certificate" },
+  {
+    text: t(lang, "team.sidebar_advisors"),
+    href: "#advisors",
+    icon: "userCheck",
+  },
+  {
+    text: t(lang, "team.sidebar_professional"),
+    href: "#professional",
+    icon: "certificate",
+  },
   { text: t(lang, "team.sidebar_tech"), href: "#tech", icon: "code" },
+  { text: t(lang, "team.sidebar_project"), href: "#project", icon: "rocket" },
   { text: t(lang, "team.sidebar_alumni"), href: "#alumni", icon: "userX" },
 ];
 
@@ -38,10 +59,15 @@ const sg: SubGroupMaps = team.subGroupMaps;
   sidebarItems={sidebarItems}
 >
   {/* 创始人 */}
-  <section class="section-panel section-padding">
+  <section
+    id="founder"
+    class="section-panel section-padding scroll-mt-[var(--nav-h)]"
+  >
     <div class="container-x">
       <h2 class="mb-14 text-center">
-        <span class="title-underline font-heading text-xl font-bold text-deep-text">
+        <span
+          class="title-underline font-heading text-xl font-bold text-deep-text"
+        >
           {t(lang, "team.founder_title")}
         </span>
       </h2>
@@ -258,15 +284,64 @@ const sg: SubGroupMaps = team.subGroupMaps;
     }
   </DepartmentSection>
 
+  {/* 项目团队 */}
+  <DepartmentSection
+    id="project"
+    title={t(lang, "team.project_title")}
+    desc={t(lang, "team.project_desc")}
+    noGrid
+  >
+    {
+      Object.entries(sg.projectSubGroups ?? {}).map(([, group]) => (
+        <div class="mb-12">
+          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
+            {group.label}
+          </h3>
+          {group.desc && (
+            <p class="mx-auto mb-6 max-w-3xl text-center text-[14px] leading-relaxed text-text-muted">
+              {group.desc}
+            </p>
+          )}
+          {group.members?.length ? (
+            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {group.members.map((m) => (
+                <MemberCard
+                  name={m.name ?? ""}
+                  avatarKey={m.avatarKey}
+                  role={m.role}
+                  desc={m.desc}
+                  dream={m.dream}
+                  quote={m.quote}
+                  level={4}
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="text-center text-sm text-text-muted">
+              {t(lang, "team.subgroup_empty")}
+            </p>
+          )}
+        </div>
+      ))
+    }
+  </DepartmentSection>
+
   {/* 已离开成员 */}
-  <section id="alumni" class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+  <section
+    id="alumni"
+    class="section-panel section-padding scroll-mt-[var(--nav-h)]"
+  >
     <div class="container-x">
       <h2 class="mb-14 text-center">
-        <span class="title-underline font-heading text-xl font-bold text-deep-text">
+        <span
+          class="title-underline font-heading text-xl font-bold text-deep-text"
+        >
           {t(lang, "team.alumni_title")}
         </span>
       </h2>
-      <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-[14px] leading-relaxed text-text-muted">
+      <p
+        class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-[14px] leading-relaxed text-text-muted"
+      >
         {t(lang, "team.alumni_desc")}
       </p>
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">

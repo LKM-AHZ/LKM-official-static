@@ -1,20 +1,25 @@
-/* ===== 社区外壳侧边栏===== */
+/* ===== 页内侧边栏 ===== */
 
-/* 容器定位/背景/边框：固定左侧栏，顶部对齐悬浮导航（--nav-h）。
-   背景改为半透明玻璃，让全站粒子背景透出。 */
+/* 容器定位/材质：与刘海顶栏同一套玻璃（--nav-* 变量 + 18px 模糊）。
+   形状也镜像顶栏——顶栏贴顶只下缘圆角，侧栏贴左只右缘圆角。 */
 .shell {
   position: fixed;
   top: var(--nav-h);
   left: 0;
   height: calc(100vh - var(--nav-h));
   width: 240px;
-  background: color-mix(in srgb, var(--base-100) 72%, transparent);
-  backdrop-filter: blur(14px);
+  background: var(--nav-bg);
+  backdrop-filter: blur(18px);
+  border-right: 1px solid var(--nav-edge);
+  border-radius: 0 1.5rem 1.5rem 0;
+  box-shadow: 6px 0 30px color-mix(in srgb, var(--deep-text) 8%, transparent);
   z-index: 10;
   padding-left: 8px;
   overflow: hidden;
-  border-right: 1px solid var(--card-edge);
-  transition: width 0.3s;
+  transition:
+    width 0.3s,
+    background 0.4s,
+    border-color 0.4s;
 }
 
 :global(html.sidebar-collapsed) .shell {
@@ -52,12 +57,12 @@
     height: 30px;
   }
   .icon svg {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
   }
   .text {
     height: 30px;
-    font-size: 13px;
+    font-size: 14px;
     padding-left: 8px;
   }
   .toggle {
@@ -72,7 +77,7 @@
 /* 导航列表 */
 .nav {
   position: relative;
-  height: calc(100vh - 72px);
+  height: calc(100vh - var(--nav-h));
   list-style: none;
   margin: 0;
   padding: 0;
@@ -103,8 +108,8 @@
 }
 
 .icon svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   z-index: 1;
 }
 
@@ -114,7 +119,7 @@
   height: 35px;
   display: flex;
   align-items: center;
-  font-size: 14px;
+  font-size: 16px;
   color: var(--deep-text);
   padding-left: 12px;
   letter-spacing: 0;
@@ -124,54 +129,31 @@
 /* hover 高亮 */
 .nav li:hover .icon,
 .nav li:hover .text {
-  color: var(--warning);
+  color: var(--primary);
 }
 
-/* active 状态 — 气泡圆角背景 */
+/* active 状态：淡底 + 左缘渐变竖线微光（对应顶栏的 nav-underline） */
 .nav li.active {
-  background: var(--base-200);
-  border-top-left-radius: 50px;
-  border-bottom-left-radius: 50px;
+  background: var(--social-hover-bg);
+  border-radius: 0.875rem;
 }
 
 .nav li.active::before {
   content: "";
   position: absolute;
-  top: -19px;
-  right: 0;
-  width: 19px;
-  height: 19px;
-  border-bottom-right-radius: 16px;
-  box-shadow: 3px 3px 0 3px var(--base-200);
-  background: transparent;
-}
-
-.nav li.active::after {
-  content: "";
-  position: absolute;
-  bottom: -19px;
-  right: 0;
-  width: 19px;
-  height: 19px;
-  border-top-right-radius: 16px;
-  box-shadow: 3px -3px 0 3px var(--base-200);
-  background: transparent;
-}
-
-/* active 图标圆形边框 */
-.nav li.active .icon::before {
-  content: "";
-  position: absolute;
   top: 50%;
-  left: 50%;
-  translate: -50% -50%;
-  width: 29px;
-  height: 29px;
-  background: var(--base-100);
-  border-radius: 50%;
-  transition: 0.5s;
-  border: 3px solid var(--primary);
-  box-sizing: border-box;
+  left: 0;
+  translate: 0 -50%;
+  width: 2px;
+  height: 58%;
+  border-radius: 9999px;
+  background: linear-gradient(180deg, #7fd4ff, #b9c8ff);
+  box-shadow: 0 0 8px rgba(127, 212, 255, 0.6);
+}
+
+.nav li.active .icon,
+.nav li.active .text {
+  color: var(--primary);
 }
 
 /* 底部开合按钮 */
@@ -187,30 +169,31 @@
   justify-content: center;
   gap: 6px;
   padding: 0;
-  border: 1px solid var(--base-300);
-  border-radius: 8px;
-  background: var(--base-200);
-  color: var(--deep-text);
+  border: 1px solid var(--ghost-edge);
+  border-radius: 9999px;
+  background: var(--ghost-bg);
+  color: var(--ghost-text);
   cursor: pointer;
   transition:
-    background 0.3s,
-    color 0.3s;
+    border-color 0.3s,
+    color 0.3s,
+    transform 0.3s;
 }
 
 .toggle:hover {
-  background: var(--base-300);
+  border-color: var(--primary);
   color: var(--primary);
 }
 
 .toggle svg {
   flex-shrink: 0;
-  width: 16px;
+  width: 18px;
   transition: transform 0.3s;
 }
 
 .toggleSpan {
   white-space: nowrap;
-  font-size: 12px;
+  font-size: 13px;
   transition: 0.3s;
 }
 

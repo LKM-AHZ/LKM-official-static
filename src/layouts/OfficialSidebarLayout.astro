@@ -34,9 +34,17 @@ const {
 } = Astro.props;
 ---
 
-<OfficialLayout title={title} description={description} currentPath={currentPath}>
+<OfficialLayout
+  title={title}
+  description={description}
+  currentPath={currentPath}
+>
   <div class="min-h-screen">
-    <nav class={styles.shell} data-page-sidebar aria-label={t(lang, "common.aria.page_toc")}>
+    <nav
+      class={styles.shell}
+      data-page-sidebar
+      aria-label={t(lang, "common.aria.page_toc")}
+    >
       <ul class={styles.nav}>
         {
           sidebarItems.map((item) => (
@@ -103,12 +111,23 @@ const {
 </script>
 
 <style>
-  /* 页内侧栏 active 气泡（复用主应用 .nav li.active 视觉，独立作用在 .nav li.pg-active） */
+  /* 页内侧栏 active（与顶栏 .nav-underline 同语言：淡底 + 左缘渐变竖线微光） */
   .pg-active {
-    background: var(--base-200);
-    border-top-left-radius: 50px;
-    border-bottom-left-radius: 50px;
     position: relative;
+    background: var(--social-hover-bg);
+    border-radius: 0.875rem;
+  }
+  .pg-active::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    translate: 0 -50%;
+    width: 2px;
+    height: 58%;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, #7fd4ff, #b9c8ff);
+    box-shadow: 0 0 8px rgba(127, 212, 255, 0.6);
   }
   .pg-active a > div {
     color: var(--primary);

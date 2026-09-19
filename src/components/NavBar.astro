@@ -9,14 +9,13 @@ import type { Lang, TranslationKey } from "../i18n/index";
 import { langUrl } from "../i18n/paths";
 
 /**
- * 悬浮胶囊导航（fixed）。
+ * 刘海式顶栏（fixed）：通栏贴顶、仅下缘圆角，形似屏幕刘海。
  * 状态（滚动加深、移动面板开合）与主题切换改由原生脚本驱动。
  */
 const lang = (Astro.currentLocale ?? "zh") as Lang;
 
 /** 当前页（已剥离语言前缀），用于导航激活态 */
-const currentPath =
-  Astro.url.pathname.replace(/^\/(zh|en)(?=\/|$)/, "") || "/";
+const currentPath = Astro.url.pathname.replace(/^\/(zh|en)(?=\/|$)/, "") || "/";
 
 const navLinks: { href: string; key: TranslationKey }[] = [
   { href: "/", key: "common.nav_home" },
@@ -32,33 +31,37 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
 
 <nav
   id="navbar"
-  class="fixed inset-x-0 top-0 z-[9999] pt-4"
+  class="fixed inset-x-0 top-0 z-[9999] px-4 md:px-10 lg:px-20"
   aria-label={t(lang, "common.aria.main_nav")}
 >
-  <div
-    class="nav-shell container-x flex items-center justify-between rounded-full px-5 py-3"
-    data-nav-shell
-  >
-    <a
-      href={langUrl(lang, "/")}
-      class="flex items-center gap-2.5 no-underline"
-      data-nav-home
+  <!-- 刘海式顶栏：贴顶、左右留边、仅下缘圆角；移动面板并入同一块玻璃 -->
+  <div class="nav-shell" data-nav-shell>
+    <div
+      class="mx-auto flex w-full max-w-[1160px] items-center px-4 py-3 md:px-5"
     >
-      <BrandMark size={38} />
-      <span class="text-lg font-bold tracking-wide text-deep-text">
-        {brandLabel}
-        <span class="text-[var(--primary)]">LKM</span>
-      </span>
-    </a>
+      <!-- 品牌：与右侧工具区同为 flex-1，中段导航因而居中于整条刘海 -->
+      <div class="flex flex-1 items-center">
+        <a
+          href={langUrl(lang, "/")}
+          class="flex items-center gap-2.5 no-underline"
+          data-nav-home
+        >
+          <BrandMark size={38} />
+          <span class="text-xl font-bold tracking-wide text-deep-text">
+            {brandLabel}
+            <span class="text-[var(--primary)]">LKM</span>
+          </span>
+        </a>
+      </div>
 
-    <div class="hidden items-center gap-6 md:flex">
-      <div class="flex items-center gap-6">
+      <!-- 中段：主导航 -->
+      <div class="hidden items-center gap-3 md:flex lg:gap-8">
         {
           navLinks.map((l) => (
             <a
               href={langUrl(lang, l.href)}
               class:list={[
-                "group relative text-sm no-underline transition-colors",
+                "group relative text-base no-underline transition-colors",
                 currentPath === l.href
                   ? "text-[var(--primary)]"
                   : "text-text-muted hover:text-deep-text",
@@ -72,74 +75,82 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
         }
       </div>
 
-      <ThemeToggle />
-
-      <a
-        href={communityHref}
-        class="btn-ghost-pill"
-        aria-label={communityLabel}
+      <!-- 右段：主题/语言为一组，细线分隔后接社区入口 -->
+      <div
+        class="hidden flex-1 items-center justify-end gap-2 md:flex lg:gap-4"
       >
-        {communityLabel}
-        <Icon name="arrowRight" class="w-4 h-4" />
-      </a>
-
-      <LanguageSwitcher />
-    </div>
-
-    <div class="flex items-center gap-2 md:hidden">
-      <ThemeToggle />
-      <button
-        type="button"
-        class="flex h-10 w-10 items-center justify-center rounded-lg text-deep-text"
-        aria-label={t(lang, "common.aria.menu")}
-        aria-expanded="false"
-        aria-controls="nav-mobile-panel"
-        data-nav-toggle
-      >
-        <span data-nav-icon="open" class="flex">
-          <Icon name="menu" class="w-[22px] h-[22px]" />
-        </span>
-        <span data-nav-icon="close" class="hidden">
-          <Icon name="close" class="w-[22px] h-[22px]" />
-        </span>
-      </button>
-    </div>
-  </div>
-
-  <!-- 移动端菜单 -->
-  <div
-    id="nav-mobile-panel"
-    class="nav-mobile-panel container-x mt-1 max-h-0 rounded-2xl md:hidden"
-    data-nav-panel
-  >
-    <div class="flex flex-col gap-1 px-5 py-4">
-      {
-        navLinks.map((l) => (
-          <a
-            href={langUrl(lang, l.href)}
-            class:list={[
-              "rounded-lg px-3 py-2.5 text-sm no-underline transition-colors",
-              currentPath === l.href
-                ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
-                : "text-text-muted hover:text-deep-text",
-            ]}
-          >
-            {t(lang, l.key)}
-          </a>
-        ))
-      }
-      <a
-        href={communityHref}
-        class="rounded-lg px-3 py-2.5 text-sm text-text-muted no-underline transition-colors hover:text-deep-text"
-      >
-        {communityLabel}
-      </a>
-      <div class="mt-2 flex items-center justify-between px-3">
+        <ThemeToggle />
         <LanguageSwitcher />
-        <a href={communityHref} class="btn btn-primary btn-sm">
+        <span
+          class="hidden h-6 w-px bg-[var(--nav-edge)] lg:block"
+          aria-hidden="true"></span>
+        <a
+          href={communityHref}
+          class="btn-ghost-pill"
+          aria-label={communityLabel}
+        >
           {communityLabel}
           <Icon name="arrowRight" class="w-4 h-4" />
         </a>
+      </div>
+
+      <div class="flex items-center gap-2 md:hidden">
+        <ThemeToggle />
+        <button
+          type="button"
+          class="flex h-10 w-10 items-center justify-center rounded-lg text-deep-text"
+          aria-label={t(lang, "common.aria.menu")}
+          aria-expanded="false"
+          aria-controls="nav-mobile-panel"
+          data-nav-toggle
+        >
+          <span data-nav-icon="open" class="flex">
+            <Icon name="menu" class="w-[22px] h-[22px]" />
+          </span>
+          <span data-nav-icon="close" class="hidden">
+            <Icon name="close" class="w-[22px] h-[22px]" />
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 移动端菜单：刘海下拉 -->
+    <div
+      id="nav-mobile-panel"
+      class="nav-mobile-panel max-h-0 md:hidden"
+      data-nav-panel
+    >
+      <div
+        class="mx-auto flex w-full max-w-[1160px] flex-col gap-1 px-5 pt-3 pb-4"
+      >
+        {
+          navLinks.map((l) => (
+            <a
+              href={langUrl(lang, l.href)}
+              class:list={[
+                "rounded-lg px-3 py-2.5 text-base no-underline transition-colors",
+                currentPath === l.href
+                  ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
+                  : "text-text-muted hover:text-deep-text",
+              ]}
+            >
+              {t(lang, l.key)}
+            </a>
+          ))
+        }
+        <a
+          href={communityHref}
+          class="rounded-lg px-3 py-2.5 text-base text-text-muted no-underline transition-colors hover:text-deep-text"
+        >
+          {communityLabel}
+        </a>
+        <div class="mt-2 flex items-center justify-between px-3">
+          <LanguageSwitcher />
+          <a href={communityHref} class="btn btn-primary btn-sm">
+            {communityLabel}
+            <Icon name="arrowRight" class="w-4 h-4" />
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -200,14 +211,13 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
   }
 
   // 已在首页时点「首页」应平滑回顶，而不是重新加载
-  document.querySelector<HTMLAnchorElement>("[data-nav-home]")?.addEventListener(
-    "click",
-    (event) => {
+  document
+    .querySelector<HTMLAnchorElement>("[data-nav-home]")
+    ?.addEventListener("click", (event) => {
       const path = window.location.pathname.replace(/^\/(zh|en)(?=\/|$)/, "");
       if (path === "" || path === "/") {
         event.preventDefault();
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-    },
-  );
+    });
 </script>

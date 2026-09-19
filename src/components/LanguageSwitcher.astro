@@ -19,7 +19,11 @@ function localizedHref(target: Lang): string {
   return withLang === "/en/" ? "/en/" : withLang;
 }
 ---
-<nav class="flex items-center gap-1 text-sm" aria-label={t(current, "common.aria.language")}>
+
+<nav
+  class="flex items-center rounded-full border border-[var(--ghost-edge)] bg-[var(--ghost-bg)] p-0.5"
+  aria-label={t(current, "common.aria.language")}
+>
   {
     SUPPORTED_LANGS.map((lang) => (
       <a
@@ -28,9 +32,9 @@ function localizedHref(target: Lang): string {
         lang={lang}
         aria-current={lang === current ? "true" : undefined}
         class:list={[
-          "rounded-md px-2 py-1 text-sm font-semibold no-underline transition-colors",
+          "rounded-full px-2.5 py-1.5 text-sm font-semibold no-underline transition-colors",
           lang === current
-            ? "text-[var(--primary)]"
+            ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
             : "text-text-muted hover:text-[var(--primary)]",
         ]}
       >
