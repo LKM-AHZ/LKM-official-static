@@ -38,12 +38,14 @@ const sg: SubGroupMaps = team.subGroupMaps;
   sidebarItems={sidebarItems}
 >
   {/* 创始人 */}
-  <section id="founder" class="relative not-prose scroll-mt-[72px]">
-    <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-20 lg:py-24">
-      <h2 class="text-xl font-bold mb-2 text-center">
-        <span class="border-b-2 border-primary pb-1">{t(lang, "team.founder_title")}</span>
+  <section class="section-panel section-padding">
+    <div class="container-x">
+      <h2 class="mb-14 text-center">
+        <span class="title-underline font-heading text-xl font-bold text-deep-text">
+          {t(lang, "team.founder_title")}
+        </span>
       </h2>
-      <p class="mt-3 text-[17px] text-text-muted text-center mb-9 leading-relaxed">
+      <p class="mb-9 text-center text-[17px] leading-relaxed text-text-muted">
         {t(lang, "team.founder_subtitle")}
       </p>
       <div class="max-w-2xl mx-auto">
@@ -68,7 +70,6 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <DepartmentSection
     id="general"
     title={t(lang, "team.general_title")}
-    borderColor="#ef4444"
     desc={t(lang, "team.general_desc")}
   >
     {
@@ -89,17 +90,16 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <DepartmentSection
     id="affairs"
     title={t(lang, "team.affairs_title")}
-    borderColor="#3b82f6"
     desc={t(lang, "team.affairs_desc")}
     noGrid
   >
     {
       Object.entries(sg.affairsSubGroups ?? {}).map(([, group]) => (
         <div class="mb-12">
-          <h3 class="text-md font-bold mb-3 text-center text-text-muted">
+          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
             {group.label}
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {group.members?.map((m) => (
               <MemberCard
                 name={m.name ?? ""}
@@ -121,7 +121,6 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <DepartmentSection
     id="events"
     title={t(lang, "team.events_title")}
-    borderColor="#f97316"
     desc={t(lang, "team.events_desc")}
   >
     {
@@ -142,11 +141,10 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <DepartmentSection
     id="news"
     title={t(lang, "team.news_title")}
-    borderColor="#22c55e"
     desc={t(lang, "team.news_desc")}
     noGrid
   >
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
         ml.newsMembers?.map((m) => (
           <MemberCard
@@ -163,15 +161,15 @@ const sg: SubGroupMaps = team.subGroupMaps;
     {
       Object.entries(sg.newsSubGroups ?? {}).map(([, group]) => (
         <div class="mt-8">
-          <h3 class="text-md font-bold mb-3 text-center text-text-muted">
+          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
             {group.label}
           </h3>
           {group.desc && (
-            <p class="max-w-3xl mx-auto mb-6 px-6 py-3 bg-page-bg border border-surface-3 rounded-[8px] text-center text-[13px] text-text-muted leading-relaxed">
+            <p class="card-hover max-w-3xl mx-auto mb-6 px-6 py-3 rounded-2xl text-center text-[13px] text-text-muted leading-relaxed">
               {group.desc}
             </p>
           )}
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {group.members?.map((m) => (
               <MemberCard
                 name={m.name ?? ""}
@@ -193,7 +191,6 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <DepartmentSection
     id="advisors"
     title={t(lang, "team.advisors_title")}
-    borderColor="#eab308"
     desc={t(lang, "team.advisors_desc")}
   >
     {
@@ -214,17 +211,16 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <DepartmentSection
     id="professional"
     title={t(lang, "team.professional_title")}
-    borderColor="#a855f7"
     desc={t(lang, "team.professional_desc")}
     noGrid
   >
     {
       Object.entries(sg.professionalSubGroups ?? {}).map(([, group]) => (
         <div class="mb-12">
-          <h3 class="text-md font-bold mb-3 text-center text-text-muted">
+          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
             {group.label}
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {group.members?.map((m) => (
               <MemberCard
                 name={m.name ?? ""}
@@ -246,7 +242,6 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <DepartmentSection
     id="tech"
     title={t(lang, "team.tech_title")}
-    borderColor="#6b7280"
     desc={t(lang, "team.tech_desc")}
   >
     {
@@ -264,15 +259,17 @@ const sg: SubGroupMaps = team.subGroupMaps;
   </DepartmentSection>
 
   {/* 已离开成员 */}
-  <section id="alumni" class="relative not-prose scroll-mt-[72px]">
-    <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-20 lg:py-24">
-      <h2 class="text-xl font-bold mb-9 text-center">
-        <span class="border-b-2 border-surface-3 pb-1">{t(lang, "team.alumni_title")}</span>
+  <section id="alumni" class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <h2 class="mb-14 text-center">
+        <span class="title-underline font-heading text-xl font-bold text-deep-text">
+          {t(lang, "team.alumni_title")}
+        </span>
       </h2>
-      <p class="max-w-3xl mx-auto mb-9 px-6 py-4 bg-page-bg border border-surface-3 rounded-[8px] text-center text-[14px] text-text-muted leading-relaxed">
+      <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-[14px] leading-relaxed text-text-muted">
         {t(lang, "team.alumni_desc")}
       </p>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
           ml.alumniMembers?.map((m) => (
             <MemberCard

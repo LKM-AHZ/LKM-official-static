@@ -55,10 +55,14 @@ const projects = [
   description={t(lang, "seo.projects")}
   currentPath="/projects"
 >
-  <div class="relative not-prose scroll-mt-[72px]">
-    <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-16">
+  <section class="section-panel section-padding">
+    <div class="container-x">
       <div class="space-y-6">
-        <h1 class="text-3xl font-bold text-deep-text">{t(lang, "projects.title")}</h1>
+        <div class="mb-14 text-center">
+          <h1 class="title-underline text-3xl font-bold text-deep-text">
+            {t(lang, "projects.title")}
+          </h1>
+        </div>
 
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {
@@ -114,7 +118,7 @@ const projects = [
                   {p.roles.length > 0 && (
                     <div class="flex items-center gap-1.5 flex-wrap">
                       {p.roles.map((r) => (
-                        <span class="text-[11px] px-2 py-0.5 rounded-full bg-page-bg border border-surface-3 text-text-muted">
+                        <span class="rounded-full border border-[var(--ghost-edge)] bg-[var(--ghost-bg)] px-2 py-0.5 text-[11px] text-text-muted">
                           {t(lang, "projects.role_missing")}{r}
                         </span>
                       ))}
@@ -127,5 +131,5 @@ const projects = [
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </OfficialLayout>

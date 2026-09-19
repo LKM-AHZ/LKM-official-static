@@ -11,20 +11,22 @@ interface Props {
 const { id, title, intro } = Astro.props;
 ---
 
-<section id={id} class="relative not-prose scroll-mt-[72px]">
-  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-20 lg:py-24">
-    <div class="max-w-7xl mx-auto">
-      <h2 class="text-xl font-bold mb-2 text-center">
-        <span class="border-b-2 border-primary pb-1">{title}</span>
-      </h2>
-      {intro && (
-        <p class="max-w-3xl mx-auto mb-6 px-6 py-4 bg-page-bg border border-surface-3 rounded-[8px] text-center text-[14px] text-text-muted leading-relaxed card-hover">
+<section id={id} class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+  <div class="container-x">
+    <h2 class="mb-14 text-center">
+      <span class="title-underline font-heading text-xl font-bold text-deep-text">
+        {title}
+      </span>
+    </h2>
+    {
+      intro && (
+        <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-[14px] leading-relaxed text-text-muted">
           {intro}
         </p>
-      )}
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <slot />
-      </div>
+      )
+    }
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <slot />
     </div>
   </div>
 </section>

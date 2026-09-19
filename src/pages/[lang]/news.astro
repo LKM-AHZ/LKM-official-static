@@ -27,13 +27,15 @@ const enEmpty = isEn && posts.length === 0;
   description={t(lang, "seo.news")}
   currentPath="/news"
 >
-  <div class="relative not-prose scroll-mt-[72px]">
-    <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-14 md:py-20">
-      <header class="mb-8 md:mb-12 text-center">
-        <h1 class="font-heading text-3xl md:text-[40px] font-bold text-deep-text tracking-[-0.01em]">
+  <section class="section-panel section-padding">
+    <div class="container-x">
+      <header class="mb-14 text-center">
+        <h1
+          class="title-underline font-heading text-3xl font-bold tracking-[-0.01em] text-deep-text md:text-[40px]"
+        >
           {t(lang, "news.title")}
         </h1>
-        <p class="mt-3 mx-auto max-w-2xl text-[15px] text-text-muted">
+        <p class="mx-auto mt-8 max-w-2xl text-[15px] text-text-muted">
           {posts.length > 0
             ? `${posts.length} ${isEn ? "articles" : "篇文章"} · ${t(lang, "news.subtitle")}`
             : t(lang, "news.subtitle")}
@@ -41,7 +43,7 @@ const enEmpty = isEn && posts.length === 0;
       </header>
 
       {enEmpty && (
-        <div class="rounded-xl border border-surface-3 bg-card-bg px-6 py-12 text-center text-text-muted">
+        <div class="card-hover rounded-2xl px-6 py-12 text-center text-text-muted">
           {isEn
             ? "English translations are being prepared — check back soon."
             : "暂无文章。"}
@@ -69,5 +71,5 @@ const enEmpty = isEn && posts.length === 0;
         </div>
       )}
     </div>
-  </div>
+  </section>
 </OfficialLayout>

@@ -1,18 +1,19 @@
 /* ===== 社区外壳侧边栏===== */
 
-/* 容器定位/背景/边框：样式复刻主应用 inline 类：
-   fixed top-72px left-0 h+pl-2 border-r border-base-300 bg-base-100 */
+/* 容器定位/背景/边框：固定左侧栏，顶部对齐悬浮导航（--nav-h）。
+   背景改为半透明玻璃，让全站粒子背景透出。 */
 .shell {
   position: fixed;
-  top: 72px;
+  top: var(--nav-h);
   left: 0;
-  height: calc(100vh - 72px);
+  height: calc(100vh - var(--nav-h));
   width: 240px;
-  background: var(--base-100);
+  background: color-mix(in srgb, var(--base-100) 72%, transparent);
+  backdrop-filter: blur(14px);
   z-index: 10;
   padding-left: 8px;
   overflow: hidden;
-  border-right: 1px solid var(--base-300);
+  border-right: 1px solid var(--card-edge);
   transition: width 0.3s;
 }
 

@@ -1,0 +1,195 @@
+---
+import Icon from "./Icon.astro";
+import { t } from "../i18n/index";
+import type { Lang } from "../i18n/index";
+import { langUrl } from "../i18n/paths";
+import type { GalleryItem } from "../data/gallery";
+
+/**
+ * 科学影像：网格缩略图 + 原生 <dialog> 灯箱（零依赖，替代源站的 PhotoSwipe）。
+ * 支持 Esc / 点击遮罩关闭、左右方向键与按钮切换。
+ */
+interface Props {
+  items: GalleryItem[];
+}
+
+const lang = (Astro.currentLocale ?? "zh") as Lang;
+const { items } = Astro.props;
+const zoomLabel = t(lang, "home.gallery_zoom");
+const prevLabel = t(lang, "home.gallery_prev");
+const nextLabel = t(lang, "home.gallery_next");
+const closeLabel = t(lang, "common.aria.close");
+---
+
+{
+  items.length > 0 && (
+    <>
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((item, i) => (
+          <button
+            type="button"
+            class="card-hover group relative block w-full cursor-zoom-in overflow-hidden rounded-2xl p-0 text-left"
+            data-gallery-item
+            data-index={i}
+            aria-label={`${zoomLabel}: ${item.title}`}
+          >
+            <img
+              src={item.src}
+              alt={item.title}
+              width="1200"
+              height="650"
+              loading="lazy"
+              decoding="async"
+              class="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            <span class="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/75 to-transparent px-4 pt-8 pb-3 text-sm font-medium text-white">
+              <Icon name="magnify" class="h-4 w-4 shrink-0" />
+              <span class="truncate">{item.title}</span>
+            </span>
+          </button>
+        ))}
+      </div>
+
+      <dialog
+        class="lightbox fixed inset-0 z-[10000] m-auto w-[min(1100px,92vw)] rounded-2xl border border-[var(--card-edge)] bg-card-bg p-0 text-deep-text"
+        data-gallery-lightbox
+      >
+        <div class="relative">
+          <img
+            src={items[0].full}
+            alt=""
+            class="max-h-[76vh] w-full rounded-t-2xl object-contain"
+            data-gallery-image
+          />
+          <button
+            type="button"
+            class="social-icon absolute right-3 top-3 bg-[color-mix(in_srgb,var(--card-bg)_80%,transparent)]"
+            aria-label={closeLabel}
+            data-gallery-close
+          >
+            <Icon name="close" class="h-4 w-4" />
+          </button>
+        </div>
+        <div class="flex items-center justify-between gap-4 px-5 py-4">
+          <div class="min-w-0">
+            <div class="truncate font-semibold" data-gallery-title>
+              {items[0].title}
+            </div>
+            <div class="text-sm text-text-muted" data-gallery-caption>
+              {items[0].caption}
+            </div>
+          </div>
+          <div class="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              class="social-icon"
+              aria-label={prevLabel}
+              data-gallery-prev
+            >
+              <Icon name="chevronUp" class="h-4 w-4 -rotate-90" />
+            </button>
+            <button
+              type="button"
+              class="social-icon"
+              aria-label={nextLabel}
+              data-gallery-next
+            >
+              <Icon name="chevronDown" class="h-4 w-4 -rotate-90" />
+            </button>
+            <a
+              href={langUrl(lang, items[0].href)}
+              class="btn btn-primary btn-sm"
+              data-gallery-link
+            >
+              {t(lang, "home.gallery_open")}
+            </a>
+          </div>
+        </div>
+      </dialog>
+
+      <script
+        is:inline
+        type="application/json"
+        data-gallery-data
+        set:html={JSON.stringify(
+          items.map((item) => ({
+            full: item.full,
+            title: item.title,
+            caption: item.caption,
+            href: langUrl(lang, item.href),
+          })),
+        )}
+      />
+    </>
+  )
+}
+
+<script>
+  const lightbox = document.querySelector<HTMLDialogElement>(
+    "[data-gallery-lightbox]",
+  );
+  const dataEl = document.querySelector<HTMLScriptElement>("[data-gallery-data]");
+  const triggers = document.querySelectorAll<HTMLElement>("[data-gallery-item]");
+
+  if (lightbox && dataEl && triggers.length > 0) {
+    const dialog = lightbox;
+    const items = JSON.parse(dataEl.textContent ?? "[]") as {
+      full: string;
+      title: string;
+      caption: string;
+      href: string;
+    }[];
+    const image = dialog.querySelector<HTMLImageElement>("[data-gallery-image]");
+    const titleEl = dialog.querySelector<HTMLElement>("[data-gallery-title]");
+    const captionEl = dialog.querySelector<HTMLElement>(
+      "[data-gallery-caption]",
+    );
+    const linkEl = dialog.querySelector<HTMLAnchorElement>("[data-gallery-link]");
+    let index = 0;
+
+    function render(): void {
+      const item = items[index];
+      if (!item) return;
+      if (image) {
+        image.src = item.full;
+        image.alt = item.title;
+      }
+      if (titleEl) titleEl.textContent = item.title;
+      if (captionEl) captionEl.textContent = item.caption;
+      if (linkEl) linkEl.href = item.href;
+    }
+
+    function step(delta: number): void {
+      index = (index + delta + items.length) % items.length;
+      render();
+    }
+
+    triggers.forEach((trigger) => {
+      trigger.addEventListener("click", () => {
+        index = Number(trigger.dataset.index ?? 0);
+        render();
+        dialog.showModal();
+      });
+    });
+
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") step(-1);
+      if (event.key === "ArrowRight") step(1);
+    });
+
+    dialog
+      .querySelector("[data-gallery-prev]")
+      ?.addEventListener("click", () => step(-1));
+    dialog
+      .querySelector("[data-gallery-next]")
+      ?.addEventListener("click", () => step(1));
+    dialog
+      .querySelector("[data-gallery-close]")
+      ?.addEventListener("click", () => dialog.close());
+
+    // 点击遮罩区域关闭（dialog 本体之外的部分）
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>

@@ -28,10 +28,10 @@ function localizedHref(target: Lang): string {
         lang={lang}
         aria-current={lang === current ? "true" : undefined}
         class:list={[
-          "px-2 py-1 rounded-md font-semibold transition-colors",
+          "rounded-md px-2 py-1 text-sm font-semibold no-underline transition-colors",
           lang === current
             ? "text-[var(--primary)]"
-            : "text-neutral-600 dark:text-neutral-300 hover:text-[var(--primary)]",
+            : "text-text-muted hover:text-[var(--primary)]",
         ]}
       >
         {label[lang]}

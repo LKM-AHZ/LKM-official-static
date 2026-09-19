@@ -1,0 +1,251 @@
+---
+/**
+ * 全站动态背景（简朴 · 科技感）
+ *
+ * - 青蓝星座网络：节点缓慢漂移，邻近节点细线相连
+ * - 滚动视差：滚轮/滑动产生带深度差的下沉、上升冲量
+ * - 两团呼吸辉光 + 鼠标轻微视差
+ * - day / night 两套调色板，跟随 <html data-theme>
+ * - 尊重 prefers-reduced-motion（只绘制一帧静态图）、DPR ≤ 2、页面隐藏时暂停
+ *
+ * 移植自「理科迷官网-源代码」的 TechBackground.vue，去 Vue 外壳改为原生 canvas。
+ */
+---
+
+<canvas id="tech-canvas" aria-hidden="true"></canvas>
+
+<script>
+  import { onThemeChange } from "../lib/theme";
+  import type { ThemeName } from "../lib/theme";
+
+  const canvas = document.getElementById("tech-canvas") as HTMLCanvasElement | null;
+  const ctx = canvas?.getContext("2d") ?? null;
+
+  if (canvas && ctx) {
+    const c = canvas;
+    const g = ctx;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /** 调色板 */
+    function palette(theme: ThemeName) {
+      return theme === "day"
+        ? {
+            node: [36, 84, 150],
+            line: [40, 100, 190],
+            lineAlpha: 0.13,
+            glowA: "rgba(79,158,255,0.10)",
+            glowB: "rgba(127,212,255,0.09)",
+          }
+        : {
+            node: [159, 212, 255],
+            line: [127, 212, 255],
+            lineAlpha: 0.16,
+            glowA: "rgba(79,158,255,0.07)",
+            glowB: "rgba(127,212,255,0.05)",
+          };
+    }
+
+    let theme: ThemeName =
+      document.documentElement.dataset.theme === "night" ? "night" : "day";
+    let colors = palette(theme);
+
+    interface BNode {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      r: number;
+      a: number;
+      depth: number;
+    }
+
+    let w = 0;
+    let h = 0;
+    let raf = 0;
+    let running = true;
+    let t = 0;
+    let nodes: BNode[] = [];
+    const pointer = { x: 0, y: 0 };
+
+    // —— 滚动视差状态 ——
+    let impulse = 0;
+    let drift = 0;
+    let driftTarget = 0;
+    let lastScrollY = window.scrollY;
+
+    function resize(): void {
+      w = window.innerWidth;
+      h = window.innerHeight;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      c.width = w * dpr;
+      c.height = h * dpr;
+      c.style.width = `${w}px`;
+      c.style.height = `${h}px`;
+      g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const count = Math.max(36, Math.min(78, Math.floor((w * h) / 26000)));
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.14,
+        vy: (Math.random() - 0.5) * 0.14,
+        r: Math.random() * 1.4 + 0.5,
+        a: Math.random() * 0.4 + 0.25,
+        depth: Math.random() * 0.65 + 0.35,
+      }));
+    }
+
+    /** 循环回绕：让节点在视差偏移后仍铺满屏幕 */
+    function wrap(v: number, min: number, max: number): number {
+      const span = max - min;
+      let x = (v - min) % span;
+      if (x < 0) x += span;
+      return min + x;
+    }
+
+    function draw(): void {
+      t += 0.004;
+
+      // 冲量衰减 + 滚动位移缓动跟随（下沉/上升）
+      impulse *= 0.92;
+      drift += (driftTarget - drift) * 0.08;
+      const parallax = drift * 0.5 + impulse * 16;
+
+      g.clearRect(0, 0, w, h);
+
+      // 呼吸辉光（两团，缓慢移动，带轻微视差）
+      const glowShift = parallax * 0.12;
+      const gx1 = w * 0.22 + Math.sin(t * 0.7) * w * 0.04 + pointer.x * 12;
+      const gy1 = wrap(
+        h * 0.28 + Math.cos(t * 0.5) * h * 0.04 + pointer.y * 8 - glowShift,
+        -h * 0.3,
+        h * 1.3,
+      );
+      const g1 = g.createRadialGradient(
+        gx1,
+        gy1,
+        0,
+        gx1,
+        gy1,
+        Math.max(w, h) * 0.5,
+      );
+      g1.addColorStop(0, colors.glowA);
+      g1.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = g1;
+      g.fillRect(0, 0, w, h);
+
+      const gx2 = w * 0.8 + Math.cos(t * 0.6) * w * 0.03 - pointer.x * 10;
+      const gy2 = wrap(
+        h * 0.7 + Math.sin(t * 0.45) * h * 0.03 - pointer.y * 6 - glowShift * 0.7,
+        -h * 0.3,
+        h * 1.3,
+      );
+      const g2 = g.createRadialGradient(
+        gx2,
+        gy2,
+        0,
+        gx2,
+        gy2,
+        Math.max(w, h) * 0.42,
+      );
+      g2.addColorStop(0, colors.glowB);
+      g2.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = g2;
+      g.fillRect(0, 0, w, h);
+
+      // 节点（深度越深，随滚动沉浮越明显）
+      const view: { x: number; y: number }[] = [];
+      for (const n of nodes) {
+        n.x += n.vx;
+        n.y += n.vy;
+        if (n.x < -20) n.x = w + 20;
+        if (n.x > w + 20) n.x = -20;
+        if (n.y < -20) n.y = h + 20;
+        if (n.y > h + 20) n.y = -20;
+        const sy = wrap(n.y - parallax * n.depth, -24, h + 24);
+        view.push({ x: n.x, y: sy });
+        g.beginPath();
+        g.arc(n.x, sy, n.r, 0, Math.PI * 2);
+        g.fillStyle = `rgba(${colors.node[0]},${colors.node[1]},${colors.node[2]},${n.a})`;
+        g.fill();
+      }
+
+      // 连线（接缝处自然断开）
+      const max = 132;
+      for (let i = 0; i < view.length; i++) {
+        for (let j = i + 1; j < view.length; j++) {
+          const a = view[i];
+          const b = view[j];
+          const dx = a.x - b.x;
+          const dy = a.y - b.y;
+          const d = Math.hypot(dx, dy);
+          if (d < max) {
+            const alpha = (1 - d / max) * colors.lineAlpha;
+            g.beginPath();
+            g.moveTo(a.x, a.y);
+            g.lineTo(b.x, b.y);
+            g.strokeStyle = `rgba(${colors.line[0]},${colors.line[1]},${colors.line[2]},${alpha})`;
+            g.lineWidth = 1;
+            g.stroke();
+          }
+        }
+      }
+    }
+
+    function frame(): void {
+      if (!running) return;
+      draw();
+      raf = requestAnimationFrame(frame);
+    }
+
+    function onMove(e: PointerEvent): void {
+      pointer.x = e.clientX / window.innerWidth - 0.5;
+      pointer.y = e.clientY / window.innerHeight - 0.5;
+    }
+
+    function onWheel(e: WheelEvent): void {
+      if (reduced) return;
+      const push = Math.max(-120, Math.min(120, e.deltaY)) * 0.02;
+      impulse = Math.max(-6, Math.min(6, impulse + push));
+    }
+
+    function onScroll(): void {
+      const y = window.scrollY;
+      const dy = y - lastScrollY;
+      lastScrollY = y;
+      driftTarget = y * 0.14;
+      if (!reduced) {
+        impulse = Math.max(-6, Math.min(6, impulse + dy * 0.02));
+      }
+    }
+
+    function onVisibility(): void {
+      running = !document.hidden;
+      if (running) {
+        raf = requestAnimationFrame(frame);
+      } else {
+        cancelAnimationFrame(raf);
+      }
+    }
+
+    onThemeChange((next) => {
+      theme = next;
+      colors = palette(theme);
+      if (reduced) draw();
+    });
+
+    resize();
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("wheel", onWheel, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    document.addEventListener("visibilitychange", onVisibility);
+
+    if (reduced) {
+      // 静态帧：只画一次，不做任何循环
+      running = false;
+      draw();
+    } else {
+      frame();
+    }
+  }
+</script>

@@ -1,0 +1,213 @@
+---
+import Icon from "./Icon.astro";
+import BrandMark from "./BrandMark.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import LanguageSwitcher from "./LanguageSwitcher.astro";
+import { SITE_NAME } from "../data/config";
+import { t } from "../i18n/index";
+import type { Lang, TranslationKey } from "../i18n/index";
+import { langUrl } from "../i18n/paths";
+
+/**
+ * 悬浮胶囊导航（fixed）。
+ * 状态（滚动加深、移动面板开合）与主题切换改由原生脚本驱动。
+ */
+const lang = (Astro.currentLocale ?? "zh") as Lang;
+
+/** 当前页（已剥离语言前缀），用于导航激活态 */
+const currentPath =
+  Astro.url.pathname.replace(/^\/(zh|en)(?=\/|$)/, "") || "/";
+
+const navLinks: { href: string; key: TranslationKey }[] = [
+  { href: "/", key: "common.nav_home" },
+  { href: "/news", key: "common.nav_articles" },
+  { href: "/about", key: "common.nav_about" },
+  { href: "/team", key: "common.nav_team" },
+];
+
+const communityHref = langUrl(lang, "/communities");
+const communityLabel = t(lang, "common.nav_communities");
+const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
+---
+
+<nav
+  id="navbar"
+  class="fixed inset-x-0 top-0 z-[9999] pt-4"
+  aria-label={t(lang, "common.aria.main_nav")}
+>
+  <div
+    class="nav-shell container-x flex items-center justify-between rounded-full px-5 py-3"
+    data-nav-shell
+  >
+    <a
+      href={langUrl(lang, "/")}
+      class="flex items-center gap-2.5 no-underline"
+      data-nav-home
+    >
+      <BrandMark size={38} />
+      <span class="text-lg font-bold tracking-wide text-deep-text">
+        {brandLabel}
+        <span class="text-[var(--primary)]">LKM</span>
+      </span>
+    </a>
+
+    <div class="hidden items-center gap-6 md:flex">
+      <div class="flex items-center gap-6">
+        {
+          navLinks.map((l) => (
+            <a
+              href={langUrl(lang, l.href)}
+              class:list={[
+                "group relative text-sm no-underline transition-colors",
+                currentPath === l.href
+                  ? "text-[var(--primary)]"
+                  : "text-text-muted hover:text-deep-text",
+              ]}
+              aria-current={currentPath === l.href ? "page" : undefined}
+            >
+              {t(lang, l.key)}
+              <span class="nav-underline" aria-hidden="true" />
+            </a>
+          ))
+        }
+      </div>
+
+      <ThemeToggle />
+
+      <a
+        href={communityHref}
+        class="btn-ghost-pill"
+        aria-label={communityLabel}
+      >
+        {communityLabel}
+        <Icon name="arrowRight" class="w-4 h-4" />
+      </a>
+
+      <LanguageSwitcher />
+    </div>
+
+    <div class="flex items-center gap-2 md:hidden">
+      <ThemeToggle />
+      <button
+        type="button"
+        class="flex h-10 w-10 items-center justify-center rounded-lg text-deep-text"
+        aria-label={t(lang, "common.aria.menu")}
+        aria-expanded="false"
+        aria-controls="nav-mobile-panel"
+        data-nav-toggle
+      >
+        <span data-nav-icon="open" class="flex">
+          <Icon name="menu" class="w-[22px] h-[22px]" />
+        </span>
+        <span data-nav-icon="close" class="hidden">
+          <Icon name="close" class="w-[22px] h-[22px]" />
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 移动端菜单 -->
+  <div
+    id="nav-mobile-panel"
+    class="nav-mobile-panel container-x mt-1 max-h-0 rounded-2xl md:hidden"
+    data-nav-panel
+  >
+    <div class="flex flex-col gap-1 px-5 py-4">
+      {
+        navLinks.map((l) => (
+          <a
+            href={langUrl(lang, l.href)}
+            class:list={[
+              "rounded-lg px-3 py-2.5 text-sm no-underline transition-colors",
+              currentPath === l.href
+                ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
+                : "text-text-muted hover:text-deep-text",
+            ]}
+          >
+            {t(lang, l.key)}
+          </a>
+        ))
+      }
+      <a
+        href={communityHref}
+        class="rounded-lg px-3 py-2.5 text-sm text-text-muted no-underline transition-colors hover:text-deep-text"
+      >
+        {communityLabel}
+      </a>
+      <div class="mt-2 flex items-center justify-between px-3">
+        <LanguageSwitcher />
+        <a href={communityHref} class="btn btn-primary btn-sm">
+          {communityLabel}
+          <Icon name="arrowRight" class="w-4 h-4" />
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<script>
+  const shell = document.querySelector<HTMLElement>("[data-nav-shell]");
+  const toggle = document.querySelector<HTMLButtonElement>("[data-nav-toggle]");
+  const panel = document.querySelector<HTMLElement>("[data-nav-panel]");
+
+  if (shell) {
+    const onScroll = (): void => {
+      shell.classList.toggle("is-scrolled", window.scrollY > 50);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+  if (toggle && panel) {
+    const setOpen = (open: boolean): void => {
+      panel.style.maxHeight = open ? `${panel.scrollHeight}px` : "0px";
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle
+        .querySelector<HTMLElement>('[data-nav-icon="open"]')
+        ?.classList.toggle("hidden", open);
+      toggle
+        .querySelector<HTMLElement>('[data-nav-icon="close"]')
+        ?.classList.toggle("hidden", !open);
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(panel.style.maxHeight === "0px" || !panel.style.maxHeight);
+    });
+
+    document.addEventListener("click", (event) => {
+      const target = event.target as Node;
+      if (
+        panel.style.maxHeight !== "0px" &&
+        !panel.contains(target) &&
+        !toggle.contains(target)
+      ) {
+        setOpen(false);
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && panel.style.maxHeight !== "0px") {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    window.matchMedia("(min-width: 768px)").addEventListener("change", (e) => {
+      if (e.matches) setOpen(false);
+    });
+
+    setOpen(false);
+  }
+
+  // 已在首页时点「首页」应平滑回顶，而不是重新加载
+  document.querySelector<HTMLAnchorElement>("[data-nav-home]")?.addEventListener(
+    "click",
+    (event) => {
+      const path = window.location.pathname.replace(/^\/(zh|en)(?=\/|$)/, "");
+      if (path === "" || path === "/") {
+        event.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    },
+  );
+</script>

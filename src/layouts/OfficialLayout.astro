@@ -1,21 +1,24 @@
 ---
 import "../styles/main.css";
 import Icon from "../components/Icon.astro";
+import BrandMark from "../components/BrandMark.astro";
+import NavBar from "../components/NavBar.astro";
+import TechBackground from "../components/TechBackground.astro";
+import BackToTop from "../components/BackToTop.astro";
+import Seo from "../components/Seo.astro";
 import { SITE_NAME } from "../data/config"; // 品牌名不翻译，保持中文
 import { t } from "../i18n/index";
 import type { TranslationKey } from "../i18n/index";
 import { langUrl } from "../i18n/paths";
-import LanguageSwitcher from "../components/LanguageSwitcher.astro";
-import Seo from "../components/Seo.astro";
 
 /**
- * 官网首页布局（官方壳）：顶部导航 + 主内容 + Footer，无侧边栏。
- * 复刻主应用 OfficialLayout（SiteNavbar + main + Footer）的视觉。
+ * 官网首页布局（官方壳）：悬浮胶囊导航 + 科技感内容区 + 页脚，无侧边栏。
+ * 视觉移植自「理科迷官网-源代码」，内容仍取自本仓库的 i18n / data。
  */
 interface Props {
   title: string;
   description?: string;
-  /** 当前路径，用于顶栏激活态 */
+  /** 当前路径（保留以兼容既有调用方；导航激活态由 NavBar 自行从 URL 推导） */
   currentPath?: string;
   /** 分享图站点内路径或绝对 URL */
   image?: string;
@@ -26,29 +29,26 @@ interface Props {
   includeWebsiteJsonLd?: boolean;
   /** 文章页发布时间（ISO 字符串） */
   publishedTime?: string;
+  /**
+   * 首屏是否通栏顶格（首页 Hero 用）：为 true 时不给 main 留导航高度，
+   * 让 Hero 自身 min-h-screen 承接悬浮导航的遮挡。
+   */
+  overlayHero?: boolean;
 }
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 const {
   title,
   description,
-  currentPath = "/",
   image,
   type,
   noindex,
   includeWebsiteJsonLd,
   publishedTime,
+  overlayHero = false,
 } = Astro.props;
 
-// 顶栏导航（静态站现有页面）
-const navLinks: { href: string; key: TranslationKey }[] = [
-  { href: "/", key: "common.nav_home" },
-  { href: "/news", key: "common.nav_articles" },
-  { href: "/about", key: "common.nav_about" },
-  { href: "/team", key: "common.nav_team" },
-];
-
-// Footer 硬编码栏目（链接指向静态站现有页）
+// Footer 栏目（链接指向静态站现有页）
 const footerCols: {
   titleKey: TranslationKey;
   links: { textKey: TranslationKey; href: string }[];
@@ -82,12 +82,24 @@ const footerCols: {
 ---
 
 <!doctype html>
-<html lang={lang === "en" ? "en" : "zh-CN"} data-theme="light">
+<html lang={lang === "en" ? "en" : "zh-CN"} data-theme="day">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="generator" content={Astro.generator} />
+    {/* 首屏前恢复主题，避免夜间用户先看到白天再闪一下 */}
+    <script is:inline>
+      (function () {
+        let theme = "day";
+        try {
+          if (localStorage.getItem("likemi-theme") === "night") theme = "night";
+        } catch {
+          /* 隐私模式：保持默认 */
+        }
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
     <Seo
       title={title}
       description={description}
@@ -98,172 +110,86 @@ const footerCols: {
       publishedTime={publishedTime}
     />
   </head>
-  <body class="bg-white text-base-content antialiased tracking-tight">
-    <div class="sticky top-0 z-50">
-      <div class="bg-white dark:bg-[oklch(0.23_0.015_var(--hue))] overflow-hidden shadow-sm dark:shadow-none relative h-[4.5rem] flex items-center justify-between px-4 sm:px-6">
-        <div class="flex items-center gap-1">
-          <a href={langUrl(lang, "/")} class="rounded-lg h-[3.25rem] px-2 sm:px-5 font-bold flex items-center text-neutral-800 hover:bg-black/5 transition-colors">
-            <span class="flex flex-row items-center text-[var(--primary)] text-md">
-              <Icon name="home" class="w-7 h-7 mb-1 mr-2" />
-              {SITE_NAME}
-            </span>
-          </a>
-        </div>
+  <body class="tech-theme">
+    <TechBackground />
 
-        <nav class="hidden md:flex absolute left-[48%] top-1/2 -translate-x-1/2 -translate-y-1/2 items-center" aria-label={t(lang, "common.aria.main_nav")}>
-          {
-            navLinks.map((l) => (
-              <a
-                href={langUrl(lang, l.href)}
-                class:list={[
-                  "rounded-lg h-11 font-bold px-10 active:scale-95 flex items-center gap-1 transition-colors",
-                  currentPath === l.href
-                    ? "text-[var(--primary)] hover:bg-black/5"
-                    : "text-neutral-700 hover:text-[var(--primary)] hover:bg-black/5",
-                ]}
-              >
-                {t(lang, l.key)}
-              </a>
-            ))
-          }
-        </nav>
+    <header>
+      <NavBar />
+    </header>
 
-        <div class="flex items-center gap-2">
-          <details class="md:hidden relative" data-mobile-nav>
-            <summary
-              class="list-none rounded-lg h-11 w-11 flex items-center justify-center text-neutral-700 hover:bg-black/5 transition-colors cursor-pointer"
-              aria-label={t(lang, "common.aria.menu")}
-            >
-              <span data-menu-icon><Icon name="menu" class="w-6 h-6" /></span>
-              <span data-close-icon class="hidden"><Icon name="close" class="w-6 h-6" /></span>
-            </summary>
-            <nav
-              class="fixed right-4 top-[4.75rem] z-50 w-56 rounded-xl border border-surface-3 bg-white dark:bg-[oklch(0.23_0.015_var(--hue))] shadow-lg p-2 flex flex-col"
-              aria-label={t(lang, "common.aria.mobile_nav")}
-            >
-              {
-                navLinks.map((l) => (
-                  <a
-                    href={langUrl(lang, l.href)}
-                    class:list={[
-                      "rounded-lg px-3 py-2.5 font-bold text-sm transition-colors",
-                      currentPath === l.href
-                        ? "text-[var(--primary)] bg-black/5"
-                        : "text-neutral-700 dark:text-neutral-200 hover:text-[var(--primary)] hover:bg-black/5",
-                    ]}
-                  >
-                    {t(lang, l.key)}
-                  </a>
-                ))
-              }
-              <a
-                href={langUrl(lang, "/communities")}
-                class="rounded-lg px-3 py-2.5 font-bold text-sm text-neutral-700 dark:text-neutral-200 hover:text-[var(--primary)] hover:bg-black/5 transition-colors"
-              >
-                {t(lang, "common.nav_communities")}
-              </a>
-            </nav>
-          </details>
-          <LanguageSwitcher />
-        </div>
-      </div>
-    </div>
-
-    <main>
+    <main class={overlayHero ? undefined : "nav-offset"}>
       <slot />
     </main>
 
-    {/* 页脚（复刻主应用 Footer） */}
-    <footer class="relative border-t border-surface-3 not-prose">
-      <div class="absolute inset-0 pointer-events-none bg-white dark:bg-[oklch(0.23_0.015_var(--hue))]" aria-hidden="true"></div>
-      <div class="relative max-w-7xl mx-auto px-4 md:px-6 text-text-muted">
-        <div class="grid grid-cols-12 gap-4 gap-y-8 sm:gap-8 py-[64px]">
-          <div class="col-span-12 lg:col-span-4">
-            <div class="mb-2">
-              <a href={langUrl(lang, "/")} class="inline-block text-[17px] font-semibold text-deep-text no-underline">
-                {SITE_NAME}
-              </a>
+    <footer class="relative border-t border-[var(--card-edge)] py-14">
+      <div class="container-x">
+        <div class="flex flex-col justify-between gap-10 md:flex-row">
+          <div class="md:max-w-sm">
+            <div class="mb-4 flex items-center gap-2.5">
+              <BrandMark size={34} />
+              <span class="text-xl font-bold text-deep-text"
+                >{SITE_NAME} LKM</span
+              >
             </div>
-            <div class="text-[12px] text-text-muted">
-              {t(lang, "common.footer.copyright")}
+            <p class="text-sm leading-7 text-text-muted">
+              {t(lang, "common.site.description")}
+            </p>
+            <p class="mt-3 text-sm text-text-muted">
+              {t(lang, "common.footer.tagline")}
+            </p>
+            <div class="mt-5 flex items-center gap-3">
+              <a
+                class="social-icon"
+                aria-label={t(lang, "common.aria.github")}
+                href="https://github.com/LKM-AHZ"
+                target="_blank"
+                rel="noopener"
+              >
+                <Icon name="github" class="w-5 h-[18px]" />
+              </a>
+              <a
+                class="social-icon"
+                aria-label={t(lang, "common.aria.rss")}
+                href={langUrl(lang, "/")}
+              >
+                <Icon name="rss" class="w-5 h-[18px]" />
+              </a>
             </div>
           </div>
-          {
-            footerCols.map((col) => (
-              <div class="col-span-12 sm:col-span-6 md:col-span-3 lg:col-span-2">
-                <div class="text-[14px] font-semibold text-deep-text mb-2">{t(lang, col.titleKey)}</div>
-                <ul class="text-[12px] leading-[2.41]">
-                  {col.links.map((l) => (
-                    <li class="mb-2">
-                      <a class="text-[12px] text-text-muted hover:text-deep-text hover:underline transition duration-150 ease-in-out" href={langUrl(lang, l.href)}>
-                        {t(lang, l.textKey)}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))
-          }
+
+          <div class="grid grid-cols-2 gap-8 sm:grid-cols-3">
+            {
+              footerCols.map((col) => (
+                <div>
+                  <h4 class="mb-4 font-bold text-deep-text">
+                    {t(lang, col.titleKey)}
+                  </h4>
+                  <ul class="space-y-2 text-sm">
+                    {col.links.map((l) => (
+                      <li>
+                        <a
+                          href={langUrl(lang, l.href)}
+                          class="no-underline text-text-muted transition-colors hover:text-deep-text"
+                        >
+                          {t(lang, l.textKey)}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            }
+          </div>
         </div>
-        <div class="md:flex md:items-center md:justify-between py-6 md:py-8 border-t border-surface-3">
-          <ul class="flex mb-4 md:order-1 -ml-2 md:ml-4 md:mb-0">
-            <li>
-              <a class="text-text-muted hover:text-deep-text focus:outline-none focus:ring-2 rounded-[8px] text-sm p-2.5 inline-flex items-center" aria-label={t(lang, "common.aria.github")} href="https://github.com/LKM-AHZ" target="_blank" rel="noopener">
-                <Icon name="github" class="w-5 h-5" />
-              </a>
-            </li>
-            <li>
-              <a class="text-text-muted hover:text-deep-text focus:outline-none focus:ring-2 rounded-[8px] text-sm p-2.5 inline-flex items-center" aria-label={t(lang, "common.aria.rss")} href={langUrl(lang, "/")}>
-                <Icon name="rss" class="w-5 h-5" />
-              </a>
-            </li>
-          </ul>
-          <div class="text-[12px] mr-4 text-text-muted">{t(lang, "common.footer.copyright")}</div>
+
+        <div
+          class="mt-12 border-t border-[var(--card-edge)] pt-8 text-center text-sm text-text-muted"
+        >
+          {t(lang, "common.footer.copyright")}
         </div>
       </div>
     </footer>
 
-    <style>
-      [data-mobile-nav] summary {
-        list-style: none;
-      }
-      [data-mobile-nav] summary::-webkit-details-marker {
-        display: none;
-      }
-    </style>
-
-    <script>
-      // 移动端导航：details/summary 原生可键盘操作，这里只补 Esc/点外关闭与断点收起
-      document.addEventListener("DOMContentLoaded", () => {
-        const details = document.querySelector<HTMLDetailsElement>("[data-mobile-nav]");
-        if (!details) return;
-        const summary = details.querySelector("summary");
-        const menuIcon = details.querySelector("[data-menu-icon]");
-        const closeIcon = details.querySelector("[data-close-icon]");
-
-        const sync = () => {
-          const open = details.open;
-          menuIcon?.classList.toggle("hidden", open);
-          closeIcon?.classList.toggle("hidden", !open);
-        };
-        details.addEventListener("toggle", sync);
-        sync();
-
-        document.addEventListener("click", (e) => {
-          if (details.open && !details.contains(e.target as Node)) details.open = false;
-        });
-        details.addEventListener("keydown", (e) => {
-          if (e.key === "Escape" && details.open) {
-            details.open = false;
-            (summary as HTMLElement | null)?.focus();
-          }
-        });
-
-        const mq = window.matchMedia("(min-width: 768px)");
-        mq.addEventListener("change", (e) => {
-          if (e.matches) details.open = false;
-        });
-      });
-    </script>
+    <BackToTop />
   </body>
 </html>

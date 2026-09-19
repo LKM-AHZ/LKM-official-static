@@ -1,0 +1,165 @@
+---
+import Icon from "./Icon.astro";
+import { t } from "../i18n/index";
+import type { Lang } from "../i18n/index";
+
+/**
+ * 首屏：打字机轮播 + 滚动渐隐。
+ *
+ * 视觉移植自「理科迷官网-源代码」的 HeroTyper.vue：渐变遮罩 + 打字光标 +
+ * 滚动时把进度写进 --hero-progress（驱动 body::after 侧辉光），
+ * 同时让首屏内容随之下沉淡出。
+ */
+interface Props {
+  title: string;
+  subtitle: string;
+  /** 副标题下方的正文（可省略） */
+  lead?: string;
+  /** 「了解更多」按钮的目标锚点（不含 #） */
+  nextAnchor?: string;
+  ctaHref?: string;
+  ctaLabel?: string;
+}
+
+const lang = (Astro.currentLocale ?? "zh") as Lang;
+const {
+  title,
+  subtitle,
+  lead,
+  nextAnchor = "resources-entry",
+  ctaHref,
+  ctaLabel,
+} = Astro.props;
+
+const typingTexts = [title, subtitle].filter(Boolean);
+---
+
+<header
+  id="hero-stage"
+  class="relative flex min-h-screen items-center justify-center overflow-hidden"
+  data-hero
+  data-typing-texts={JSON.stringify(typingTexts)}
+  data-hero-anchor={nextAnchor}
+>
+  <div class="hero-overlay absolute inset-0 z-0"></div>
+  <div class="hero-fade pointer-events-none absolute inset-0 z-0"></div>
+
+  <div class="container-x relative z-10 px-4 text-center" data-hero-inner>
+    <p
+      class="animate-fadeInUp mb-5 text-sm tracking-[.35em] text-[var(--primary)]"
+      style="animation-delay:.05s"
+    >
+      LI KE MI · SCIENCE COMMUNITY
+    </p>
+    <h1
+      class="text-shadow mb-6 text-[clamp(2.2rem,5.2vw,4.2rem)] font-bold leading-tight text-deep-text"
+    >
+      <span data-typing-content>&nbsp;</span><span class="typing-cursor"
+        >|</span
+      >
+    </h1>
+    <p
+      class="animate-fadeInUp mx-auto mb-4 max-w-2xl text-[clamp(1rem,2vw,1.25rem)] text-text-muted"
+      style="animation-delay:.2s"
+    >
+      {lead}
+    </p>
+    <p
+      class="animate-fadeInUp mx-auto mb-10 text-sm tracking-widest text-text-muted"
+      style="animation-delay:.3s"
+    >
+      SCIENCE · TECHNOLOGY · FUTURE
+    </p>
+    <div class="animate-fadeInUp" style="animation-delay:.4s">
+      {
+        ctaHref ? (
+          <a href={ctaHref} class="btn btn-primary btn-lg">
+            {ctaLabel ?? t(lang, "home.cta_communities")}
+            <Icon name="arrowRight" class="w-5 h-5" />
+          </a>
+        ) : (
+          <button type="button" class="btn btn-primary btn-lg" data-hero-next>
+            {t(lang, "home.hero_scroll")}
+            <Icon name="arrowDown" class="w-5 h-5" />
+          </button>
+        )
+      }
+    </div>
+  </div>
+
+  <div
+    class="bounce-soft absolute bottom-10 left-1/2 z-10 text-2xl text-text-muted"
+  >
+    <Icon name="chevronDown" class="w-6 h-6" />
+  </div>
+</header>
+
+<script>
+  const hero = document.querySelector<HTMLElement>("[data-hero]");
+  const inner = document.querySelector<HTMLElement>("[data-hero-inner]");
+  const target = document.querySelector<HTMLElement>("[data-typing-content]");
+
+  if (hero && inner && target) {
+    const el = target;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const texts: string[] = JSON.parse(hero.dataset.typingTexts ?? "[]");
+
+    if (reduced || texts.length === 0) {
+      el.textContent = texts[0] ?? "";
+    } else {
+      // 打字机轮播：90ms 打 / 45ms 删 / 2s 停顿
+      let index = 0;
+      let char = 0;
+      let deleting = false;
+
+      function tick(): void {
+        const text = texts[index];
+        if (!deleting) {
+          char += 1;
+          el.textContent = text.slice(0, char);
+          if (char === text.length) {
+            deleting = true;
+            setTimeout(tick, 2000);
+            return;
+          }
+          setTimeout(tick, 90);
+        } else {
+          char -= 1;
+          el.textContent = text.slice(0, char);
+          if (char === 0) {
+            deleting = false;
+            index = (index + 1) % texts.length;
+            setTimeout(tick, 600);
+            return;
+          }
+          setTimeout(tick, 45);
+        }
+      }
+      setTimeout(tick, 700);
+    }
+
+    // 首屏随滚动渐隐，并把进度写进 --hero-progress
+    const onScroll = (): void => {
+      const p = Math.min(window.scrollY / (window.innerHeight * 0.72), 1);
+      document.documentElement.style.setProperty(
+        "--hero-progress",
+        p.toFixed(3),
+      );
+      inner.style.opacity = String(1 - p * 0.55);
+      if (!reduced) {
+        inner.style.transform = `translateY(${p * -26}px)`;
+      }
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+  document.querySelector<HTMLElement>("[data-hero-next]")?.addEventListener(
+    "click",
+    () => {
+      const id = hero?.dataset.heroAnchor;
+      if (!id) return;
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    },
+  );
+</script>

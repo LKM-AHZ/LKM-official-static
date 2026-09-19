@@ -1,38 +1,40 @@
 ---
 /**
- * 带 scroll-mt 锚点 id 的 section + 下划线居中标题 + desc 提示框 + 默认三列/自定义网格。
+ * 带锚点 id 的 section + 下划线居中标题 + desc 提示框 + 默认三列/自定义网格。
  */
 interface Props {
   id: string;
   title: string;
-  /** 标题下划线颜色 */
-  borderColor: string;
   desc?: string;
   /** true 时跳过默认三列网格，由 slot 自定义布局（子分组等） */
   noGrid?: boolean;
 }
 
-const { id, title, borderColor, desc, noGrid = false } = Astro.props;
+const { id, title, desc, noGrid = false } = Astro.props;
 ---
 
-<section id={id} class="relative not-prose scroll-mt-[72px]">
-  <div class="relative mx-auto max-w-7xl px-4 md:px-6 py-16 md:py-20 lg:py-24">
-    <h2 class="text-xl font-bold mb-5 text-center">
-      <span class="border-b-2 pb-1" style={`border-color: ${borderColor}`}>
+<section id={id} class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+  <div class="container-x">
+    <h2 class="mb-14 text-center">
+      <span class="title-underline font-heading text-xl font-bold text-deep-text">
         {title}
       </span>
     </h2>
-    {desc && (
-      <p class="max-w-3xl mx-auto mb-9 px-6 py-4 bg-page-bg border border-surface-3 rounded-[8px] text-center text-[14px] text-text-muted leading-relaxed card-hover">
-        {desc}
-      </p>
-    )}
-    {noGrid ? (
-      <slot />
-    ) : (
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    {
+      desc && (
+        <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-[14px] leading-relaxed text-text-muted">
+          {desc}
+        </p>
+      )
+    }
+    {
+      noGrid ? (
         <slot />
-      </div>
-    )}
+      ) : (
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <slot />
+        </div>
+      )
+    }
   </div>
 </section>

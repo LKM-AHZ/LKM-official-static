@@ -1,0 +1,415 @@
+/* ============================================================
+   科技感外壳：页面背景分层、玻璃工具类、导航/回到顶部/主题切换
+   取值全部来自 variables.css 的语义 token（day / night 两套）
+   —— 移植自「理科迷官网-源代码」的 global.css，去掉其依赖
+   Tailwind 类名字面量的白天覆盖规则，改由 token 直接保证。
+   ============================================================ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    background: var(--html-bg);
+    /* 原生滚动条替代 OverlayScrollbars */
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-bg) transparent;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-bg);
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-bg-hover);
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:active {
+    background: var(--scrollbar-bg-active);
+    background-clip: content-box;
+  }
+
+  ::selection {
+    background: var(--selection-bg);
+  }
+}
+
+@layer components {
+  /* ---------- 页面背景分层 ---------- */
+  body.tech-theme {
+    position: relative;
+    margin: 0;
+    min-height: 100vh;
+    color: var(--base-content);
+    background: var(--body-bg);
+    background-attachment: fixed;
+    transition:
+      background 500ms ease,
+      color 400ms ease;
+    overflow-x: hidden;
+  }
+
+  /* 细网格层：简朴、低存在感 */
+  body.tech-theme::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: var(--grid-opacity);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(circle at center, black 38%, transparent 88%);
+    transition: opacity 400ms ease;
+  }
+
+  /* 两侧辉光：透明度随首屏滚动进度变化 */
+  body.tech-theme::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background: linear-gradient(
+      90deg,
+      var(--side-glow),
+      transparent 32%,
+      transparent 68%,
+      var(--side-glow)
+    );
+    opacity: calc(0.1 + var(--hero-progress) * 0.12);
+  }
+
+  #tech-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  body.tech-theme > header,
+  body.tech-theme > main,
+  body.tech-theme > footer {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* 悬浮导航要盖在 main 之上：header 自身建立更高的层叠上下文，
+     这样 NavBar 的 z-index 才能在整页范围内生效 */
+  body.tech-theme > header {
+    z-index: 50;
+  }
+
+  body.tech-theme a,
+  body.tech-theme button {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* ---------- 布局工具 ---------- */
+  .container-x {
+    width: min(1160px, calc(100% - 2rem));
+    margin-inline: auto;
+  }
+
+  .section-padding {
+    padding-block: 3rem;
+  }
+  @media (min-width: 768px) {
+    .section-padding {
+      padding-block: 5rem;
+    }
+  }
+
+  .nav-offset {
+    padding-top: var(--nav-h);
+  }
+
+  .text-shadow {
+    text-shadow: var(--hero-text-shadow);
+  }
+
+  /* 标题下划线：渐变细线 + 微光 */
+  .title-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .title-underline::after {
+    content: "";
+    position: absolute;
+    bottom: -0.75rem;
+    left: 18%;
+    width: 64%;
+    height: 2px;
+    border-radius: 9999px;
+    background: var(--title-line);
+    box-shadow: var(--title-glow);
+  }
+
+  /* 内容区块玻璃底板 */
+  main section {
+    position: relative;
+  }
+  .section-panel {
+    position: relative;
+  }
+  .section-panel::before {
+    content: "";
+    position: absolute;
+    inset: 1rem;
+    border-radius: 2rem;
+    background: var(--section-bg);
+    border: 1px solid var(--section-edge);
+    box-shadow: var(--section-shadow);
+    pointer-events: none;
+    transition:
+      background 0.4s ease,
+      border-color 0.4s ease;
+  }
+  .section-panel > .container-x {
+    position: relative;
+    z-index: 1;
+  }
+  @media (max-width: 767px) {
+    .section-panel::before {
+      inset: 0.55rem;
+      border-radius: 1.5rem;
+    }
+  }
+
+  /* ---------- 小组件 ---------- */
+  .icon-bubble {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 9999px;
+    color: var(--primary);
+    background: var(--icon-bubble-bg);
+    border: 1px solid var(--icon-bubble-edge);
+    box-shadow:
+      inset 0 0 24px rgba(91, 184, 255, 0.1),
+      0 8px 24px rgba(0, 0, 0, 0.08);
+  }
+
+  .social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 9999px;
+    color: var(--primary);
+    border: 1px solid var(--social-edge);
+    background: var(--social-bg);
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .social-icon:hover {
+    background: var(--social-hover-bg);
+    border-color: var(--primary);
+    color: var(--social-hover-text);
+    transform: translateY(-3px);
+  }
+
+  /* 幽灵胶囊按钮（与 .btn 体系并存，供不受 .btn 约束的场景使用） */
+  .btn-ghost-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.5rem;
+    border-radius: 9999px;
+    color: var(--ghost-text);
+    background: var(--ghost-bg);
+    border: 1px solid var(--ghost-edge);
+    backdrop-filter: blur(14px);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: all 0.3s ease;
+  }
+  .btn-ghost-pill:hover {
+    border-color: var(--ghost-hover-edge);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- 悬浮导航 ---------- */
+  .nav-shell {
+    border: 1px solid var(--nav-edge);
+    background: var(--nav-bg);
+    box-shadow: var(--nav-shadow);
+    backdrop-filter: blur(18px);
+    transition:
+      background 0.4s ease,
+      border-color 0.4s ease,
+      box-shadow 0.4s ease;
+  }
+  .nav-shell.is-scrolled {
+    background: var(--nav-bg-scrolled);
+  }
+
+  .nav-mobile-panel {
+    border: 1px solid var(--nav-edge);
+    background: var(--nav-mobile-bg);
+    backdrop-filter: blur(18px);
+    overflow: hidden;
+    transition:
+      max-height 0.3s ease,
+      background 0.4s ease;
+  }
+
+  /* 导航链接下划线（hover 渐显） */
+  .nav-underline {
+    position: absolute;
+    bottom: -0.375rem;
+    left: 50%;
+    height: 1px;
+    width: 0;
+    transform: translateX(-50%);
+    background: linear-gradient(90deg, #7fd4ff, #b9c8ff);
+    box-shadow: 0 0 8px rgba(127, 212, 255, 0.6);
+    transition: width 0.3s ease;
+  }
+  .group:hover .nav-underline,
+  a:focus-visible .nav-underline {
+    width: 72%;
+  }
+
+  .back-top {
+    border: 1px solid var(--backtop-edge);
+    background: var(--backtop-bg);
+    color: var(--primary);
+    backdrop-filter: blur(12px);
+    transition:
+      background 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease,
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  .back-top:hover {
+    background: var(--social-hover-bg);
+    color: var(--primary);
+  }
+
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 9999px;
+    color: var(--ghost-text);
+    border: 1px solid var(--ghost-edge);
+    background: var(--ghost-bg);
+    cursor: pointer;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+  .theme-toggle:hover {
+    transform: translateY(-1px);
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  /* ---------- 首屏遮罩 ---------- */
+  .hero-overlay {
+    background: var(--hero-overlay);
+    transition: background 0.4s ease;
+  }
+  .hero-fade {
+    background: var(--hero-fade);
+    transition: background 0.4s ease;
+  }
+
+  /* ---------- 影像灯箱 ---------- */
+  .lightbox::backdrop {
+    background: rgba(4, 8, 16, 0.82);
+    backdrop-filter: blur(6px);
+  }
+  .lightbox[open] {
+    animation: fadeIn 0.25s ease-out;
+  }
+}
+
+/* ---------- 动画 ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes bounceSoft {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, 10px);
+  }
+}
+
+@layer components {
+  .animate-fadeInUp {
+    animation: fadeInUp 0.8s ease-out forwards;
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+  .typing-cursor {
+    display: inline-block;
+    animation: blink 0.7s infinite;
+    color: var(--primary);
+  }
+  .bounce-soft {
+    animation: bounceSoft 2s ease-in-out infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

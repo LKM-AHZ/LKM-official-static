@@ -6,6 +6,7 @@
 import { getAbsoluteLocaleUrl } from "astro:i18n";
 import { SITE_DESCRIPTION, SITE_NAME } from "../data/config";
 import { SUPPORTED_LANGS } from "../i18n/index";
+import { THEME_COLORS } from "../lib/theme";
 
 interface Props {
   title: string;
@@ -93,7 +94,8 @@ const articleJsonLd =
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
 <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
-<meta name="theme-color" content="#6C2AD8" />
+<!-- 初始值对应默认的白天主题；ThemeToggle 的脚本会在切主题时改写 -->
+<meta name="theme-color" content={THEME_COLORS.day} />
 {description && <meta name="description" content={description} />}
 
 {

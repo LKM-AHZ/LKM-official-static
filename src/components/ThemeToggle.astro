@@ -1,0 +1,85 @@
+---
+import Icon from "./Icon.astro";
+import { t } from "../i18n/index";
+import type { Lang } from "../i18n/index";
+
+/**
+ * 日夜主题切换按钮。
+ *
+ * 图标切换完全交给 CSS（依据 <html data-theme>），首屏即正确、无闪烁；
+ * 脚本只负责点击写入主题与同步 aria-label / title。
+ */
+interface Props {
+  class?: string;
+}
+
+const lang = (Astro.currentLocale ?? "zh") as Lang;
+const { class: className } = Astro.props;
+const toNight = t(lang, "common.theme_to_night");
+const toDay = t(lang, "common.theme_to_day");
+---
+
+<button
+  type="button"
+  class:list={["theme-toggle", className]}
+  data-theme-toggle
+  data-label-to-night={toNight}
+  data-label-to-day={toDay}
+  aria-label={toNight}
+  title={toNight}
+>
+  <span data-theme-icon="day" class="flex items-center justify-center">
+    <Icon name="moon" class="w-[18px] h-[18px]" />
+  </span>
+  <span data-theme-icon="night" class="flex items-center justify-center">
+    <Icon name="sun" class="w-[18px] h-[18px]" />
+  </span>
+</button>
+
+<style>
+  [data-theme-icon="night"] {
+    display: none;
+  }
+  :global([data-theme="night"]) [data-theme-icon="day"] {
+    display: none;
+  }
+  :global([data-theme="night"]) [data-theme-icon="night"] {
+    display: flex;
+  }
+</style>
+
+<script>
+  import {
+    applyTheme,
+    getTheme,
+    onThemeChange,
+    THEME_COLORS,
+  } from "../lib/theme";
+
+  function syncLabels(): void {
+    const theme = getTheme();
+    // 首屏防闪脚本只能改 data-theme，这里补上地址栏配色
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", THEME_COLORS[theme]);
+    document
+      .querySelectorAll<HTMLElement>("[data-theme-toggle]")
+      .forEach((btn) => {
+        const label =
+          theme === "day" ? btn.dataset.labelToNight : btn.dataset.labelToDay;
+        if (!label) return;
+        btn.setAttribute("aria-label", label);
+        btn.setAttribute("title", label);
+      });
+  }
+
+  document
+    .querySelectorAll<HTMLElement>("[data-theme-toggle]")
+    .forEach((btn) => {
+      btn.addEventListener("click", () => {
+        applyTheme(getTheme() === "day" ? "night" : "day");
+      });
+    });
+
+  onThemeChange(syncLabels);
+  syncLabels();
+</script>

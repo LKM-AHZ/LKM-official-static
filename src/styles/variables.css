@@ -4,67 +4,100 @@
   --content-delay: 150ms;
   --page-width: 1280px;
 
-  /* 统一动画 Token */
+  /* 统一动画 Token（--ease 为 .btn / .ct-arrow 的默认缓动） */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
   --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 300ms;
+
+  /* 顶栏高度（悬浮胶囊导航 + 上边距），主内容据此留白 */
+  --nav-h: 88px;
+
+  /* 首屏滚动进度：由 HeroTyper 写入，驱动 body::after 侧辉光 */
+  --hero-progress: 0;
 }
 
-/* ===== 浅色主题 ===== */
-:root {
+/* ============================================================
+   白天主题（默认）
+   设计语言：青蓝科技感 + 玻璃拟态；取值源自「理科迷官网-源代码」day 调色板
+   ============================================================ */
+:root,
+[data-theme="day"] {
+  color-scheme: light;
+
   /* 基础语义色 */
   --base-100: #ffffff;
-  --base-200: #f5f5f7;
-  --base-300: #e0e0e0;
-  --base-content: #1d1d1f;
-  --neutral: #7a7a7a;
+  --base-200: #eef4fb;
+  --base-300: #dbe6f3;
+  --base-content: #10233d;
+  --neutral: #7a8ba3;
   --neutral-content: #ffffff;
-  --primary-content: #ffffff;
 
-  /* fuwari 原有变量 */
-  /* L=0.56 保证白字/白底正文均达到 WCAG AA(≥4.5) */
-  --primary: oklch(0.56 0.15 var(--hue, 250));
-  --page-bg: oklch(0.95 0.01 var(--hue, 250));
-  --card-bg: white;
-  --surface-3: oklch(0.9 0.01 var(--hue, 250));
-  --btn-content: oklch(0.55 0.12 var(--hue, 250));
-  --btn-regular-bg: oklch(0.95 0.025 var(--hue, 250));
-  --btn-regular-bg-hover: oklch(0.9 0.05 var(--hue, 250));
-  --btn-regular-bg-active: oklch(0.85 0.08 var(--hue, 250));
-  --btn-plain-bg-hover: oklch(0.95 0.025 var(--hue, 250));
-  --btn-plain-bg-active: oklch(0.98 0.01 var(--hue, 250));
-  --btn-card-bg-hover: oklch(0.98 0.005 var(--hue, 250));
-  --btn-card-bg-active: oklch(0.9 0.03 var(--hue, 250));
+  /* 页面与卡片 */
+  --page-bg: #e8f0f9;
+  --card-bg: #ffffff;
+  --surface-3: rgba(70, 120, 190, 0.18);
+  --deep-text: #10233d;
+  --text-muted: rgba(16, 35, 61, 0.58);
+
+  /* 主色 / 强调 */
+  --hue: 230;
+  --primary: #0a6fc2;
+  --primary-content: #ffffff;
+  --on-primary: #ffffff;
+  --secondary: #5b5bd6;
+  --on-secondary: #ffffff;
+
+  /* 语义色 */
+  --info: #0a6fc2;
+  --on-info: #ffffff;
+  --success: #0f8a5f;
+  --on-success: #ffffff;
+  --warning: #a86400;
+  --on-warning: #ffffff;
+  --error: #c0392b;
+  --on-error: #ffffff;
+
+  /* 按钮态（旧组件兼容） */
+  --btn-content: #0a6fc2;
+  --btn-regular-bg: #eef4fb;
+  --btn-regular-bg-hover: #e2ecf8;
+  --btn-regular-bg-active: #d5e4f5;
+  --btn-plain-bg-hover: #eef4fb;
+  --btn-plain-bg-active: #f6fafe;
+  --btn-card-bg-hover: #f6fafe;
+  --btn-card-bg-active: #e8f0f9;
   --enter-btn-bg: var(--btn-regular-bg);
   --enter-btn-bg-hover: var(--btn-regular-bg-hover);
   --enter-btn-bg-active: var(--btn-regular-bg-active);
-  --deep-text: oklch(0.25 0.02 var(--hue, 250));
-  --title-active: oklch(0.6 0.1 var(--hue, 250));
-  --line-divider: rgba(0, 0, 0, 0.08);
-  --line-color: rgba(0, 0, 0, 0.1);
-  --meta-divider: rgba(0, 0, 0, 0.2);
+
+  /* 分隔线 / 代码 / 选择 */
+  --line-divider: rgba(31, 70, 130, 0.1);
+  --line-color: rgba(31, 70, 130, 0.14);
+  --meta-divider: rgba(31, 70, 130, 0.24);
   --inline-code-bg: var(--btn-regular-bg);
   --inline-code-color: var(--btn-content);
-  --selection-bg: oklch(0.9 0.05 var(--hue, 250));
-  --codeblock-selection: oklch(0.4 0.08 var(--hue, 250));
-  --codeblock-bg: oklch(0.17 0.015 var(--hue, 250));
-  --codeblock-topbar-bg: oklch(0.3 0.02 var(--hue, 250));
-  --license-block-bg: rgba(0, 0, 0, 0.03);
-  --link-underline: oklch(0.93 0.04 var(--hue, 250));
-  --link-hover: oklch(0.95 0.025 var(--hue, 250));
-  --link-active: oklch(0.9 0.05 var(--hue, 250));
-  --float-panel-bg: white;
+  --selection-bg: rgba(10, 111, 194, 0.18);
+  --codeblock-selection: rgba(127, 212, 255, 0.28);
+  --codeblock-bg: #0d1424;
+  --codeblock-topbar-bg: #16203a;
+  --license-block-bg: rgba(31, 70, 130, 0.05);
+  --link-underline: rgba(10, 111, 194, 0.22);
+  --link-hover: rgba(10, 111, 194, 0.08);
+  --link-active: rgba(10, 111, 194, 0.14);
+  --float-panel-bg: #ffffff;
+  --title-active: #0a6fc2;
 
   /* 滚动条 */
-  --scrollbar-bg-light: rgba(0, 0, 0, 0.4);
-  --scrollbar-bg-hover-light: rgba(0, 0, 0, 0.5);
-  --scrollbar-bg-active-light: rgba(0, 0, 0, 0.6);
-  --scrollbar-bg-dark: rgba(255, 255, 255, 0.4);
-  --scrollbar-bg-hover-dark: rgba(255, 255, 255, 0.5);
-  --scrollbar-bg-active-dark: rgba(255, 255, 255, 0.6);
+  --scrollbar-bg-light: rgba(16, 35, 61, 0.28);
+  --scrollbar-bg-hover-light: rgba(16, 35, 61, 0.42);
+  --scrollbar-bg-active-light: rgba(16, 35, 61, 0.56);
+  --scrollbar-bg-dark: rgba(237, 244, 255, 0.3);
+  --scrollbar-bg-hover-dark: rgba(237, 244, 255, 0.46);
+  --scrollbar-bg-active-dark: rgba(237, 244, 255, 0.6);
   --scrollbar-bg: var(--scrollbar-bg-light);
   --scrollbar-bg-hover: var(--scrollbar-bg-hover-light);
   --scrollbar-bg-active: var(--scrollbar-bg-active-light);
@@ -89,75 +122,208 @@
   --display-light-icon: 1;
   --display-dark-icon: 0;
 
-  /* Admonition 颜色 */
+  /* Admonition */
   --admonitions-color-tip: oklch(0.7 0.14 180);
-  --admonitions-color-note: oklch(0.55 0.15 250);
+  --admonitions-color-note: #0a6fc2;
   --admonitions-color-important: oklch(0.7 0.14 310);
   --admonitions-color-warning: oklch(0.7 0.14 60);
   --admonitions-color-caution: oklch(0.6 0.2 25);
 
   /* TOC */
-  --toc-badge-bg: oklch(0.89 0.05 var(--hue, 250));
-  --toc-btn-hover: oklch(0.926 0.015 var(--hue, 250));
-  --toc-btn-active: oklch(0.9 0.015 var(--hue, 250));
+  --toc-badge-bg: var(--btn-regular-bg);
+  --toc-btn-hover: #eef4fb;
+  --toc-btn-active: #e2ecf8;
   --toc-width: calc((100vw - var(--page-width)) / 2 - 1rem);
-  --toc-item-active: oklch(0.7 0.13 var(--hue, 250));
+  --toc-item-active: #0a6fc2;
 
-  --text-muted: oklch(0.5 0.01 var(--hue, 250));
-  --on-primary: #ffffff;
-  --secondary: oklch(0.3 0.01 var(--hue, 250));
-  --on-secondary: #ffffff;
-  --info: oklch(0.52 0.16 230);
-  --on-info: #ffffff;
-  --success: oklch(0.52 0.18 145);
-  --on-success: #ffffff;
-  --warning: oklch(0.75 0.15 75);
-  --on-warning: #1d1d1f;
-  --error: oklch(0.55 0.22 25);
-  --on-error: #ffffff;
+  /* 圆角 */
   --radius-box: 0.75rem;
   --radius-field: 0.5rem;
   --radius-selector: 0.375rem;
+
+  /* ---------- 科技感外壳（供 tech.css 消费） ---------- */
+  --body-bg:
+    radial-gradient(
+      circle at 14% 4%,
+      rgba(79, 158, 255, 0.14),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 86% 8%,
+      rgba(127, 212, 255, 0.12),
+      transparent 26%
+    ),
+    linear-gradient(180deg, #f1f6fc 0%, #e8f0f9 46%, #e2ebf6 100%);
+  --html-bg: #e8f0f9;
+  --grid-line: rgba(30, 80, 150, 0.07);
+  --grid-opacity: 0.5;
+  --side-glow: rgba(10, 111, 194, 0.05);
+
+  --card-bg-grad: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.92),
+    rgba(238, 245, 253, 0.66)
+  );
+  --card-edge: rgba(70, 120, 190, 0.18);
+  --card-highlight: rgba(255, 255, 255, 0.85);
+  --card-shadow:
+    inset 0 1px 0 var(--card-highlight), 0 10px 30px rgba(31, 70, 130, 0.1);
+  --card-hover-shadow:
+    0 20px 48px rgba(31, 70, 130, 0.16), 0 0 0 1px rgba(10, 111, 194, 0.06);
+  --card-blob: rgba(79, 158, 255, 0.14);
+  --card-topline: linear-gradient(
+    90deg,
+    transparent,
+    rgba(10, 111, 194, 0.5),
+    rgba(91, 91, 214, 0.3),
+    transparent
+  );
+
+  --section-bg:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.5),
+      rgba(255, 255, 255, 0.18)
+    ),
+    linear-gradient(
+      135deg,
+      rgba(79, 158, 255, 0.05),
+      transparent 35%,
+      rgba(127, 212, 255, 0.05)
+    );
+  --section-edge: rgba(70, 120, 190, 0.12);
+  --section-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 16px 44px rgba(31, 70, 130, 0.07);
+
+  --ghost-bg: linear-gradient(
+    145deg,
+    rgba(10, 60, 120, 0.05),
+    rgba(10, 60, 120, 0.015)
+  );
+  --ghost-edge: rgba(10, 60, 120, 0.18);
+  --ghost-text: #10233d;
+  --ghost-hover-edge: rgba(10, 111, 194, 0.4);
+
+  --title-line: linear-gradient(
+    90deg,
+    transparent,
+    #0a6fc2 30%,
+    #4f9eff 55%,
+    #5b5bd6 78%,
+    transparent
+  );
+  --title-glow: 0 0 14px rgba(10, 111, 194, 0.18);
+
+  --icon-bubble-bg: linear-gradient(
+    145deg,
+    rgba(79, 158, 255, 0.16),
+    rgba(91, 91, 214, 0.08)
+  );
+  --icon-bubble-edge: rgba(10, 111, 194, 0.18);
+
+  --social-bg: rgba(10, 111, 194, 0.05);
+  --social-edge: rgba(10, 111, 194, 0.2);
+  --social-hover-bg: rgba(10, 111, 194, 0.12);
+  --social-hover-text: #0a6fc2;
+
+  --nav-bg: rgba(255, 255, 255, 0.78);
+  --nav-bg-scrolled: rgba(255, 255, 255, 0.94);
+  --nav-edge: rgba(70, 120, 190, 0.16);
+  --nav-shadow: 0 14px 38px rgba(31, 70, 130, 0.12);
+  --nav-mobile-bg: rgba(255, 255, 255, 0.97);
+
+  --backtop-bg: rgba(255, 255, 255, 0.9);
+  --backtop-edge: rgba(10, 111, 194, 0.22);
+
+  --hero-text-shadow: 0 4px 18px rgba(255, 255, 255, 0.55);
+  --hero-overlay:
+    linear-gradient(
+      115deg,
+      rgba(150, 200, 248, 0.32),
+      rgba(238, 245, 253, 0.12) 42%,
+      rgba(140, 195, 245, 0.26)
+    ),
+    radial-gradient(
+      circle at 12% 50%,
+      rgba(91, 184, 255, 0.14),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 82% 48%,
+      rgba(127, 212, 255, 0.12),
+      transparent 28%
+    ),
+    linear-gradient(135deg, rgba(241, 246, 252, 0.5), rgba(226, 235, 246, 0.3));
+  --hero-fade: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.3),
+    transparent 30%,
+    transparent 70%,
+    rgba(226, 235, 246, 0.55)
+  );
 }
 
-/* ===== 深色主题 ===== */
-:root.dark {
-  /* 基础语义色（深色） */
-  --base-100: #010102;
-  --base-200: #0f1011;
-  --base-300: #141516;
-  --base-content: #f7f8f8;
-  --neutral: #8a8f98;
-  --neutral-content: #010102;
-  --primary-content: #ffffff;
+/* ============================================================
+   夜晚主题：<html data-theme="night">
+   ============================================================ */
+[data-theme="night"] {
+  color-scheme: dark;
 
-  /* fuwari 原有变量（深色） */
-  --primary: oklch(0.75 0.14 var(--hue, 250));
-  --page-bg: oklch(0.16 0.014 var(--hue, 250));
-  --card-bg: oklch(0.23 0.015 var(--hue, 250));
-  --surface-3: oklch(0.32 0.02 var(--hue, 250));
-  --btn-content: oklch(0.75 0.1 var(--hue, 250));
-  --btn-regular-bg: oklch(0.33 0.035 var(--hue, 250));
-  --btn-regular-bg-hover: oklch(0.38 0.04 var(--hue, 250));
-  --btn-regular-bg-active: oklch(0.43 0.045 var(--hue, 250));
-  --btn-plain-bg-hover: oklch(0.3 0.035 var(--hue, 250));
-  --btn-plain-bg-active: oklch(0.27 0.025 var(--hue, 250));
-  --btn-card-bg-hover: oklch(0.3 0.03 var(--hue, 250));
-  --btn-card-bg-active: oklch(0.35 0.035 var(--hue, 250));
+  --base-100: #081120;
+  --base-200: #0d1830;
+  --base-300: #16233d;
+  --base-content: #edf4ff;
+  --neutral: #8a9bb5;
+  --neutral-content: #050a14;
+
+  --page-bg: #050a14;
+  --card-bg: #121b2d;
+  --surface-3: rgba(185, 225, 255, 0.14);
+  --deep-text: #edf4ff;
+  --text-muted: rgba(237, 244, 255, 0.58);
+
+  --primary: #7fd4ff;
+  --primary-content: #0b1522;
+  --on-primary: #0b1522;
+  --secondary: #b9c8ff;
+  --on-secondary: #0b1522;
+
+  --info: #9fd4ff;
+  --on-info: #0b1522;
+  --success: #6fe0b0;
+  --on-success: #06231a;
+  --warning: #ffd479;
+  --on-warning: #2a1c00;
+  --error: #ff9b9b;
+  --on-error: #2a0a0a;
+
+  --btn-content: #9fd4ff;
+  --btn-regular-bg: #16233d;
+  --btn-regular-bg-hover: #1c2c4a;
+  --btn-regular-bg-active: #223558;
+  --btn-plain-bg-hover: #16233d;
+  --btn-plain-bg-active: #0d1830;
+  --btn-card-bg-hover: #16233d;
+  --btn-card-bg-active: #1c2c4a;
+
   --line-divider: rgba(255, 255, 255, 0.08);
   --line-color: rgba(255, 255, 255, 0.1);
   --meta-divider: rgba(255, 255, 255, 0.2);
-  --selection-bg: oklch(0.4 0.08 var(--hue, 250));
-  --codeblock-bg: oklch(0.17 0.015 var(--hue, 250));
-  --codeblock-topbar-bg: oklch(0.12 0.015 var(--hue, 250));
+  --selection-bg: rgba(127, 212, 255, 0.22);
+  --codeblock-selection: rgba(127, 212, 255, 0.3);
+  --codeblock-bg: #0d1424;
+  --codeblock-topbar-bg: #101a2e;
   --license-block-bg: var(--codeblock-bg);
-  --link-underline: oklch(0.4 0.08 var(--hue, 250));
-  --link-hover: oklch(0.4 0.08 var(--hue, 250));
-  --link-active: oklch(0.35 0.07 var(--hue, 250));
-  --float-panel-bg: oklch(0.19 0.015 var(--hue, 250));
+  --link-underline: rgba(127, 212, 255, 0.28);
+  --link-hover: rgba(127, 212, 255, 0.1);
+  --link-active: rgba(127, 212, 255, 0.16);
+  --float-panel-bg: #0d1830;
+  --title-active: #9fd4ff;
+
   --scrollbar-bg: var(--scrollbar-bg-dark);
   --scrollbar-bg-hover: var(--scrollbar-bg-hover-dark);
   --scrollbar-bg-active: var(--scrollbar-bg-active-dark);
+
   --color-selection-bar: linear-gradient(
     to right,
     oklch(0.7 0.1 0),
@@ -176,22 +342,136 @@
   );
   --display-light-icon: 0;
   --display-dark-icon: 1;
+
   --admonitions-color-tip: oklch(0.75 0.14 180);
-  --admonitions-color-note: oklch(0.75 0.14 250);
+  --admonitions-color-note: #9fd4ff;
   --admonitions-color-important: oklch(0.75 0.14 310);
   --admonitions-color-warning: oklch(0.75 0.14 60);
   --admonitions-color-caution: oklch(0.65 0.2 25);
-  --toc-badge-bg: var(--btn-regular-bg);
-  --toc-btn-hover: oklch(0.22 0.02 var(--hue, 250));
-  --toc-btn-active: oklch(0.25 0.02 var(--hue, 250));
-  --toc-item-active: oklch(0.35 0.07 var(--hue, 250));
 
-  --deep-text: oklch(0.85 0.01 var(--hue, 250));
-  --text-muted: oklch(0.65 0.01 var(--hue, 250));
-  /* 暗色主题下 primary 较亮，按钮用深色文字保证对比度 */
-  --on-primary: oklch(0.16 0.01 var(--hue, 250));
-  --secondary: oklch(0.75 0.01 var(--hue, 250));
-  --on-secondary: oklch(0.16 0.01 var(--hue, 250));
-  --on-warning: oklch(0.16 0.01 var(--hue, 250));
-  --error: oklch(0.55 0.22 25);
+  --toc-badge-bg: var(--btn-regular-bg);
+  --toc-btn-hover: #0d1830;
+  --toc-btn-active: #16233d;
+  --toc-item-active: #9fd4ff;
+
+  /* ---------- 科技感外壳 ---------- */
+  --body-bg:
+    radial-gradient(
+      circle at 16% 6%,
+      rgba(79, 158, 255, 0.14),
+      transparent 24%
+    ),
+    radial-gradient(
+      circle at 84% 10%,
+      rgba(127, 212, 255, 0.1),
+      transparent 20%
+    ),
+    linear-gradient(180deg, #050a14 0%, #081120 46%, #04080f 100%);
+  --html-bg: #050a14;
+  --grid-line: rgba(159, 212, 255, 0.05);
+  --grid-opacity: 0.18;
+  --side-glow: rgba(79, 158, 255, 0.06);
+
+  --card-bg-grad: linear-gradient(
+    145deg,
+    rgba(18, 27, 45, 0.42),
+    rgba(10, 15, 27, 0.2)
+  );
+  --card-edge: rgba(185, 225, 255, 0.14);
+  --card-highlight: rgba(255, 255, 255, 0.07);
+  --card-shadow:
+    inset 0 1px 0 var(--card-highlight), 0 12px 32px rgba(0, 0, 0, 0.18);
+  --card-hover-shadow:
+    0 22px 54px rgba(0, 0, 0, 0.28), 0 0 0 1px rgba(159, 212, 255, 0.05);
+  --card-blob: rgba(117, 194, 255, 0.12);
+  --card-topline: linear-gradient(
+    90deg,
+    transparent,
+    rgba(159, 212, 255, 0.82),
+    rgba(185, 200, 255, 0.42),
+    transparent
+  );
+
+  --section-bg:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.018),
+      rgba(255, 255, 255, 0.006)
+    ),
+    linear-gradient(
+      135deg,
+      rgba(91, 184, 255, 0.018),
+      transparent 35%,
+      rgba(127, 212, 255, 0.018)
+    );
+  --section-edge: rgba(185, 225, 255, 0.045);
+  --section-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.018), 0 18px 48px rgba(0, 0, 0, 0.07);
+
+  --ghost-bg: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.085),
+    rgba(255, 255, 255, 0.025)
+  );
+  --ghost-edge: rgba(255, 255, 255, 0.16);
+  --ghost-text: rgba(255, 255, 255, 0.94);
+  --ghost-hover-edge: rgba(255, 255, 255, 0.3);
+
+  --title-line: linear-gradient(
+    90deg,
+    transparent,
+    #7fd4ff 30%,
+    #dcecff 55%,
+    #b9c8ff 78%,
+    transparent
+  );
+  --title-glow: 0 0 14px rgba(127, 212, 255, 0.32);
+
+  --icon-bubble-bg: linear-gradient(
+    145deg,
+    rgba(94, 169, 255, 0.18),
+    rgba(110, 121, 255, 0.08)
+  );
+  --icon-bubble-edge: rgba(159, 212, 255, 0.14);
+
+  --social-bg: rgba(159, 212, 255, 0.045);
+  --social-edge: rgba(159, 212, 255, 0.16);
+  --social-hover-bg: rgba(159, 212, 255, 0.12);
+  --social-hover-text: #ffffff;
+
+  --nav-bg: rgba(16, 24, 42, 0.72);
+  --nav-bg-scrolled: rgba(13, 20, 36, 0.9);
+  --nav-edge: rgba(255, 255, 255, 0.1);
+  --nav-shadow: 0 16px 42px rgba(3, 8, 22, 0.28);
+  --nav-mobile-bg: rgba(14, 21, 38, 0.97);
+
+  --backtop-bg: rgba(10, 16, 30, 0.82);
+  --backtop-edge: rgba(159, 212, 255, 0.18);
+
+  --hero-text-shadow: 0 10px 30px rgba(0, 0, 0, 0.34);
+  --hero-overlay:
+    linear-gradient(
+      115deg,
+      rgba(40, 110, 210, 0.4),
+      rgba(13, 18, 34, 0.55) 42%,
+      rgba(90, 170, 255, 0.32)
+    ),
+    radial-gradient(
+      circle at 12% 50%,
+      rgba(91, 184, 255, 0.22),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 82% 48%,
+      rgba(127, 212, 255, 0.16),
+      transparent 28%
+    ),
+    linear-gradient(135deg, rgba(6, 9, 18, 0.92), rgba(10, 14, 24, 0.72));
+  --hero-fade: linear-gradient(
+    180deg,
+    rgba(4, 8, 16, 0.35),
+    transparent 30%,
+    transparent 70%,
+    rgba(4, 8, 16, 0.85)
+  );
 }

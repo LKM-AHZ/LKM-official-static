@@ -9,10 +9,10 @@
 
 @plugin '@tailwindcss/typography';
 
-/* 暗色模式下全局文字颜色自动适配 */
+/* 夜间模式下全局文字颜色自动适配 */
 @layer base {
-  .dark .text-deep-text {
-    color: oklch(0.85 0.01 var(--hue, 250));
+  [data-theme="night"] .text-deep-text {
+    color: var(--deep-text);
   }
   /* 统一可见焦点环，保证键盘导航可感知 */
   :focus-visible {
@@ -21,8 +21,9 @@
   }
 }
 
-/* 暗色模式变体 — 使用 :root.dark / [data-theme='dark'] */
-@custom-variant dark (&:where(.dark, .dark *));
+/* 暗色变体 — 主题真源是 <html data-theme="day|night">，
+   故 dark: 前缀等价于「夜间模式」，与站点既有 dark: 用法语义对齐 */
+@custom-variant dark (&:where([data-theme='night'], [data-theme='night'] *));
 
 @theme {
   /* ── 字体系统 ── */
@@ -140,16 +141,40 @@
   }
 }
 
-/* 团队成员/项目团队卡片 */
+/* 团队成员/项目团队卡片（玻璃拟态） */
 @utility profile-card {
   position: relative;
-  background: var(--card-bg);
-  border-radius: 16px;
-  border: 1px solid var(--surface-3);
-  box-shadow:
-    0 8px 32px 0 color-mix(in srgb, var(--color-primary) 12%, transparent),
-    0 0 0 0px transparent;
+  isolation: isolate;
   overflow: hidden;
+  background: var(--card-bg-grad);
+  border-radius: 16px;
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(8px) saturate(118%);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease,
+    background 0.4s ease;
+
+  /* 顶部高光细线 */
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 52%;
+    height: 1px;
+    background: var(--card-topline);
+    opacity: 0.72;
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: var(--card-hover-shadow);
+  }
 }
 
 .profile-card,
@@ -164,41 +189,75 @@
   transform: translateY(-5px);
 }
 
-.profile-card:hover {
-  box-shadow:
-    0 16px 48px 0 color-mix(in srgb, var(--color-primary) 25%, transparent),
-    0 0 0 2px color-mix(in srgb, var(--color-primary) 30%, transparent);
-}
-
 .profile-card:hover img {
   box-shadow: 0 0 0 4px
     color-mix(in srgb, var(--color-primary) 25%, transparent);
 }
 
-.dark .profile-card,
-.dark .profile-card:hover {
-  box-shadow: none;
+/* 通用玻璃卡片（Features2 / CallToAction / 区块卡等） */
+@utility card-hover {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--card-bg-grad);
+  border: 1px solid var(--card-edge);
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(8px) saturate(118%);
+  transition:
+    transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease,
+    background 0.4s ease;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 10%;
+    width: 52%;
+    height: 1px;
+    background: var(--card-topline);
+    opacity: 0.72;
+    pointer-events: none;
+  }
+
+  /* 右上角柔光 blob，hover 时浮现 */
+  &::after {
+    content: "";
+    position: absolute;
+    top: -8rem;
+    right: -7rem;
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    background: var(--card-blob);
+    filter: blur(34px);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.4s ease,
+      transform 0.4s ease;
+  }
+
+  &:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary);
+    box-shadow: var(--card-hover-shadow);
+  }
+
+  &:hover::after {
+    opacity: 1;
+    transform: translate(-1rem, 1rem);
+  }
 }
 
-/* 通用卡片 hover（Features2 / CallToAction 等） */
-@utility card-hover {
-  transition:
-    transform 200ms ease,
-    border-color 200ms ease,
-    box-shadow 200ms ease;
-}
-@media (prefers-reduced-motion: no-preference) {
-  .card-hover:hover {
-    transform: translateY(-2px);
-    border-color: color-mix(
-      in srgb,
-      var(--color-base-content) 20%,
-      transparent
-    );
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+@media (prefers-reduced-motion: reduce) {
+  .card-hover:hover,
+  .profile-card:hover {
+    transform: none;
   }
-  .dark .card-hover:hover {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  .profile-card:hover > .profile-inner {
+    transform: none;
   }
 }
 
@@ -373,7 +432,7 @@
     left: calc(90% + 4px);
     font-size: 22px;
     font-family: ui-monospace, monospace;
-    color: oklch(0.3 0.01 var(--hue, 250));
+    color: var(--text-muted);
     white-space: nowrap;
   }
 
@@ -485,9 +544,33 @@
   .btn-lg {
     @apply min-h-[3rem] px-6 text-base;
   }
+  /* 主按钮：胶囊 + 渐变。夜间沿用源设计的亮青白渐变（深色文字），
+     白天改用深青蓝渐变（白字）以保证浅底上的对比度 */
   .btn-primary {
-    @apply bg-[var(--primary)] text-[var(--on-primary)]
-           hover:brightness-110 active:brightness-90;
+    background: linear-gradient(135deg, #0a6fc2 0%, #2f8fdc 55%, #4f9eff 100%);
+    color: #ffffff;
+    border: 1px solid color-mix(in srgb, #0a6fc2 40%, transparent);
+    box-shadow:
+      0 12px 30px rgba(10, 111, 194, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.32);
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: 0 18px 42px rgba(10, 111, 194, 0.3);
+  }
+  [data-theme="night"] .btn-primary {
+    background: linear-gradient(135deg, #e4f6ff 0%, #9fd4ff 55%, #b9c8ff 100%);
+    color: #0b1522;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    box-shadow:
+      0 12px 30px rgba(91, 184, 255, 0.22),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  }
+  [data-theme="night"] .btn-primary:hover {
+    box-shadow: 0 18px 42px rgba(91, 184, 255, 0.3);
   }
   .btn-secondary {
     @apply bg-[var(--secondary)] text-[var(--on-secondary)]
@@ -533,4 +616,29 @@
   .btn-disabled {
     @apply opacity-50 pointer-events-none;
   }
+}
+
+/* ===== Markdown 正文（docs / privacy / terms）=====
+   把 @tailwindcss/typography 的调色板接到站点语义 token 上，
+   使 prose 在 day/night 两套主题下都成立。
+
+   必须放在 @layer 之外：typography 插件的 .prose 默认值在 layer 内，
+   未分层的规则才能稳定地覆盖它，而不受产物排序影响。 */
+.prose {
+  --tw-prose-body: var(--text-muted);
+  --tw-prose-headings: var(--deep-text);
+  --tw-prose-lead: var(--text-muted);
+  --tw-prose-links: var(--primary);
+  --tw-prose-bold: var(--deep-text);
+  --tw-prose-counters: var(--text-muted);
+  --tw-prose-bullets: var(--surface-3);
+  --tw-prose-hr: var(--surface-3);
+  --tw-prose-quotes: var(--deep-text);
+  --tw-prose-quote-borders: var(--primary);
+  --tw-prose-captions: var(--text-muted);
+  --tw-prose-code: var(--deep-text);
+  --tw-prose-pre-code: #dcecff;
+  --tw-prose-pre-bg: var(--codeblock-bg);
+  --tw-prose-th-borders: var(--surface-3);
+  --tw-prose-td-borders: var(--surface-3);
 }

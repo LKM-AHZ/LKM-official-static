@@ -75,15 +75,17 @@ const platformItems = [
   ]}
 >
   {/* HeroText */}
-  <section class="relative not-prose">
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="py-16 md:py-[80px]">
-        <div class="text-center max-w-5xl mx-auto">
-          <h1 class="text-[40px] md:text-[56px] font-semibold leading-[1.07] tracking-[-0.005em] mb-4 font-heading text-deep-text">
+  <section class="section-padding">
+    <div class="container-x">
+      <div class="py-8 md:py-12">
+        <div class="mx-auto max-w-5xl text-center">
+          <h1
+            class="mb-6 font-heading text-[40px] font-semibold leading-[1.07] tracking-[-0.005em] text-deep-text md:text-[56px]"
+          >
             {t(lang, "about.hero_title")}
           </h1>
-          <div class="max-w-3xl mx-auto">
-            <p class="text-[17px] text-text-muted mb-6 leading-relaxed">
+          <div class="mx-auto max-w-3xl">
+            <p class="mb-6 text-[17px] leading-relaxed text-text-muted">
               {t(lang, "about.hero_paragraph")}
             </p>
           </div>
@@ -93,20 +95,20 @@ const platformItems = [
   </section>
 
   {/* ===== 社区理念 ===== */}
-  <section id="values" class="relative not-prose scroll-mt-[72px]">
-    <div class="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 lg:py-24">
-      <div class="mb-8 md:mx-auto md:mb-12 text-center max-w-3xl">
-        <h2 class="font-semibold leading-tight font-heading text-3xl md:text-[40px] font-semibold tracking-[-0.005em]">
+  <section id="values" class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="mb-14 text-center">
+        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
           {t(lang, "about.values_title")}
         </h2>
-        <p class="mt-3 text-[17px] text-text-muted">
+        <p class="mt-8 text-[17px] text-text-muted">
           {t(lang, "about.values_subtitle")}
         </p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
         {
           valueItems.map((c) => (
-            <div class="relative flex flex-col rounded-[12px] bg-page-bg border border-surface-3 p-6 card-hover">
+            <div class="card-hover flex flex-col rounded-2xl p-6">
               <div class="flex justify-center">
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
               </div>
@@ -120,17 +122,17 @@ const platformItems = [
   </section>
 
   {/* ===== 我们的服务：内容创作 ===== */}
-  <section id="content" class="relative not-prose scroll-mt-[72px]">
-    <div class="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 lg:py-24">
-      <div class="mb-8 md:mx-auto md:mb-12 text-center max-w-3xl">
-        <h2 class="font-semibold leading-tight font-heading text-3xl md:text-[40px] tracking-[-0.005em]">
+  <section id="content" class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="mb-14 text-center">
+        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
           {t(lang, "services.section_content")}
         </h2>
-        <p class="mt-3 text-[17px] text-text-muted">{t(lang, "services.section_content_sub")}</p>
+        <p class="mt-8 text-[17px] text-text-muted">{t(lang, "services.section_content_sub")}</p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
         {contentItems.map((c) => (
-          <div class="relative flex flex-col rounded-[12px] bg-page-bg border border-surface-3 p-6 card-hover">
+          <div class="card-hover flex flex-col rounded-2xl p-6">
             <div class="flex justify-center">
               <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
             </div>
@@ -143,17 +145,17 @@ const platformItems = [
   </section>
 
   {/* ===== 我们的服务：社区活动 ===== */}
-  <section id="events" class="relative not-prose scroll-mt-[72px]">
-    <div class="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 lg:py-24">
-      <div class="mb-8 md:mx-auto md:mb-12 text-center max-w-3xl">
-        <h2 class="font-semibold leading-tight font-heading text-3xl md:text-[40px] tracking-[-0.005em]">
+  <section id="events" class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="mb-14 text-center">
+        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
           {t(lang, "services.section_events")}
         </h2>
-        <p class="mt-3 text-[17px] text-text-muted">{t(lang, "services.section_events_sub")}</p>
+        <p class="mt-8 text-[17px] text-text-muted">{t(lang, "services.section_events_sub")}</p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2">
         {eventItems.map((c) => (
-          <div class="relative flex flex-col rounded-[12px] bg-page-bg border border-surface-3 p-6 card-hover">
+          <div class="card-hover flex flex-col rounded-2xl p-6">
             <div class="flex justify-center">
               <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
             </div>
@@ -166,17 +168,17 @@ const platformItems = [
   </section>
 
   {/* ===== 我们的服务：知识平台 ===== */}
-  <section id="platform" class="relative not-prose scroll-mt-[72px]">
-    <div class="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 lg:py-24">
-      <div class="mb-8 md:mx-auto md:mb-12 text-center max-w-3xl">
-        <h2 class="font-semibold leading-tight font-heading text-3xl md:text-[40px] tracking-[-0.005em]">
+  <section id="platform" class="section-panel section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="mb-14 text-center">
+        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
           {t(lang, "services.section_platform")}
         </h2>
-        <p class="mt-3 text-[17px] text-text-muted">{t(lang, "services.section_platform_sub")}</p>
+        <p class="mt-8 text-[17px] text-text-muted">{t(lang, "services.section_platform_sub")}</p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2">
         {platformItems.map((c) => (
-          <div class="relative flex flex-col rounded-[12px] bg-page-bg border border-surface-3 p-6 card-hover">
+          <div class="card-hover flex flex-col rounded-2xl p-6">
             <div class="flex justify-center">
               <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
             </div>
@@ -189,9 +191,9 @@ const platformItems = [
   </section>
 
   {/* ===== 行动号召 ===== */}
-  <section class="relative not-prose">
-    <div class="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 lg:py-24">
-      <div class="max-w-3xl mx-auto text-center p-8 rounded-[12px] bg-page-bg border border-surface-3 card-hover">
+  <section class="section-panel section-padding">
+    <div class="container-x">
+      <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
         <div class="mb-0">
           <h2 class="text-[40px] font-semibold tracking-[-0.005em] mb-3 font-heading">
             {t(lang, "about.cta_welcome")}{t(lang, "about.cta_welcome_accent")}
