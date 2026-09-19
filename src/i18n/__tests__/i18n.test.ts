@@ -14,7 +14,7 @@ describe("i18n", () => {
 
   it("en 缺 key 时回退中文（阶段一英文占位）", () => {
     // 故意：若 en.ts 未定义某 key，t() 应回退 zh 而非抛错
-    expect(t("en", "common.brand")).toMatch(/理科迷|LiKeLi/);
+    expect(t("en", "common.brand")).toMatch(/理科迷|LiKeMi/);
   });
 
   it("zh key 集合能覆盖结构文案命名规范", () => {

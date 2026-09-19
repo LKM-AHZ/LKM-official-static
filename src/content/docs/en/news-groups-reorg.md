@@ -12,7 +12,7 @@ lang: en
 
 Our members range from middle school to senior year, and their stages rarely line up on the same topics. Rather than squeezing everyone into one room to compromise, we split into spaces that fit better — that was the point of this reorg.
 
-So there are two parallel official groups: LiKeLi·Middle (foundations and gentler company) and LiKeLi·Senior (competitions, subject choice and denser study). Threads get clearer, and the people answering are more likely to share your stage.
+So there are two parallel official groups: LiKeMi · Middle School (foundations and guided learning) and LiKeMi · High School (competitions, subject choices, and more advanced study). Threads become clearer, and the people answering are more likely to share your stage.
 
 ## After the Split
 

@@ -1,5 +1,5 @@
 ---
-title: A New LiKeLi Website Goes Live
+title: A New LiKeMi Website Goes Live
 description: A more robust rebuild of the official site, for a better online experience.
 publishDate: 2026-08-01
 category: news

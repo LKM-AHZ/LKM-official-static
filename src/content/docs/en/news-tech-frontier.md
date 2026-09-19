@@ -18,4 +18,4 @@ Unlike a news ticker, each post gives context — why it matters, what researche
 
 Topics first pass our editor notes, then a review pass checks the writing is clear and the claims keep their limits — never selling “maybe” as “certain.”
 
-The column updates on a loose schedule, and we hope it isn’t one-way. If you see something other LiKeLi members should read, forward it. A single link is enough — leave the unpacking to us.
+The column updates on a loose schedule, and we hope it isn’t one-way. If you see something other LiKeMi members should read, forward it. A single link is enough — leave the unpacking to us.

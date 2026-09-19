@@ -6,6 +6,61 @@ const lang = (Astro.currentLocale ?? "zh") as string;
 
 import { getStaticPathsForLang } from "../../i18n/paths";
 export const getStaticPaths = getStaticPathsForLang;
+
+const copy =
+  lang === "en"
+    ? {
+        intro:
+          "Please read these terms before using the LiKeMi (LKM) static website.",
+        natureTitle: "Nature of the service",
+        nature:
+          "This website publishes informational pages, community introductions, announcements, and external links. It does not provide user accounts, payments, cloud storage, or a server-side messaging service.",
+        formTitle: "Contact form",
+        form: "The contact form is a visual demonstration. Submitting it does not send or retain the entered data. Use one of the listed external contact channels if you need to reach us.",
+        availabilityTitle: "Availability and accuracy",
+        availability:
+          "The website is provided as available. We work to keep content accurate and accessible, but do not guarantee uninterrupted availability or that every historical or external reference remains current.",
+        linksTitle: "External services",
+        links:
+          "Third-party links are provided for convenience. Their content, availability, terms, and data practices are controlled by their respective operators.",
+        rightsTitle: "Content and source code",
+        rights:
+          "Unless otherwise stated, website content belongs to LKM or is used with permission. Source code and third-party materials remain subject to the licenses and notices published with them; those licenses take precedence over this summary.",
+        conductTitle: "Acceptable use",
+        conduct:
+          "Do not attempt to disrupt the website, bypass security controls, misrepresent LKM, or use site content in a way that violates applicable law or another party's rights.",
+        changesTitle: "Changes to these terms",
+        changes:
+          "We may update these terms when the website changes. The latest version and update date will remain available on this page.",
+        contactTitle: "Contact",
+        contact:
+          "Questions about these terms may be sent to almafox123@outlook.com.",
+      }
+    : {
+        intro: "使用理科迷（LKM）静态官网前，请阅读以下条款。",
+        natureTitle: "服务性质",
+        nature:
+          "本站用于发布介绍性页面、社区信息、公告和外部链接，不提供用户账户、在线支付、云端存储或服务器端留言服务。",
+        formTitle: "联系表单",
+        form: "联系表单仅用于界面展示，提交操作不会发送或保存填写的数据。如需联系我们，请使用页面列出的外部联系渠道。",
+        availabilityTitle: "可用性与准确性",
+        availability:
+          "本站按实际可用状态提供。我们会尽力保持内容准确和页面可访问，但不保证服务持续不中断，也不保证所有历史信息或外部链接始终有效。",
+        linksTitle: "第三方服务",
+        links:
+          "第三方链接仅为访问便利而提供，其内容、可用性、使用条款和数据处理方式由相应运营方负责。",
+        rightsTitle: "内容与源代码",
+        rights:
+          "除另有说明外，本站内容归 LKM 所有或已获授权使用。源代码及第三方材料适用其随附的许可证和声明；若本段摘要与许可证不一致，以许可证为准。",
+        conductTitle: "合理使用",
+        conduct:
+          "不得干扰网站运行、绕过安全控制、冒用 LKM 名义，或以违反适用法律及他人权利的方式使用本站内容。",
+        changesTitle: "条款变更",
+        changes:
+          "网站发生变化时，我们可能修订本条款。最新版本及更新日期会保留在本页面。",
+        contactTitle: "联系我们",
+        contact: "如对本条款有疑问，请发送邮件至 almafox123@outlook.com。",
+      };
 ---
 
 <OfficialLayout
@@ -15,55 +70,36 @@ export const getStaticPaths = getStaticPathsForLang;
 >
   <section class="section-panel section-padding">
     <article class="prose mx-auto max-w-3xl">
-    <h1 class="mb-2">{t(lang, "terms.title")}</h1>
-    <p class="text-sm text-text-muted !mt-0"><em>{t(lang, "terms.updated")}</em></p>
+      <h1 class="mb-2">{t(lang, "terms.title")}</h1>
+      <p class="text-sm text-text-muted !mt-0">
+        <em>{t(lang, "terms.updated")}</em>
+      </p>
 
-    <p>在使用理科迷（LKM）网站（以下简称"本网站"）之前，请仔细阅读以下服务条款。</p>
+      <p>{copy.intro}</p>
 
-    <h2>服务性质</h2>
-    <p>本网站是纯静态网站，不运行任何服务器端代码。网站上提供的以下功能（若存在）均为前端演示或静态化内容：</p>
-    <ul>
-      <li>社区板块（帖子、评论、互动）</li>
-      <li>账户系统（注册、登录、个人设置）</li>
-      <li>通知中心</li>
-      <li>后台管理面板</li>
-      <li>编辑器文档存储</li>
-    </ul>
-    <p>这些功能使用浏览器 localStorage 模拟，不涉及任何真实的服务器端处理或数据持久化。</p>
+      <h2>{copy.natureTitle}</h2>
+      <p>{copy.nature}</p>
 
-    <h2>数据存储说明</h2>
-    <ul>
-      <li><strong>本地数据</strong>：您在编辑器中创建或编辑的文档仅保存在浏览器 localStorage 中。跨设备、跨浏览器或在清除浏览器数据后，内容将无法恢复。</li>
-      <li><strong>演示数据</strong>：社区帖子、账户信息等演示数据仅在浏览器本地存储，不保证数据持久性。</li>
-      <li><strong>AI 功能数据</strong>：AI 功能所需的 API Key 保存在浏览器内存中，提示词和编辑器内容直接发送至您选择的第三方 AI 服务商。</li>
-    </ul>
-    <p><strong>本网站不保证任何数据的跨设备保留或长期持久性。</strong></p>
+      <h2>{copy.formTitle}</h2>
+      <p>{copy.form}</p>
 
-    <h2>无账户承诺</h2>
-    <p>本网站不提供真实的用户账户注册、登录或认证系统。任何显示为"账户"的功能均为前端演示，不存在与之关联的真实用户身份或数据。</p>
+      <h2>{copy.availabilityTitle}</h2>
+      <p>{copy.availability}</p>
 
-    <h2>第三方服务</h2>
-    <h3>AI 服务</h3>
-    <p>使用本网站的 AI 功能时，您需自行承担与第三方 AI 服务商交互的责任。请遵守相应服务商的使用条款和政策。</p>
-    <h3>外部链接</h3>
-    <p>本网站可能包含指向第三方网站的链接。我们不对第三方网站的内容、服务或实践负责。访问第三方网站的风险由您自行承担。</p>
+      <h2>{copy.linksTitle}</h2>
+      <p>{copy.links}</p>
 
-    <h2>免责声明</h2>
-    <p>本网站按"现状"和"按可用性"提供，不附带任何明示或默示的保证。我们不保证：</p>
-    <ul>
-      <li>网站功能始终无错误或不中断</li>
-      <li>数据在浏览器清除后仍可恢复</li>
-      <li>演示功能的可用性或准确性</li>
-    </ul>
+      <h2>{copy.rightsTitle}</h2>
+      <p>{copy.rights}</p>
 
-    <h2>知识产权</h2>
-    <p>本网站上的内容（包括文本、图片、代码等）归理科迷（LKM）所有或经授权使用。未经许可，不得复制、分发或用于商业目的。</p>
+      <h2>{copy.conductTitle}</h2>
+      <p>{copy.conduct}</p>
 
-    <h2>条款变更</h2>
-    <p>我们可能会更新本服务条款。更新后的版本将发布在此页面，并在顶部注明"最后更新"日期。继续使用本网站即表示您同意修订后的条款。</p>
+      <h2>{copy.changesTitle}</h2>
+      <p>{copy.changes}</p>
 
-    <h2>联系我们</h2>
-    <p>如有疑问，请联系：almafox123@outlook.com</p>
-  </article>
+      <h2>{copy.contactTitle}</h2>
+      <p>{copy.contact}</p>
+    </article>
   </section>
 </OfficialLayout>

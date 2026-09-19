@@ -2,14 +2,14 @@
 import type { Zh } from "./zh";
 
 export const en = {
-  "common.brand": "LiKeLi",
+  "common.brand": "LiKeMi",
   "common.nav_home": "Home",
   "common.nav_about": "About",
   "common.nav_services": "Services",
   "common.nav_team": "Team",
   "common.nav_articles": "News",
   "common.nav_communities": "Community",
-  "common.footer.copyright": "LiKeLi LKM © 2026 · All rights reserved.",
+  "common.footer.copyright": "LiKeMi LKM © 2026 · All rights reserved.",
   "common.footer.tagline": "Bringing science back to everyone",
   "common.footer.col_community": "Community",
   "common.footer.col_pages": "Pages",
@@ -34,34 +34,34 @@ export const en = {
   "common.aria.close": "Close",
   "common.theme_to_night": "Switch to night mode",
   "common.theme_to_day": "Switch to day mode",
-  "common.site.description": "LiKeLi (LKM) Official Website",
+  "common.site.description": "LiKeMi (LKM) Official Website",
   "seo.home":
-    "LiKeLi (LKM) — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
+    "LiKeMi (LKM) — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
   "seo.news":
-    "Official announcements, tech news and popular-science content from LiKeLi.",
+    "Official announcements, tech news and popular-science content from LiKeMi.",
   "seo.team":
-    "Meet the LiKeLi management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
+    "Meet the LiKeMi management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
   "seo.communities":
-    "Browse LiKeLi's QQ communities: general group, grade and subject groups, interest clubs and recurring events.",
+    "Browse LiKeMi's QQ communities: general group, grade and subject groups, interest clubs and recurring events.",
   "seo.about":
-    "About LiKeLi: a science & technology enthusiast community founded in 2014, breaking down professional barriers so science is within everyone's reach.",
+    "About LiKeMi: a science & technology enthusiast community founded in 2014, breaking down professional barriers so science is within everyone's reach.",
   "seo.contact":
-    "Contact LiKeLi: join the community, propose collaborations, report issues, or reach us directly.",
+    "Contact LiKeMi: join the community, propose collaborations, report issues, or reach us directly.",
   "seo.pricing":
-    "Support LiKeLi: a non-profit science & technology community — many ways to take part.",
+    "Support LiKeMi: a non-profit science & technology community — many ways to take part.",
   "seo.resources":
-    "Curated external resources from LiKeLi: academic institutes, research tools and literature sites.",
+    "Curated external resources from LiKeMi: academic institutes, research tools and literature sites.",
   "seo.projects":
-    "LiKeLi Project Hub: incubated and co-created community projects.",
+    "LiKeMi Project Hub: incubated and co-created community projects.",
   "seo.privacy":
-    "LiKeLi Privacy Policy: how we collect and protect your personal information.",
+    "LiKeMi static website privacy policy: local theme preferences, hosting logs, and external contact channels.",
   "seo.terms":
-    "LiKeLi Terms of Service: please read before using our site and community services.",
-  "home.title": "LiKeLi — For Science & Tech Enthusiasts",
-  "home.hero_title": "LiKeLi!",
+    "LiKeMi static website terms: please read before using its content and external links.",
+  "home.title": "LiKeMi — For Science & Tech Enthusiasts",
+  "home.hero_title": "LiKeMi!",
   "home.hero_subtitle": "A community for science & tech enthusiasts",
   "home.hero_kicker":
-    "LiKeLi is a community made up of science & tech enthusiasts",
+    "LiKeMi is a community made up of science & tech enthusiasts",
   "home.hero_paragraph":
     "Here, science and technology step out of the ivory tower and become a curiosity that everyone can spark and ask about the world. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works.",
   "home.cta_communities": "Explore Community",
@@ -73,7 +73,7 @@ export const en = {
   "home.section_explore": "Explore Boards",
   "home.section_explore_sub": "Discover content that interests you",
   "home.section_team": "Team Members",
-  "home.section_team_sub": "LiKeLi is better because of you",
+  "home.section_team_sub": "LiKeMi is better because of you",
   "home.team_more": "More Members",
   "home.team_view_all_hint": "View the full management team",
   "home.team_view_all": "View All →",
@@ -94,7 +94,7 @@ export const en = {
   "home.section_faq": "FAQ",
   "home.section_faq_sub":
     "Common questions about the LKM official website, so you can get started quickly.",
-  "team.title": "Management Team — LiKeLi",
+  "team.title": "Management Team — LiKeMi",
   "team.sidebar_founder": "Founder",
   "team.sidebar_general": "General Affairs",
   "team.sidebar_affairs": "Community Affairs",
@@ -107,7 +107,7 @@ export const en = {
   "team.sidebar_textbooks": "Textbook Project",
   "team.sidebar_science": "Science Project",
   "team.founder_title": "Founder",
-  "team.founder_subtitle": "Where LiKeLi began — it all started here",
+  "team.founder_subtitle": "Where LiKeMi began — it all started here",
   "team.general_title": "July Team · General Affairs",
   "team.general_desc":
     "This department coordinates and plans affairs, guiding the team to collaborate and fulfill our shared purpose and goals. General Affairs suits members with strong multitasking and execution skills; cross-department coordination is often required.",
@@ -122,7 +122,7 @@ export const en = {
     "This department runs official promotion accounts on various platforms and handles diplomacy, sustaining outreach and influence. It produces science-promotion content for the public. It oversees a science project group and a translation project group to share knowledge across languages and break down information barriers.",
   "team.advisors_title": "Advisors",
   "team.advisors_desc":
-    "This team comprises external advisors to LiKeLi, supporting our work groups and project groups — for example legal counsel and other social organizations.",
+    "This team comprises external advisors to LiKeMi, supporting our work groups and project groups — for example legal counsel and other social organizations.",
   "team.professional_title": "Professional Committee",
   "team.professional_desc":
     "This committee provides professional knowledge for activities and projects, enriching the substance of each specialty. Its members are committed to deep work in their fields and will later oversee academic project groups for richer academic exchange.",
@@ -131,17 +131,17 @@ export const en = {
     "This committee develops and maintains the technology behind our platforms and activities, and will bring more practical and better open-source projects in the future. Programming and web-building skills are needed.",
   "team.alumni_title": "Members Who Have Left",
   "team.alumni_desc":
-    "The members below once contributed to LiKeLi but can no longer be reached. No matter what, LiKeLi's doors will always be open to you.",
+    "The members below once contributed to LiKeMi but can no longer be reached. No matter what, LiKeMi's doors will always be open to you.",
   "about.title": "About",
-  "about.description": "About the LiKeLi community",
-  "about.hero_title": "About LiKeLi",
+  "about.description": "About the LiKeMi community",
+  "about.hero_title": "About LiKeMi",
   "about.hero_paragraph":
-    "LiKeLi (LKM) was founded in 2014 as a community of science and technology enthusiasts. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works together.",
+    "LiKeMi (LKM) was founded in 2014 as a community of science and technology enthusiasts. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works together.",
   "about.values_title": "Bring science back to everyone",
   "about.values_subtitle":
     "We believe science and technology should be within reach — not out of reach.",
   "about.team_section": "Our Team",
-  "about.team_section_sub": "LiKeLi is better because of you",
+  "about.team_section_sub": "LiKeMi is better because of you",
   "about.team_more": "More Members",
   "about.team_view_all_hint": "View the full management team",
   "about.team_view_all": "View All →",
@@ -150,11 +150,11 @@ export const en = {
   "about.timeline_prev": "Previous",
   "about.timeline_next": "Next",
   "about.cta_welcome": "Welcome to ",
-  "about.cta_welcome_accent": "LiKeLi",
+  "about.cta_welcome_accent": "LiKeMi",
   "about.cta_body":
-    "Whether you want to learn, create, or join our team, LiKeLi welcomes you.",
+    "Whether you want to learn, create, or join our team, LiKeMi welcomes you.",
   "about.cta_services": "Learn About Services",
-  "communities.title": "QQ Community — LiKeLi",
+  "communities.title": "QQ Community — LiKeMi",
   "communities.copy": "Copy group number",
   "communities.copy_channel": "Copy channel ID",
   "communities.sidebar_general": "General Group",
@@ -175,7 +175,7 @@ export const en = {
   "services.title": "Services",
   "services.hero_title": "Bringing technology back to everyone",
   "services.hero_paragraph":
-    "LiKeLi offers many ways to spread science and technology and serve the community — from academic discussion to popular-science content. We work to break down knowledge barriers and information gaps, so more people can feel the beauty of technology and reason.",
+    "LiKeMi offers many ways to spread science and technology and serve the community — from academic discussion to popular-science content. We work to break down knowledge barriers and information gaps, so more people can feel the beauty of technology and reason.",
   "services.cta_join": "Join Us",
   "services.sidebar_content": "Content",
   "services.sidebar_events": "Community Events",
@@ -185,12 +185,12 @@ export const en = {
     "High-quality content co-created by team members and the community, spanning many fields.",
   "services.section_events": "Community Events",
   "services.section_events_sub":
-    "From online seminars to holiday activities, LiKeLi offers members a rich and varied set of interactions.",
+    "From online seminars to holiday activities, LiKeMi offers members a rich and varied set of interactions.",
   "services.section_platform": "Knowledge Platform",
   "services.section_platform_sub":
-    "LiKeLi is building a knowledge-management platform for its members, supporting learning and collaboration.",
+    "LiKeMi is building a knowledge-management platform for its members, supporting learning and collaboration.",
   "services.cta_question_pre": "Interested in ",
-  "services.cta_question_accent": "LiKeLi",
+  "services.cta_question_accent": "LiKeMi",
   "services.cta_question_post": "?",
   "services.cta_body":
     "Whether you want to join the community, submit your work, or propose a collaboration, we welcome you.",
@@ -203,14 +203,14 @@ export const en = {
   "pricing.title": "Support Us",
   "pricing.hero_title": "Helping tech reach further",
   "pricing.hero_paragraph":
-    "LiKeLi is a non-profit community of science and technology enthusiasts. Every member's support is what keeps us going.",
+    "LiKeMi is a non-profit community of science and technology enthusiasts. Every member's support is what keeps us going.",
   "pricing.section_support": "Ways to Support",
   "pricing.section_support_sub":
-    "Every bit of your strength helps LiKeLi get better. Here are some ways to take part in building the community.",
+    "Every bit of your strength helps LiKeMi get better. Here are some ways to take part in building the community.",
   "pricing.section_faq": "FAQ",
   "pricing.section_faq_sub":
     "Some common questions about ways to support us — hopefully these answer yours.",
-  "pricing.cta_title": "Ready to make a difference for LiKeLi?",
+  "pricing.cta_title": "Ready to make a difference for LiKeMi?",
   "pricing.cta_body":
     "Join our community and, together with like-minded friends, help tech reach further.",
   "pricing.cta_contact": "Contact Us",
@@ -218,7 +218,7 @@ export const en = {
   "contact.hero_title": "We'd love to hear from you!",
   "contact.section_message": "Leave us a message",
   "contact.section_message_sub":
-    "If you'd like to join LiKeLi, offer suggestions, or propose a collaboration, please reach us via the form below. You can also check the FAQ — the answer may already be there.",
+    "If you'd like to join LiKeMi, offer suggestions, or propose a collaboration, please reach us via the form below. You can also check the FAQ — the answer may already be there.",
   "contact.label_name": "Your name",
   "contact.label_email": "Email",
   "contact.label_message": "Message",
@@ -228,9 +228,9 @@ export const en = {
   "contact.reply_note": "We usually reply to messages within 24 hours.",
   "contact.section_contact": "Contact Us",
   "privacy.title": "Privacy Policy",
-  "privacy.updated": "Last updated: July 28, 2026",
+  "privacy.updated": "Last updated: September 19, 2026",
   "terms.title": "Terms of Service",
-  "terms.updated": "Last updated: July 28, 2026",
+  "terms.updated": "Last updated: September 19, 2026",
   "notfound.title": "Page not found",
   "notfound.message": "The page you are looking for does not exist.",
   "notfound.back": "Back to home",
