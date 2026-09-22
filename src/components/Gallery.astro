@@ -52,12 +52,13 @@ const closeLabel = t(lang, "common.aria.close");
 
       <dialog
         class="lightbox fixed inset-0 z-[10000] m-auto w-[min(1100px,92vw)] rounded-2xl border border-[var(--card-edge)] bg-card-bg p-0 text-deep-text"
+        aria-labelledby="gallery-lightbox-title"
         data-gallery-lightbox
       >
         <div class="relative">
           <img
             src={items[0].full}
-            alt=""
+            alt={items[0].title}
             class="max-h-[76vh] w-full rounded-t-2xl object-contain"
             data-gallery-image
           />
@@ -72,7 +73,11 @@ const closeLabel = t(lang, "common.aria.close");
         </div>
         <div class="flex items-center justify-between gap-4 px-5 py-4">
           <div class="min-w-0">
-            <div class="truncate font-semibold" data-gallery-title>
+            <div
+              id="gallery-lightbox-title"
+              class="truncate font-semibold"
+              data-gallery-title
+            >
               {items[0].title}
             </div>
             <div class="text-sm text-text-muted" data-gallery-caption>
@@ -107,6 +112,8 @@ const closeLabel = t(lang, "common.aria.close");
         </div>
       </dialog>
 
+      {/* JSON 内联进 <script> 时必须转义 "<"：数据里若出现 "</script>" 会提前闭合标签并注入标记
+          （存储型 XSS）。\u003c 经 JSON.parse 读回仍是同一个字符，数据本身不受影响。 */}
       <script
         is:inline
         type="application/json"
@@ -118,7 +125,7 @@ const closeLabel = t(lang, "common.aria.close");
             caption: item.caption,
             href: langUrl(lang, item.href),
           })),
-        )}
+        ).replace(/</g, "\\u003c")}
       />
     </>
   )
@@ -133,12 +140,18 @@ const closeLabel = t(lang, "common.aria.close");
 
   if (lightbox && dataEl && triggers.length > 0) {
     const dialog = lightbox;
-    const items = JSON.parse(dataEl.textContent ?? "[]") as {
+    // 载荷损坏时不能抛在模块顶层：那会连带废掉下面的关闭/翻页绑定
+    let items: {
       full: string;
       title: string;
       caption: string;
       href: string;
-    }[];
+    }[] = [];
+    try {
+      items = JSON.parse(dataEl.textContent ?? "[]") as typeof items;
+    } catch {
+      items = [];
+    }
     const image = dialog.querySelector<HTMLImageElement>("[data-gallery-image]");
     const titleEl = dialog.querySelector<HTMLElement>("[data-gallery-title]");
     const captionEl = dialog.querySelector<HTMLElement>(
@@ -166,7 +179,13 @@ const closeLabel = t(lang, "common.aria.close");
 
     triggers.forEach((trigger) => {
       trigger.addEventListener("click", () => {
-        index = Number(trigger.dataset.index ?? 0);
+        // data-index 缺失/非数字会得到 NaN、越界会指向不存在的条目，
+        // 两者都会让 render() 静默早退却仍弹出灯箱（显示上一张/首张内容）
+        const parsed = Number(trigger.dataset.index);
+        if (!Number.isInteger(parsed) || parsed < 0 || parsed >= items.length) {
+          return;
+        }
+        index = parsed;
         render();
         dialog.showModal();
       });

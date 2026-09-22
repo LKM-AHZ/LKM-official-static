@@ -7,7 +7,8 @@ export const zh = {
   "common.nav_team": "团队",
   "common.nav_articles": "文章",
   "common.nav_communities": "社群",
-  "common.footer.copyright": "理科迷 LKM © 2026 · 保留所有权利。",
+  // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚），避免每年手改两本字典
+  "common.footer.copyright": "理科迷 LKM © {year} · 保留所有权利。",
   "common.footer.tagline": "让科学回归每一个人",
   "common.footer.col_community": "社区",
   "common.footer.col_pages": "页面",
@@ -30,6 +31,7 @@ export const zh = {
   "common.aria.page_toc": "页面目录",
   "common.aria.back_to_top": "回到顶部",
   "common.aria.close": "关闭",
+  "common.theme_toggle": "切换主题",
   "common.theme_to_night": "切换到夜晚模式",
   "common.theme_to_day": "切换到白天模式",
   "common.site.description": "理科迷 (LKM) 独立官网",
@@ -54,7 +56,7 @@ export const zh = {
   "home.hero_subtitle": "科技爱好者社区",
   "home.hero_kicker": "理科迷——是由广大科技爱好者组成的社区",
   "home.hero_paragraph":
-    '在这里，科学与技术都脱离了学术象牙塔的刻板与遥远，变成了每一位都能够去迸发，对于世界发问的好奇心。触手可及，摆脱功利视视角，让更多人迸发对于知识的渴望，感受到理工科的美。我们打破专业门槛，让每一位热爱理性，崇尚科技的"爱好者"，也都能在这里找到同频的伙伴，共探万物运转的奥秘。',
+    '在这里，科学与技术都脱离了学术象牙塔的刻板与遥远，变成每一位都能够去迸发、对于世界发问的好奇心。触手可及，摆脱功利视角，让更多人迸发对于知识的渴望，感受到理工科的美。我们打破专业门槛，让每一位热爱理性，崇尚科技的"爱好者"，也都能在这里找到同频的伙伴，共探万物运转的奥秘。',
   "home.cta_communities": "社区简介",
   "home.cta_about": "寻求帮助",
   "home.section_resources": "延伸资源网站",
@@ -107,7 +109,7 @@ export const zh = {
     "该团队部门职责是负责各个平台上面社群秩序，把握群内风向，确保群处于活跃并且持续有效的学习讨论氛围当中，有情况的时候第一时间处理。群务部更适合有常驻某一平台社群的，并有一定的应急处理能力。",
   "team.events_title": "七月团队 · 活动策划部",
   "team.events_desc":
-    "该团队负责的是各个平台上面的活动，一条龙从策划开始，一直到执行，下管专业委员会，给大家带来更多更好的活动和体验，让大家能够真正的学到知识。适合有灵感、有创意并由能把这些全部落实的行动力加入。",
+    "该团队负责的是各个平台上面的活动，一条龙从策划开始，一直到执行，下管专业委员会，给大家带来更多更好的活动和体验，让大家能够真正的学到知识。适合有灵感、有创意并能把这些想法全部落实的行动力强的人加入。",
   "team.news_title": "新闻办",
   "team.news_desc":
     "该团队部门职责是负责各平台宣传账号的持续运营，以及外交事宜，持续宣传输出并扩大影响能力，并为此向大众输出科普内容，促进传播知识。新闻办会下属一个科普项目组，以及翻译项目组，为科普事业繁荣昌盛，以及中外科技爱好者能有所知识共享，破除信息差和壁垒。",
@@ -119,7 +121,7 @@ export const zh = {
     "该团队部门职责是负责活动、项目等诸多提供专业知识，充实各个专业实际内容。成员是已经确定了想要在这方面深耕的，未来会下管学术项目组，带来更好的学术交流等内容。",
   "team.tech_title": "技术委员会",
   "team.tech_desc":
-    "该团队部门职责是负责各平台、各活动的相应技术上的技术开发与维护，未来将给大家带来更多实用性更强更好的开源项目。需要有编程知识，网站搭建等能。",
+    "该团队部门职责是负责各平台、各活动的相应技术上的技术开发与维护，未来将给大家带来更多实用性更强更好的开源项目。需要有编程、网站搭建等能力。",
   "team.project_title": "项目团队",
   "team.project_desc":
     "由社区成员围绕具体产出目标组建的项目组，把知识整理成教材与科普内容，持续输出给更多需要的人。",
@@ -137,12 +139,8 @@ export const zh = {
   "about.team_section": "我们的团队",
   "about.team_section_sub": "理科迷因为有你，所以更加精彩",
   "about.team_more": "更多成员",
-  "about.team_view_all_hint": "点击查看完整管理团队",
-  "about.team_view_all": "查看全部 →",
   "about.timeline_title": "发展历程",
   "about.timeline_subtitle": "物换星移，春秋代序。",
-  "about.timeline_prev": "上一条",
-  "about.timeline_next": "下一条",
   "about.cta_welcome": "欢迎加入",
   "about.cta_welcome_accent": "理科迷",
   "about.cta_body":
@@ -151,6 +149,9 @@ export const zh = {
   "communities.title": "QQ社群 —— 理科迷",
   "communities.copy": "复制群号",
   "communities.copy_channel": "复制频道 ID",
+  "communities.channel_id_prefix": "频道 ID：",
+  "communities.copied": "已复制！",
+  "communities.copy_failed": "复制失败，请手动选择后复制",
   "communities.sidebar_general": "爱好者总群",
   "communities.sidebar_grades": "年级分段分群",
   "communities.sidebar_groups": "群体分类分群",
@@ -166,11 +167,6 @@ export const zh = {
   "news.label_science": "科普相关",
   "news.posts_count": "篇文章",
   "news.click_hint": "点击查看该分类文章",
-  "services.title": "服务",
-  "services.hero_title": "让科技回归每一个人",
-  "services.hero_paragraph":
-    "理科迷提供多种形式让科学与技术传播，以及社区服务，从学术专业讨论到科普内容，我们致力于打破知识壁垒，打破信息差，让更多人感受到科技的魅力，理性的美。",
-  "services.cta_join": "加入我们",
   "services.sidebar_content": "内容创作",
   "services.sidebar_events": "社区活动",
   "services.sidebar_platform": "知识平台",
@@ -183,17 +179,13 @@ export const zh = {
   "services.section_platform": "知识平台",
   "services.section_platform_sub":
     "理科迷正在建设面向社区成员的知识管理平台，助力学习与协作。",
-  "services.cta_question_pre": "对",
-  "services.cta_question_accent": "理科迷",
-  "services.cta_question_post": "感兴趣？",
-  "services.cta_body":
-    "无论你是想加入社区、投稿创作作品，还是提出合作建议，我们都非常欢迎。",
-  "services.cta_contact": "联系我们",
   "projects.title": "项目大厅",
   "projects.pinned": "置顶",
   "projects.incubated": "七月孵化",
   "projects.progress": "进度",
   "projects.role_missing": "缺",
+  "projects.status_recruiting": "招募中",
+  "projects.status_showcase": "成果展示",
   "pricing.title": "赞助与支持",
   "pricing.hero_title": "让科技传播走得更远",
   "pricing.hero_paragraph":
@@ -221,6 +213,8 @@ export const zh = {
   "contact.reply_note": "我们通常会在 24 小时内回复你的留言。",
   "contact.section_contact": "联系我们",
   "privacy.title": "隐私政策",
+  // 法务页的「最后更新」：改 privacy/terms 正文时必须同时改 zh 与 en 两份（含日期格式差异），
+  // 页面不会自动跟随文件修改时间
   "privacy.updated": "最后更新：2026年9月19日",
   "terms.title": "服务条款",
   "terms.updated": "最后更新：2026年9月19日",
@@ -232,7 +226,6 @@ export const zh = {
     "学术机构、科研工具、文献站点等延伸资源的入口，持续更新中。",
   "resources.network_hint": "部分站点可能需要合适的网络条件才能访问。",
   "resources.go": "前往",
-  "resources.back_home": "返回首页",
 } as const;
 
 /**

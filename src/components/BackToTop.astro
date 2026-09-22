@@ -11,6 +11,8 @@ const lang = (Astro.currentLocale ?? "zh") as Lang;
   data-back-top
   aria-label={t(lang, "common.aria.back_to_top")}
   title={t(lang, "common.aria.back_to_top")}
+  tabindex="-1"
+  aria-hidden="true"
   class="back-top pointer-events-none fixed bottom-8 right-8 z-[9998] flex h-12 w-12 translate-y-20 items-center justify-center rounded-full opacity-0"
 >
   <Icon name="chevronUp" class="w-[18px] h-[18px]" />
@@ -24,10 +26,17 @@ const lang = (Astro.currentLocale ?? "zh") as Lang;
       btn.classList.toggle("opacity-0", !visible);
       btn.classList.toggle("translate-y-20", !visible);
       btn.classList.toggle("pointer-events-none", !visible);
+      // 只做视觉隐藏不够：不可见按钮仍在 Tab 顺序与无障碍树里，需同步语义隐藏
+      btn.tabIndex = visible ? 0 : -1;
+      btn.setAttribute("aria-hidden", String(!visible));
     };
     window.addEventListener("scroll", sync, { passive: true });
     btn.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      // 显式 behavior:"smooth" 会绕过全局的 prefers-reduced-motion 降级，需自行判断
+      const reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
+      window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" });
     });
     sync();
   }

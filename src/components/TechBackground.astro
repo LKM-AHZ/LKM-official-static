@@ -102,6 +102,10 @@
       return min + x;
     }
 
+    // 每帧复用的视差位置缓冲：原来每帧都新建数组与 N 个 {x,y} 对象，
+    // 在节点上限下会持续给 GC 施压
+    const view: { x: number; y: number }[] = [];
+
     function draw(): void {
       t += 0.004;
 
@@ -109,6 +113,11 @@
       impulse *= 0.92;
       drift += (driftTarget - drift) * 0.08;
       const parallax = drift * 0.5 + impulse * 16;
+
+      // 颜色每帧只拼一次：逐节点/逐连线拼 rgba() 字符串一帧就是几千次分配，
+      // 改用不透明底色 + globalAlpha 表达各自透明度，绘制结果等价
+      const nodeColor = `rgb(${colors.node[0]},${colors.node[1]},${colors.node[2]})`;
+      const lineColor = `rgb(${colors.line[0]},${colors.line[1]},${colors.line[2]})`;
 
       g.clearRect(0, 0, w, h);
 
@@ -153,8 +162,9 @@
       g.fillRect(0, 0, w, h);
 
       // 节点（深度越深，随滚动沉浮越明显）
-      const view: { x: number; y: number }[] = [];
-      for (const n of nodes) {
+      view.length = 0;
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
         n.x += n.vx;
         n.y += n.vy;
         if (n.x < -20) n.x = w + 20;
@@ -162,15 +172,20 @@
         if (n.y < -20) n.y = h + 20;
         if (n.y > h + 20) n.y = -20;
         const sy = wrap(n.y - parallax * n.depth, -24, h + 24);
-        view.push({ x: n.x, y: sy });
+        const slot = view[i] ?? (view[i] = { x: 0, y: 0 });
+        slot.x = n.x;
+        slot.y = sy;
         g.beginPath();
         g.arc(n.x, sy, n.r, 0, Math.PI * 2);
-        g.fillStyle = `rgba(${colors.node[0]},${colors.node[1]},${colors.node[2]},${n.a})`;
+        g.fillStyle = nodeColor;
+        g.globalAlpha = n.a;
         g.fill();
       }
 
       // 连线（接缝处自然断开）
       const max = 132;
+      g.strokeStyle = lineColor;
+      g.lineWidth = 1;
       for (let i = 0; i < view.length; i++) {
         for (let j = i + 1; j < view.length; j++) {
           const a = view[i];
@@ -179,16 +194,15 @@
           const dy = a.y - b.y;
           const d = Math.hypot(dx, dy);
           if (d < max) {
-            const alpha = (1 - d / max) * colors.lineAlpha;
+            g.globalAlpha = (1 - d / max) * colors.lineAlpha;
             g.beginPath();
             g.moveTo(a.x, a.y);
             g.lineTo(b.x, b.y);
-            g.strokeStyle = `rgba(${colors.line[0]},${colors.line[1]},${colors.line[2]},${alpha})`;
-            g.lineWidth = 1;
             g.stroke();
           }
         }
       }
+      g.globalAlpha = 1;
     }
 
     function frame(): void {
@@ -202,18 +216,16 @@
       pointer.y = e.clientY / window.innerHeight - 0.5;
     }
 
-    function onWheel(e: WheelEvent): void {
-      if (reduced) return;
-      const push = Math.max(-120, Math.min(120, e.deltaY)) * 0.02;
-      impulse = Math.max(-6, Math.min(6, impulse + push));
-    }
-
     function onScroll(): void {
       const y = window.scrollY;
       const dy = y - lastScrollY;
       lastScrollY = y;
-      driftTarget = y * 0.14;
+      // 视差基准直接取滚动位置即可，但按视口高度截断，避免超长页面上漂移量无界增长；
+      // 节点位置本身会被 wrap 回绕，截断后观感不变
+      driftTarget = Math.min(y, h * 3) * 0.14;
       if (!reduced) {
+        // 冲量只由真实滚动增量驱动。此前 wheel 事件也叠加一次同方向冲量，
+        // 同一次手势被计两遍，很快把 ±6 钳位打满、失去纵深层次
         impulse = Math.max(-6, Math.min(6, impulse + dy * 0.02));
       }
     }
@@ -236,7 +248,6 @@
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("pointermove", onMove, { passive: true });
-    window.addEventListener("wheel", onWheel, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
 

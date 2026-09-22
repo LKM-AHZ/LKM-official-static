@@ -1,3 +1,9 @@
+/* 顺序是有意的，勿调换：
+   1) variables.css 先声明所有 --token；2) tailwind.css 的 @import "tailwindcss" 建立
+   层叠层顺序（theme, base, components, utilities），tech.css 里的 @layer base/components
+   规则只有在这一步之后才有层可归；3) tech.css 最后覆盖组件层细节。
+   另外 CSS 要求所有 @import 必须位于其它规则之前——本文件顶部不要插入任何规则，
+   否则后面的 import 会整链失效。 */
 @import "./variables.css";
 @import "./tailwind.css";
 @import "./tech.css";

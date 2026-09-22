@@ -1,8 +1,12 @@
 // 团队数据（从原 src/data/team-members.json 迁移到 TS，获得类型安全）。
 // 使用 as const satisfies TeamData：既校验结构符合类型，又保留字面量 key，
 // 页面用 memberListKeys / subGroupMapKeys 的联合类型获得补全与校验。
-// 注意：sync-team-avatars.mjs 通过 node --experimental-strip-types 直接读取本文件。
+// 注意：scripts/sync-team-avatars.mts 通过 `node --experimental-strip-types` 直接读取本文件，
+// 因此本文件只能使用「可擦除」的 TS 语法（不要引入 enum / namespace / 参数属性）。
 
+// 这一行必须保持 type-only：剥离类型后会被整行移除；若哪天要在这里取运行期值
+// （如 memberListKeys）而改成普通 import，同步脚本会以 ERR_MODULE_NOT_FOUND 失败
+// ——Node 的 ESM 解析要求显式扩展名。
 import type { TeamData } from "./team-types";
 
 export const teamData = {
@@ -27,12 +31,12 @@ export const teamData = {
       {
         name: "七月知更鸟",
         avatarKey: "七月知更鸟.jpeg",
-        desc: "待填写，这位还是学生在沉淀当中（让我们期待他的成长吧～",
+        desc: "待填写，这位还是学生在沉淀当中（让我们期待他的成长吧～）",
       },
       {
         name: "七月阿鸿",
         avatarKey: "七月阿鸿.jpeg",
-        desc: "待填写，这位还是学生在沉淀当中（让我们期待他的成长吧～",
+        desc: "待填写，这位还是学生在沉淀当中（让我们期待他的成长吧～）",
       },
       {
         name: "七月墨染",
@@ -94,7 +98,7 @@ export const teamData = {
         name: "七月A",
         avatarKey: "七月A.jpg",
         desc: "网站开发的主要牛马",
-        dream: "以后不要当牛马",
+        dream: "梦想：以后不要当牛马",
       },
       { name: "七月合成魔法", avatarKey: "七月合成魔法.jpg" },
     ],
@@ -152,7 +156,7 @@ export const teamData = {
           {
             name: "七月清浅",
             avatarKey: "七月清浅.jpeg",
-            desc: "略微潜水人，知识储量不丰富（",
+            desc: "略微潜水人，知识储量不丰富",
             dream: "梦想：成为一名科研工作者",
           },
           {

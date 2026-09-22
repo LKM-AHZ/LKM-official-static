@@ -264,9 +264,12 @@ const galleryItems = buildGalleryItems(allDocs, lang === "en" ? "en" : "zh");
                         <div class="mb-2 font-mono text-[28px] font-bold text-[var(--primary)]">
                           {item.year}
                         </div>
-                        <div class="mb-3 border-b border-[var(--primary)] pb-2 text-[30px] font-semibold text-deep-text">
+                        {/* 标题用 h3：18 条时间线条目此前全是 div，读屏无法按标题跳转；
+                            年份保持普通文本（它是 "2014 ~ 2016" 这类自由文本，不是合法 datetime，
+                            因此不适合用 <time>） */}
+                        <h3 class="mb-3 border-b border-[var(--primary)] pb-2 text-[30px] font-semibold text-deep-text">
                           {item.title}
-                        </div>
+                        </h3>
                         <div class="text-[15px] leading-relaxed text-text-muted">
                           {item.description}
                         </div>
@@ -424,16 +427,17 @@ const galleryItems = buildGalleryItems(allDocs, lang === "en" ? "en" : "zh");
       const allNextBtns = root.querySelectorAll("[data-ct-arrow='next']");
       if (!track || !clockCol || allPrevBtns.length === 0 || allNextBtns.length === 0) return;
 
-      const total = track.querySelectorAll(".ct-card").length;
+      const cards = Array.from(track.querySelectorAll<HTMLElement>(".ct-card"));
+      const total = cards.length;
+      if (total === 0) return; // 空时间线：否则 angleStep 会是 Infinity
       let currentIndex = 0;
       const angleStep = 360 / total;
-      const firstCard = track.querySelector(".ct-card") as HTMLElement;
-      const cardHeight = firstCard
-        ? firstCard.getBoundingClientRect().height
-        : (track.parentElement as HTMLElement).clientHeight;
 
       function update(): void {
-        track.style.transform = `translate3d(0, -${currentIndex * cardHeight}px, 0)`;
+        // 用目标卡片相对首卡的实际偏移定位，而不是「首卡高度 × 索引」：卡片高度可能不等
+        //（长文本、字体加载完成前后不同），一次性量出来的高度会随索引累积错位
+        const offset = cards[currentIndex].offsetTop - cards[0].offsetTop;
+        track.style.transform = `translate3d(0, -${offset}px, 0)`;
         const pointer = clockCol.querySelector(".clock-pointer") as HTMLElement;
         if (pointer) pointer.style.transform = `rotate(${currentIndex * angleStep}deg)`;
         clockCol.querySelectorAll("[data-ct-tick]").forEach((el) => {
@@ -456,6 +460,8 @@ const galleryItems = buildGalleryItems(allDocs, lang === "en" ? "en" : "zh");
         update();
       }));
 
+      // 跨断点时卡片尺寸变化，按新尺寸重算偏移
+      window.addEventListener("resize", update);
       update();
     }
 

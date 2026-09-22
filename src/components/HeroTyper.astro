@@ -54,7 +54,9 @@ const typingTexts = [title, subtitle].filter(Boolean);
     <h1
       class="text-shadow mb-6 text-[clamp(2.2rem,5.2vw,4.2rem)] font-bold leading-tight text-deep-text"
     >
-      <span data-typing-content>&nbsp;</span><span class="typing-cursor"
+      {/* 用 title 作为 SSR 兜底正文：禁用/未执行 JS 时 h1 不再空白（利于 SEO 与读屏），
+          打字机启动后会用 data-typing-texts 覆写该节点。 */}
+      <span data-typing-content>{title}</span><span class="typing-cursor"
         >|</span
       >
     </h1>

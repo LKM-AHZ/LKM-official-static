@@ -27,7 +27,18 @@ const avatarName = avatarKey
   : undefined;
 const avatarSrc = avatarName ? `/images/avatars/${avatarName}` : undefined;
 
-const fallbackChar = name.replace("七月", "").charAt(0) || name.charAt(0);
+// avatar-map.json 由 scripts/sync-team-avatars.mts 生成，与 team-data.ts 容易漂移；
+// 只在开发期提示，避免线上构建因为一个头像文件缺失就中断
+if (import.meta.env.DEV && avatarKey && !avatarName) {
+  console.warn(
+    `[MemberCard] avatarKey "${avatarKey}" 不在 avatar-map.json 中，已回退为首字头像`,
+  );
+}
+
+// 昵称前的「七月」是团队称呼惯例，作展示用前缀剥掉：必须只匹配开头，
+// 否则名字中间含「七月」的成员会被 replace 挖掉中间那两字
+const displayName = name.startsWith("七月") ? name.slice(2) : name;
+const fallbackChar = displayName.charAt(0) || name.charAt(0);
 const avatarSize = isLg
   ? "w-16 h-16 sm:w-24 sm:h-24"
   : "w-10 h-10 sm:w-16 sm:h-16";

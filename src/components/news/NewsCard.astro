@@ -22,10 +22,7 @@ const minutesLabel = lang === "en" ? `${minutes} min read` : `${minutes} 分钟`
 const gradient = coverGradient(title);
 ---
 
-<a
-  href={href}
-  class="card-hover group flex h-full flex-col rounded-2xl no-underline"
->
+<div class="card-hover group flex h-full flex-col rounded-2xl">
   <div
     class="relative h-40 w-full shrink-0 overflow-hidden md:h-44"
     style={image ? undefined : { background: gradient }}
@@ -33,7 +30,7 @@ const gradient = coverGradient(title);
     {image ? (
       <img
         src={image}
-        alt=""
+        alt={title}
         width={1200}
         height={630}
         loading="lazy"
@@ -42,15 +39,22 @@ const gradient = coverGradient(title);
       />
     ) : undefined}
     {tagLabel && (
-      <span class="absolute bottom-3 left-4 rounded-full bg-black/30 px-2.5 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
+      <span class="absolute bottom-3 left-4 rounded-full bg-black/60 px-2.5 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
         {tagLabel}
       </span>
     )}
   </div>
 
   <div class="flex flex-1 flex-col p-6 pt-5">
-    <h2 class="text-lg font-bold leading-snug text-deep-text transition-colors group-hover:text-primary">
-      {title}
+    {/* 链接只包标题（可访问名就是标题，不再把摘要/日期/时长都念出来），
+        再用 ::after 铺满整卡保留「整卡可点」的命中区 */}
+    <h2 class="text-lg font-bold leading-snug text-deep-text">
+      <a
+        href={href}
+        class="no-underline transition-colors group-hover:text-primary after:absolute after:inset-0 after:content-['']"
+      >
+        {title}
+      </a>
     </h2>
 
     {desc && <p class="mt-2 text-sm leading-relaxed text-text-muted line-clamp-3">{desc}</p>}
@@ -61,4 +65,4 @@ const gradient = coverGradient(title);
       <span>{minutesLabel}</span>
     </div>
   </div>
-</a>
+</div>

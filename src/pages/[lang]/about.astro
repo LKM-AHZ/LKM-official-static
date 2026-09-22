@@ -202,13 +202,13 @@ const platformItems = [
             {t(lang, "about.cta_body")}
           </p>
         </div>
-        <div class="max-w-xs sm:max-w-md m-auto flex flex-nowrap flex-col sm:flex-row sm:justify-center gap-4 mt-6">
-          <div class="flex w-full sm:w-auto">
-            <a href="#content" class="btn btn-primary w-full sm:mb-0 pointer-events-auto">
-              {t(lang, "about.cta_services")}
-              <Icon name="arrowRight" class="w-5 h-5 inline-block" />
-            </a>
-          </div>
+        {/* 单个 CTA：父容器已是 flex，去掉多余包裹层与 w-full/sm:mb-0/pointer-events-auto
+            这几个从别处带过来的死类 */}
+        <div class="max-w-xs sm:max-w-md m-auto mt-6 flex justify-center">
+          <a href="#content" class="btn btn-primary w-full sm:w-auto">
+            {t(lang, "about.cta_services")}
+            <Icon name="arrowRight" class="w-5 h-5 inline-block" />
+          </a>
         </div>
       </div>
     </div>

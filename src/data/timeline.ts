@@ -4,6 +4,12 @@ export interface TimelineItem {
   description: string;
 }
 
+/**
+ * 发展历程条目。顺序即展示顺序（数组本身不排序）。
+ * 注意 year 是**展示用**的自由文本（"2014.08.01" / "2014 ~ 2016" / "2016"），
+ * 区间与年份混排，因此「后一条的起点不早于前一条的终点」只能靠人工保证——
+ * 新增/调整条目时请自行对照上下两条，勿按字符串比较。
+ */
 export const timelineItems: TimelineItem[] = [
   {
     year: "2014.08.01",

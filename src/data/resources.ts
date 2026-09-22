@@ -12,7 +12,7 @@ export interface SiteLink {
   descZh: string;
   /** 一行简介（英文）*/
   descEn: string;
-  /** 推荐入口 URL；有 alts 时此字段可略，仅作首要入口 */
+  /** 推荐入口 URL；可省略。省略时消费方回退到 alts[0].url，且仍应渲染镜像列表 */
   url?: string;
   /** 英文（国际）版本的首选 URL。网页处于 /en 时优先用，缺省则回退 url。 */
   urlEn?: string;
@@ -49,7 +49,7 @@ export const RESOURCE_SITES: SiteLink[] = [
   },
   {
     abbr: "P",
-    nameZh: "NCBI PubChem",
+    nameZh: "PubChem 化合物数据库",
     nameEn: "PubChem",
     descZh: "化合物、分子式与生物活性的开放化学数据库。",
     descEn: "Open chemistry database: molecules, formulas, bioactivity.",
@@ -77,11 +77,12 @@ export const RESOURCE_SITES: SiteLink[] = [
     nameEn: "Z-Library",
     descZh: "大型在线数字图书馆（域名多变，需要适当的网络条件；请注意版权）。",
     descEn:
-      "Online library — domains change; needs appropriate network access.",
+      "Online library — domains change; needs appropriate network access. Mind copyright.",
     advisory: true,
     url: "https://zh.z-library.sk/",
     urlEn: "https://z-library.sk/",
-    alts: [{ label: "备用镜像 · 101ml.by", url: "https://zh.101ml.by/" }],
+    // label 不再写死镜像域名：域名只保留在 url 里，避免两处不同步
+    alts: [{ label: "备用镜像", url: "https://zh.101ml.by/" }],
   },
   {
     abbr: "W",

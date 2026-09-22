@@ -2,6 +2,7 @@
 // 现阶段复用 docs 集合里带封面图的文章（与新闻列表同一内容源），
 // 组件层不关心数据来自哪里，后续接入真实影像只需替换这里的数据来源。
 import { formatDate } from "../components/news/format";
+import { docHref } from "../i18n/paths";
 
 export interface GalleryItem {
   /** 列表缩略图 */
@@ -20,7 +21,6 @@ export interface GalleryDoc {
   data: {
     title: string;
     publishDate: Date;
-    lang?: string;
     image?: string;
   };
 }
@@ -33,20 +33,24 @@ export function buildGalleryItems(
   lang: "zh" | "en",
   limit = 6,
 ): GalleryItem[] {
-  return docs
-    .filter(
-      (doc) => (doc.data.lang ?? "zh") === lang && Boolean(doc.data.image),
-    )
-    .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime())
-    .slice(0, limit)
-    .map((doc) => {
-      const src = doc.data.image as string;
-      return {
-        src,
-        full: src,
-        title: doc.data.title,
-        caption: formatDate(doc.data.publishDate, lang),
-        href: `/docs/${doc.id.split("/").slice(1).join("/")}`,
-      };
-    });
+  return (
+    docs
+      // 语言以 entry id 的路径前缀为准（与 news.astro、docs/[...slug].astro 同源）：
+      // frontmatter 的 lang 是可选兜底，漏写时会把英文站文章错当中文
+      .filter((doc) => doc.id.startsWith(`${lang}/`) && Boolean(doc.data.image))
+      .sort(
+        (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime(),
+      )
+      .slice(0, limit)
+      .map((doc) => {
+        const src = doc.data.image as string;
+        return {
+          src,
+          full: src,
+          title: doc.data.title,
+          caption: formatDate(doc.data.publishDate, lang),
+          href: docHref(doc.id),
+        };
+      })
+  );
 }

@@ -7,6 +7,9 @@ const lang = (Astro.currentLocale ?? "zh") as string;
 import { getStaticPathsForLang } from "../../i18n/paths";
 export const getStaticPaths = getStaticPathsForLang;
 
+// 提醒：本文件的政策正文一旦修改，必须同步更新 i18n 的 privacy.updated
+// （zh.ts / en.ts 两份都要改）——页面展示的「最后更新」日期来自那里，不在这里自动跟随。
+
 const copy =
   lang === "en"
     ? {
@@ -14,7 +17,7 @@ const copy =
           "This policy explains how information is handled when you visit the LiKeMi (LKM) static website.",
         scopeTitle: "Information handled by this website",
         scope:
-          "This website does not provide user accounts, online payments, or server-side form submission. The contact form is a visual demonstration and does not transmit the name, email address, or message entered into it.",
+          "This website does not provide user accounts, online payments, or server-side form submission. The contact form is a visual demonstration: with JavaScript enabled it only shows a local notice and does not send the name, email address, or message you enter to any server.",
         localTitle: "Local browser storage",
         local:
           "The site stores only your day/night theme preference in localStorage on your device. You can remove it at any time by clearing this site's browser data.",
@@ -39,7 +42,7 @@ const copy =
           "本政策说明您访问理科迷（LKM）静态官网时，相关信息会如何被处理。",
         scopeTitle: "本站处理的信息",
         scope:
-          "本站不提供用户账户、在线支付或服务器端表单提交。联系表单仅用于界面展示，不会发送您填写的姓名、邮箱或留言内容。",
+          "本站不提供用户账户、在线支付或服务器端表单提交。联系表单仅用于界面展示：在浏览器启用 JavaScript 时，它只在本地给出提示，不会把您填写的姓名、邮箱或留言内容发送给任何服务器。",
         localTitle: "浏览器本地存储",
         local:
           "本站仅使用 localStorage 在您的设备上保存日间或夜间主题偏好。您可以随时通过清除本站浏览器数据将其删除。",

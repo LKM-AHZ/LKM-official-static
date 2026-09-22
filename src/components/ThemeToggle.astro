@@ -17,6 +17,9 @@ const lang = (Astro.currentLocale ?? "zh") as Lang;
 const { class: className } = Astro.props;
 const toNight = t(lang, "common.theme_to_night");
 const toDay = t(lang, "common.theme_to_day");
+// 构建期不知道访问者的主题（防闪脚本在 head 里才写 data-theme），故首屏标签用中性文案，
+// 由 syncLabels() 立刻收窄为「切换到夜晚/白天模式」，夜间用户不会被读成相反的指令
+const toggleLabel = t(lang, "common.theme_toggle");
 ---
 
 <button
@@ -25,8 +28,8 @@ const toDay = t(lang, "common.theme_to_day");
   data-theme-toggle
   data-label-to-night={toNight}
   data-label-to-day={toDay}
-  aria-label={toNight}
-  title={toNight}
+  aria-label={toggleLabel}
+  title={toggleLabel}
 >
   <span data-theme-icon="day" class="flex items-center justify-center">
     <Icon name="moon" class="w-[18px] h-[18px]" />
@@ -50,10 +53,10 @@ const toDay = t(lang, "common.theme_to_day");
 
 <script>
   import {
-    applyTheme,
     getTheme,
     onThemeChange,
     THEME_COLORS,
+    toggleTheme,
   } from "../lib/theme";
 
   function syncLabels(): void {
@@ -76,7 +79,8 @@ const toDay = t(lang, "common.theme_to_day");
     .querySelectorAll<HTMLElement>("[data-theme-toggle]")
     .forEach((btn) => {
       btn.addEventListener("click", () => {
-        applyTheme(getTheme() === "day" ? "night" : "day");
+        // 用 lib/theme 的 toggleTheme()，别在这里重写「当前主题取反」的规则
+        toggleTheme();
       });
     });
 

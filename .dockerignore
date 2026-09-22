@@ -2,3 +2,17 @@ node_modules
 dist
 .git
 .claude
+# 构建/系统/编辑器噪声，与 .gitignore 同口径，避免每次都塞进构建上下文
+.astro
+coverage
+*.log
+.DS_Store
+.vscode
+.idea
+# 与 .gitignore 同口径排除密钥/环境文件：当前 static.Dockerfile 只 COPY 显式路径，
+# 但构建上下文仍会整包传给 daemon，将来一旦出现宽口径 COPY . . 就会把凭据打进镜像层
+.env
+.env.*
+!.env.example
+*.pem
+*.key

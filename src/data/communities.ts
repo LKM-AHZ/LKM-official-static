@@ -6,6 +6,8 @@ export interface Community {
 }
 
 export interface CommunityCategory {
+  /** 稳定锚点 id：侧栏 #锚点与 section id 都由它派生（i18n 键 communities.sidebar_<id> 同后缀） */
+  id: string;
   label: string;
   intro?: string;
   groups: Community[];
@@ -13,6 +15,7 @@ export interface CommunityCategory {
 
 export const communityCategories: CommunityCategory[] = [
   {
+    id: "general",
     label: "爱好者总群",
     intro:
       "不属于特定专业、不限工作种类、不限年级阶段、不限水平，所有人都可以加入的大家庭！日常吹水聊天，遇到问题时大家积极讨论，欢迎分享学习和生活～",
@@ -32,6 +35,7 @@ export const communityCategories: CommunityCategory[] = [
     ],
   },
   {
+    id: "grades",
     label: "年级分段分群",
     intro:
       "组织里有各个不同学习阶段的成员，为了大家能够具体聊得开来，分有初中和高中阶段，大学可按照自己所需加入专业群。",
@@ -64,6 +68,7 @@ export const communityCategories: CommunityCategory[] = [
     ],
   },
   {
+    id: "groups",
     label: "群体分类分群",
     intro:
       "欢迎各路人员——科普工作者、科研工作者、教育工作者、各行各业的工程师、企业等以及各社会组织加入。未来立志于科研转化、项目促成以及孵化等。按照不同想法或行业分类，给大家更好的探讨空间。",
@@ -81,6 +86,7 @@ export const communityCategories: CommunityCategory[] = [
     ],
   },
   {
+    id: "basic",
     label: "自然/基础学科中心群",
     intro:
       '自然/基础学科是万物根本，应用学科从此生根发芽延伸到诸多领域。欢迎对基础学科感兴趣的"理科迷"们加入！',
@@ -123,6 +129,7 @@ export const communityCategories: CommunityCategory[] = [
     ],
   },
   {
+    id: "applied",
     label: "应用科学",
     intro:
       "应用学科尚在建设中，人还很少。如果想当学科负责人，把自己专业感兴趣的内容建设好并发扬光大，欢迎联系并加入理科迷团队！理科迷需要你！",
@@ -165,7 +172,7 @@ export const communityCategories: CommunityCategory[] = [
       {
         name: "地学工程总群",
         qqGroup: "815363412",
-        desc: "这里是理科迷·学术专业·应用科学·地学总群内容讨论交流群，是【腾讯物理部落】官方群之一，欢迎各对测绘、地质、矿业、安全，科学与工程等等，感兴趣和研究的本专业学生、医学老师、地学相关从业者、科研工作者、科普工作者、科技爱好者等人员。",
+        desc: "这里是理科迷·学术专业·应用科学·地学总群内容讨论交流群，是【腾讯物理部落】官方群之一，欢迎各对测绘、地质、矿业、安全，科学与工程等等，感兴趣和研究的本专业学生、地学老师、地学相关从业者、科研工作者、科普工作者、科技爱好者等人员。",
       },
       {
         name: "医学总部",
@@ -185,6 +192,7 @@ export const communityCategories: CommunityCategory[] = [
     ],
   },
   {
+    id: "hobby",
     label: "兴趣板块社团",
     intro:
       "群友各种兴趣爱好组成的社团。小伙伴们如果有所感兴趣欢迎加入一起玩，每逢寒暑假群里面都会有活动。",
@@ -207,7 +215,7 @@ export const communityCategories: CommunityCategory[] = [
       {
         name: "二次元的音游社",
         qqGroup: "1065753583",
-        desc: "料理学社最主要是探讨做饭和料理学相关化学反应，供大家交流厨艺和展示自己做的饭菜。未来还可以的话做些教做饭的直播和教程。",
+        desc: "以音乐节奏游戏（音游）为主：交流街机与移动端曲目、判定技巧和手元视频，也会聊动漫、二次元相关内容，欢迎音游玩家与二次元爱好者加入～",
       },
       {
         name: "料理学社",
@@ -222,6 +230,7 @@ export const communityCategories: CommunityCategory[] = [
     ],
   },
   {
+    id: "events",
     label: "常驻活动板块分群",
     intro: "",
     groups: [
@@ -238,6 +247,7 @@ export const communityCategories: CommunityCategory[] = [
     ],
   },
   {
+    id: "legacy",
     label: "原始老群",
     intro:
       "这个群目前换不了群主，也就是说无法更换新的管理团队，所以有点远古和落寞。但纪念意义很强，可以说2014年理科迷兴起就是靠着物理部落的宣传。",

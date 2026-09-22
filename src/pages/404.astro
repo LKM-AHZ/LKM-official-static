@@ -3,24 +3,37 @@ import OfficialLayout from "../layouts/OfficialLayout.astro";
 import { t } from "../i18n/index";
 import { langUrl } from "../i18n/paths";
 
-// 404 不是 [lang] 路由，Astro.currentLocale 不可用，需从请求 URL 推导语言。
-// /en/* 的 404 显示英文，其余路径(含 /zh/ 、根 /)的 404 显示中文。
-const lang = Astro.url.pathname.startsWith("/en") ? "en" : "zh";
-const title = t(lang, "notfound.title");
-const message = t(lang, "notfound.message");
-const back = t(lang, "notfound.back");
-const backHref = langUrl(lang, "/");
+// 纯静态输出（astro.config.ts: output:"static"）下本页只在构建期预渲染一次：
+// Astro.url.pathname 恒为路由路径 /404，而不是访问者请求的路径，所以「从请求 URL
+// 推导语言」在产物里不成立——/en/* 与根路径共用同一份 404.html。
+// 因此不再做语言分流，改为输出中英双语中性文案并给出两种语言的回站入口，
+// 保证英文访客也能读到可理解的内容、点到英文入口。
+const zhHome = langUrl("zh", "/");
+const enHome = langUrl("en", "/");
 ---
-<OfficialLayout title={title} currentPath="/404" noindex>
+<OfficialLayout
+  title={`${t("zh", "notfound.title")} / ${t("en", "notfound.title")}`}
+  currentPath="/404"
+  noindex
+>
   <section class="flex min-h-[70vh] items-center justify-center py-24">
     <div class="card-hover rounded-3xl px-12 py-16 text-center">
-      <div
+      {/* 用 h1 而不是 div：本页此前整页没有任何标题，读屏与大纲导航都拿不到页面主体 */}
+      <h1
         class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-7xl font-bold text-transparent"
       >
         404
+      </h1>
+      <p class="mt-4 text-lg text-text-muted">{t("zh", "notfound.message")}</p>
+      <p class="mt-1 text-base text-text-muted">{t("en", "notfound.message")}</p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href={zhHome} class="btn btn-primary">
+          {t("zh", "notfound.back")}
+        </a>
+        <a href={enHome} class="btn btn-primary">
+          {t("en", "notfound.back")}
+        </a>
       </div>
-      <p class="mt-4 text-lg text-text-muted">{message}</p>
-      <a href={backHref} class="btn btn-primary mt-8">{back}</a>
     </div>
   </section>
 </OfficialLayout>

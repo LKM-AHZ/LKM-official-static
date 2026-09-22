@@ -9,11 +9,7 @@
 
 @plugin '@tailwindcss/typography';
 
-/* 夜间模式下全局文字颜色自动适配 */
 @layer base {
-  [data-theme="night"] .text-deep-text {
-    color: var(--deep-text);
-  }
   /* 统一可见焦点环，保证键盘导航可感知 */
   :focus-visible {
     outline: 2px solid var(--primary);
@@ -177,7 +173,9 @@
   }
 }
 
-.profile-card,
+/* 只作用于卡内元素：本规则未分层，会盖过 @utility profile-card 里的 transition
+   （未分层样式优先于任何 layer），若把 .profile-card 也算进来，会静默丢掉
+   卡片自身的 border-color/background 过渡，hover 边框变色变成瞬变。 */
 .profile-card .profile-inner,
 .profile-card img {
   transition:
@@ -266,7 +264,16 @@
   .ct-root {
     width: 100%;
     content-visibility: auto;
-    contain-intrinsic-size: auto 1100px;
+    /* 首帧占位高度要贴近真实渲染高度，否则会先多占/少占一大截、造成可见的滚动跳动：
+       实测移动端约 860px、桌面端约 600px（原值 1100px 在桌面端会多占约 500px）。
+       auto 关键字在首次渲染后会记住真实高度，故这里只影响首帧。 */
+    contain-intrinsic-size: auto 860px;
+  }
+
+  @media (min-width: 768px) {
+    .ct-root {
+      contain-intrinsic-size: auto 600px;
+    }
   }
 
   .ct-layout {
@@ -494,16 +501,14 @@
     height: 380px;
   }
 
+  /* 合并为一条：原先拆成两条、靠源码顺序决定 padding 的最终值（0 → 0 0.5rem 0 0），
+     任何一次编辑都可能悄悄改变结果 */
   .ct-card {
     min-height: 380px;
-    padding: 0;
-  }
-
-  .ct-card {
+    padding: 0 0.5rem 0 0;
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
-    padding-right: 0.5rem;
   }
 
   .ct-arrows-desktop {
@@ -577,7 +582,9 @@
            hover:brightness-110 active:brightness-90;
   }
   .btn-neutral {
-    @apply bg-[var(--neutral)] text-white
+    /* 文字色走 --neutral-content（day #ffffff / night #050a14）：写死 text-white 时，
+       夜间主题下白字压浅色 --neutral 的对比度只有约 2.8:1 */
+    @apply bg-[var(--neutral)] text-[var(--neutral-content)]
            hover:brightness-110 active:brightness-90;
   }
   .btn-link {

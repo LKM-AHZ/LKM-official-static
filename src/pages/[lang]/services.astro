@@ -19,7 +19,8 @@ const canonical = new URL(dest, site).href;
     <title>{title}</title>
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href={canonical} />
-    <meta http-equiv="refresh" content="0; url={dest}" />
+    {/* 属性值必须用模板字符串插值：引号里写 {dest} 会被 Astro 当字面量原样输出，跳转失效 */}
+    <meta http-equiv="refresh" content={`0; url=${dest}`} />
   </head>
   <body>
     <p><a href={dest}>{lang === "en" ? "Services now live inside About — jump there" : "服务内容已并入「关于」页 — 正在前往"}</a></p>

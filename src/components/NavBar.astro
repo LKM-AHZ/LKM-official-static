@@ -6,7 +6,7 @@ import LanguageSwitcher from "./LanguageSwitcher.astro";
 import { SITE_NAME } from "../data/config";
 import { t } from "../i18n/index";
 import type { Lang, TranslationKey } from "../i18n/index";
-import { langUrl } from "../i18n/paths";
+import { langUrl, stripLangPrefix } from "../i18n/paths";
 
 /**
  * 刘海式顶栏（fixed）：通栏贴顶、仅下缘圆角，形似屏幕刘海。
@@ -15,7 +15,7 @@ import { langUrl } from "../i18n/paths";
 const lang = (Astro.currentLocale ?? "zh") as Lang;
 
 /** 当前页（已剥离语言前缀），用于导航激活态 */
-const currentPath = Astro.url.pathname.replace(/^\/(zh|en)(?=\/|$)/, "") || "/";
+const currentPath = stripLangPrefix(Astro.url.pathname);
 
 const navLinks: { href: string; key: TranslationKey }[] = [
   { href: "/", key: "common.nav_home" },
@@ -23,6 +23,11 @@ const navLinks: { href: string; key: TranslationKey }[] = [
   { href: "/about", key: "common.nav_about" },
   { href: "/team", key: "common.nav_team" },
 ];
+
+// 首页只在精确匹配时激活（否则任何路径都会点亮它）；其余按路径段前缀匹配，
+// 这样 /news/<slug> 之类的子页面也能点亮它的父级导航项
+const isActive = (href: string): boolean =>
+  href === "/" ? currentPath === "/" : currentPath === href || currentPath.startsWith(`${href}/`);
 
 const communityHref = langUrl(lang, "/communities");
 const communityLabel = t(lang, "common.nav_communities");
@@ -49,7 +54,8 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
           <BrandMark size={38} />
           <span class="text-xl font-bold tracking-wide text-deep-text">
             {brandLabel}
-            <span class="text-[var(--primary)]">LKM</span>
+            {/* en 下 brandLabel 本身已是 "LKM"，再拼一次会得到 "LKMLKM" */}
+            {lang !== "en" && <span class="ml-1 text-[var(--primary)]">LKM</span>}
           </span>
         </a>
       </div>
@@ -62,11 +68,11 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
               href={langUrl(lang, l.href)}
               class:list={[
                 "group relative text-base no-underline transition-colors",
-                currentPath === l.href
+                isActive(l.href)
                   ? "text-[var(--primary)]"
                   : "text-text-muted hover:text-deep-text",
               ]}
-              aria-current={currentPath === l.href ? "page" : undefined}
+              aria-current={isActive(l.href) ? "page" : undefined}
             >
               {t(lang, l.key)}
               <span class="nav-underline" aria-hidden="true" />
@@ -129,21 +135,17 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
               href={langUrl(lang, l.href)}
               class:list={[
                 "rounded-lg px-3 py-2.5 text-base no-underline transition-colors",
-                currentPath === l.href
+                isActive(l.href)
                   ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
                   : "text-text-muted hover:text-deep-text",
               ]}
+              aria-current={isActive(l.href) ? "page" : undefined}
             >
               {t(lang, l.key)}
             </a>
           ))
         }
-        <a
-          href={communityHref}
-          class="rounded-lg px-3 py-2.5 text-base text-text-muted no-underline transition-colors hover:text-deep-text"
-        >
-          {communityLabel}
-        </a>
+        {/* 社区入口下方已有 btn-primary 的 CTA，此处不再重复一个同 href 同文案的普通行 */}
         <div class="mt-2 flex items-center justify-between px-3">
           <LanguageSwitcher />
           <a href={communityHref} class="btn btn-primary btn-sm">

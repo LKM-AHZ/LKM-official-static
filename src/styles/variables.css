@@ -41,7 +41,9 @@
   --card-bg: #ffffff;
   --surface-3: rgba(70, 120, 190, 0.18);
   --deep-text: #10233d;
-  --text-muted: rgba(16, 35, 61, 0.58);
+  /* 0.68 而非 0.58：叠加在白色卡片上时 0.58 的对比度约 4.0:1，低于正文的 AA 4.5:1；
+     0.68 约 5.5:1，也更接近夜间版该 token 的观感（约 6:1） */
+  --text-muted: rgba(16, 35, 61, 0.68);
 
   /* 主色 / 强调 */
   --hue: 230;
@@ -232,6 +234,16 @@
   --nav-shadow: 0 14px 38px rgba(31, 70, 130, 0.12);
   --nav-mobile-bg: rgba(255, 255, 255, 0.97);
 
+  /* 高亮线（顶栏 hover 下划线 / 侧栏 active 竖线）、图标气泡辉光、灯箱遮罩：
+     原先散落为 tech.css / 组件里的字面量，收成 token 才能随主题调整；
+     当前 day 与 night 取值相同（沿用源设计），改主题时只改这里。 */
+  --accent-line-from: #7fd4ff;
+  --accent-line-to: #b9c8ff;
+  --accent-line-glow: rgba(127, 212, 255, 0.6);
+  --icon-bubble-glow: rgba(91, 184, 255, 0.1);
+  --icon-bubble-shadow: rgba(0, 0, 0, 0.08);
+  --lightbox-backdrop: rgba(4, 8, 16, 0.82);
+
   --backtop-bg: rgba(255, 255, 255, 0.9);
   --backtop-edge: rgba(10, 111, 194, 0.22);
 
@@ -265,8 +277,12 @@
 
 /* ============================================================
    夜晚主题：<html data-theme="night">
+   用 :root[data-theme=...] 提高特异性，使夜晚覆盖不依赖声明顺序
+   （day 那边是 `:root, [data-theme="day"]`，同为 (0,1,0)，原先只能靠写在后面取胜）；
+   注意不能把 day 块收窄成 [data-theme="day"]——--enter-btn-*、--inline-code-* 这类
+   var() 别名只在该块声明，夜晚模式下仍需要它们存在。
    ============================================================ */
-[data-theme="night"] {
+:root[data-theme="night"] {
   color-scheme: dark;
 
   --base-100: #081120;
@@ -444,6 +460,14 @@
   --nav-edge: rgba(255, 255, 255, 0.1);
   --nav-shadow: 0 16px 42px rgba(3, 8, 22, 0.28);
   --nav-mobile-bg: rgba(14, 21, 38, 0.97);
+
+  /* 与 day 同值（源设计的青蓝高亮不随主题变），保留独立定义以便将来单独调 */
+  --accent-line-from: #7fd4ff;
+  --accent-line-to: #b9c8ff;
+  --accent-line-glow: rgba(127, 212, 255, 0.6);
+  --icon-bubble-glow: rgba(91, 184, 255, 0.1);
+  --icon-bubble-shadow: rgba(0, 0, 0, 0.08);
+  --lightbox-backdrop: rgba(4, 8, 16, 0.82);
 
   --backtop-bg: rgba(10, 16, 30, 0.82);
   --backtop-edge: rgba(159, 212, 255, 0.18);

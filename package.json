@@ -17,13 +17,11 @@
     "check:prettier": "prettier --check .",
     "check": "pnpm run check:astro && pnpm run check:eslint && pnpm run check:prettier",
     "compile": "tsc --noEmit",
-    "lint": "eslint src scripts",
-    "format:check": "prettier --check .",
+    "lint": "eslint .",
     "fix": "pnpm run fix:eslint && pnpm run fix:prettier",
     "fix:eslint": "eslint --fix .",
     "fix:prettier": "prettier -w .",
-    "test": "vitest run",
-    "test:smoke": "vitest run"
+    "test": "vitest run"
   },
   "dependencies": {
     "astro": "^7.1.3",

@@ -4,8 +4,9 @@
  * 由 OfficialLayout 渲染一次；不要在别处重复引入，否则会产生重复标签。
  */
 import { getAbsoluteLocaleUrl } from "astro:i18n";
-import { SITE_DESCRIPTION, SITE_NAME } from "../data/config";
-import { SUPPORTED_LANGS } from "../i18n/index";
+import { SITE_NAME } from "../data/config";
+import { DEFAULT_LANG, SUPPORTED_LANGS, t } from "../i18n/index";
+import { stripLangPrefix } from "../i18n/paths";
 import { THEME_COLORS } from "../lib/theme";
 
 interface Props {
@@ -22,10 +23,15 @@ interface Props {
   publishedTime?: string;
 }
 
+/** 品牌默认分享图（唯一尺寸已知的图，见下方 og:image:width/height 的条件） */
+const OG_DEFAULT_IMAGE = "/images/og-default.png";
+
 const {
   title,
-  description = SITE_DESCRIPTION,
-  image = "/images/og-default.png",
+  // 默认描述按 locale 取 i18n：原先固定用中文 SITE_DESCRIPTION，会让省略 description
+  // 的页面（如 404）在英文站点输出中文描述
+  description = t(Astro.currentLocale ?? DEFAULT_LANG, "common.site.description"),
+  image = OG_DEFAULT_IMAGE,
   type = "website",
   noindex = false,
   includeWebsiteJsonLd = false,
@@ -35,24 +41,42 @@ const {
 const site = Astro.site ?? new URL("https://lkm-ahz.icu");
 const canonical = Astro.url.href;
 const ogImage = new URL(image, site).href;
+// 尺寸只对品牌图成立：文章页用的是远程分享图（内容里是 1200x650），
+// 若一律声明 1200x630，抓取方按错误比例裁剪预览图
+const ogImageIsDefault = image === OG_DEFAULT_IMAGE;
 
-// 404 等非 [lang] 路由下 currentLocale 为 undefined，此时不生成 hreflang
+// 是否真的是带语言前缀的页面：不能用 currentLocale 是否为 undefined 判断——
+// Astro 对 /404 这类非 [lang] 路由会回落到默认语言（zh），于是 404 会生成
+// /zh/404/、/en/404/ 这些并不存在的 hreflang alternate，并自称 og:locale=zh_CN。
+// 用「剥掉前缀后路径是否变化」来判定，语言中立的页面就不再声明语言相关元信息。
+const pathname = Astro.url.pathname;
+const localized = stripLangPrefix(pathname) !== pathname;
 const locale = Astro.currentLocale as "zh" | "en" | undefined;
-const localized = locale !== undefined;
-const ogLocale = locale === "en" ? "en_US" : "zh_CN";
-const ogLocaleAlternate = locale === "en" ? "zh_CN" : "en_US";
+const ogLocale =
+  !localized || locale === undefined
+    ? undefined
+    : locale === "en"
+      ? "en_US"
+      : "zh_CN";
+const ogLocaleAlternate =
+  !localized || locale === undefined
+    ? undefined
+    : locale === "en"
+      ? "zh_CN"
+      : "en_US";
 
 // 去掉语言前缀得到语言中立路径，用于生成各语言 alternate
-const pathWithoutLocale = localized
-  ? Astro.url.pathname.replace(/^\/(zh|en)(?=\/|$)/, "") || "/"
-  : "/";
+// （前缀集合由 SUPPORTED_LANGS 派生，新增语言时这里的匹配不会落后于配置）
+const pathWithoutLocale = localized ? stripLangPrefix(pathname) : "/";
 const alternates = localized
   ? SUPPORTED_LANGS.map((lang) => ({
       lang,
       href: getAbsoluteLocaleUrl(lang, pathWithoutLocale),
     }))
   : [];
-const xDefault = localized ? getAbsoluteLocaleUrl("zh", pathWithoutLocale) : undefined;
+const xDefault = localized
+  ? getAbsoluteLocaleUrl(DEFAULT_LANG, pathWithoutLocale)
+  : undefined;
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -60,7 +84,8 @@ const organizationJsonLd = {
   "@id": new URL("/#organization", site).href,
   name: SITE_NAME,
   alternateName: "LKM",
-  url: new URL("/zh/", site).href,
+  // 组织 URL 用站点根，而不是写死中文首页：英文/中立页面不该把 /zh/ 报成机构地址
+  url: new URL("/", site).href,
   logo: new URL("/favicon.svg", site).href,
   foundingDate: "2014",
 };
@@ -111,15 +136,21 @@ const articleJsonLd =
 {description && <meta property="og:description" content={description} />}
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={ogImage} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
+{ogImageIsDefault && (
+  <>
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+  </>
+)}
 <meta
   property="og:image:alt"
   content={locale === "en" ? `${SITE_NAME} official share image` : `${SITE_NAME} 官方分享图`}
 />
-<meta property="og:locale" content={ogLocale} />
+{ogLocale && <meta property="og:locale" content={ogLocale} />}
 {localized && <meta property="og:locale:alternate" content={ogLocaleAlternate} />}
-{publishedTime && <meta property="article:published_time" content={publishedTime} />}
+{type === "article" && publishedTime && (
+  <meta property="article:published_time" content={publishedTime} />
+)}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />

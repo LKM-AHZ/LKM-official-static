@@ -9,7 +9,8 @@ export const en = {
   "common.nav_team": "Team",
   "common.nav_articles": "News",
   "common.nav_communities": "Community",
-  "common.footer.copyright": "LiKeMi LKM © 2026 · All rights reserved.",
+  // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚）
+  "common.footer.copyright": "LiKeMi LKM © {year} · All rights reserved.",
   "common.footer.tagline": "Bringing science back to everyone",
   "common.footer.col_community": "Community",
   "common.footer.col_pages": "Pages",
@@ -32,6 +33,7 @@ export const en = {
   "common.aria.page_toc": "Table of contents",
   "common.aria.back_to_top": "Back to top",
   "common.aria.close": "Close",
+  "common.theme_toggle": "Toggle theme",
   "common.theme_to_night": "Switch to night mode",
   "common.theme_to_day": "Switch to day mode",
   "common.site.description": "LiKeMi (LKM) Official Website",
@@ -142,18 +144,14 @@ export const en = {
   "about.hero_title": "About LiKeMi",
   "about.hero_paragraph":
     "LiKeMi (LKM) was founded in 2014 as a community of science and technology enthusiasts. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works together.",
-  "about.values_title": "Bring science back to everyone",
+  "about.values_title": "Bringing science back to everyone",
   "about.values_subtitle":
     "We believe science and technology should be within reach — not out of reach.",
   "about.team_section": "Our Team",
   "about.team_section_sub": "LiKeMi is better because of you",
   "about.team_more": "More Members",
-  "about.team_view_all_hint": "View the full management team",
-  "about.team_view_all": "View All →",
   "about.timeline_title": "Timeline",
   "about.timeline_subtitle": "Seasons change, and so do we.",
-  "about.timeline_prev": "Previous",
-  "about.timeline_next": "Next",
   "about.cta_welcome": "Welcome to ",
   "about.cta_welcome_accent": "LiKeMi",
   "about.cta_body":
@@ -162,6 +160,10 @@ export const en = {
   "communities.title": "QQ Community — LiKeMi",
   "communities.copy": "Copy group number",
   "communities.copy_channel": "Copy channel ID",
+  "communities.channel_id_prefix": "Channel ID:",
+  "communities.copied": "Copied!",
+  "communities.copy_failed":
+    "Copy failed — please select the number and copy it manually",
   "communities.sidebar_general": "General Group",
   "communities.sidebar_grades": "Grade Groups",
   "communities.sidebar_groups": "Category Groups",
@@ -177,11 +179,6 @@ export const en = {
   "news.label_science": "Science",
   "news.posts_count": "articles",
   "news.click_hint": "Click to view articles in this category",
-  "services.title": "Services",
-  "services.hero_title": "Bringing technology back to everyone",
-  "services.hero_paragraph":
-    "LiKeMi offers many ways to spread science and technology and serve the community — from academic discussion to popular-science content. We work to break down knowledge barriers and information gaps, so more people can feel the beauty of technology and reason.",
-  "services.cta_join": "Join Us",
   "services.sidebar_content": "Content",
   "services.sidebar_events": "Community Events",
   "services.sidebar_platform": "Knowledge Platform",
@@ -194,17 +191,13 @@ export const en = {
   "services.section_platform": "Knowledge Platform",
   "services.section_platform_sub":
     "LiKeMi is building a knowledge-management platform for its members, supporting learning and collaboration.",
-  "services.cta_question_pre": "Interested in ",
-  "services.cta_question_accent": "LiKeMi",
-  "services.cta_question_post": "?",
-  "services.cta_body":
-    "Whether you want to join the community, submit your work, or propose a collaboration, we welcome you.",
-  "services.cta_contact": "Contact Us",
   "projects.title": "Project Hub",
   "projects.pinned": "Pinned",
   "projects.incubated": "Incubated",
   "projects.progress": "Progress",
-  "projects.role_missing": "Wanted: ",
+  "projects.role_missing": "Wanted:",
+  "projects.status_recruiting": "Recruiting",
+  "projects.status_showcase": "Showcase",
   "pricing.title": "Support Us",
   "pricing.hero_title": "Helping tech reach further",
   "pricing.hero_paragraph":
@@ -233,6 +226,7 @@ export const en = {
   "contact.reply_note": "We usually reply to messages within 24 hours.",
   "contact.section_contact": "Contact Us",
   "privacy.title": "Privacy Policy",
+  // 与 zh.ts 的 privacy.updated 是同一件事，务必成对更新
   "privacy.updated": "Last updated: September 19, 2026",
   "terms.title": "Terms of Service",
   "terms.updated": "Last updated: September 19, 2026",
@@ -245,5 +239,4 @@ export const en = {
   "resources.network_hint":
     "Some sites may require appropriate network access.",
   "resources.go": "Visit",
-  "resources.back_home": "Back to home",
 } satisfies Zh;

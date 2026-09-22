@@ -1,7 +1,6 @@
 ---
 import OfficialLayout from "../../layouts/OfficialLayout.astro";
 import { t } from "../../i18n/index";
-import { langUrl } from "../../i18n/paths";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 
@@ -14,7 +13,7 @@ const projects = [
   {
     name: "量子计算模拟平台",
     initiator: "七月O 发起",
-    typeLabel: "招募中",
+    status: "recruiting",
     progress: 40,
     pinned: true,
     incubated: true,
@@ -23,7 +22,7 @@ const projects = [
   {
     name: "理科迷知识图谱",
     initiator: "七月墨染 发起",
-    typeLabel: "招募中",
+    status: "recruiting",
     progress: 20,
     pinned: false,
     incubated: false,
@@ -32,7 +31,7 @@ const projects = [
   {
     name: "科普视频系列制作",
     initiator: "七月花 发起",
-    typeLabel: "成果展示",
+    status: "showcase",
     progress: 50,
     pinned: false,
     incubated: true,
@@ -41,7 +40,7 @@ const projects = [
   {
     name: "天体观测数据可视化项目",
     initiator: "七月郁离 发起",
-    typeLabel: "成果展示",
+    status: "showcase",
     progress: 75,
     pinned: false,
     incubated: false,
@@ -67,13 +66,12 @@ const projects = [
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {
             projects.map((p) => (
-              <a
-                href={langUrl(lang, "/communities")}
-                class="profile-card group block"
-              >
+              // 项目详情页尚不存在，整卡不做链接：此前每张卡都指向 /communities，
+              // 点开跳社群大厅与卡片内容无关，误导性比「不可点」更强
+              <div class="profile-card block">
                 <div class="profile-inner p-5 flex flex-col gap-3">
                   <div class="flex items-center gap-2 flex-wrap">
-                    <h2 class="text-lg font-semibold text-deep-text group-hover:text-primary transition-colors">
+                    <h2 class="text-lg font-semibold text-deep-text">
                       {p.name}
                     </h2>
                     {p.pinned && (
@@ -93,12 +91,17 @@ const projects = [
                     <span
                       class:list={[
                         "text-xs px-2 py-0.5 rounded-full font-medium",
-                        p.typeLabel === "招募中"
+                        p.status === "recruiting"
                           ? "bg-success/15 text-success"
                           : "bg-text-muted/15 text-text-muted",
                       ]}
                     >
-                      {p.typeLabel}
+                      {t(
+                        lang,
+                        p.status === "recruiting"
+                          ? "projects.status_recruiting"
+                          : "projects.status_showcase",
+                      )}
                     </span>
                   </div>
 
@@ -107,7 +110,15 @@ const projects = [
                       <span>{t(lang, "projects.progress")}</span>
                       <span>{p.progress}%</span>
                     </div>
-                    <div class="h-1.5 rounded-full bg-surface-3 overflow-hidden">
+                    {/* 进度条此前只有视觉呈现：补上 progressbar 语义，读屏才能读出百分比 */}
+                    <div
+                      class="h-1.5 rounded-full bg-surface-3 overflow-hidden"
+                      role="progressbar"
+                      aria-label={t(lang, "projects.progress")}
+                      aria-valuenow={p.progress}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                    >
                       <div
                         class="h-full rounded-full bg-primary"
                         style={`width: ${p.progress}%`}
@@ -118,14 +129,17 @@ const projects = [
                   {p.roles.length > 0 && (
                     <div class="flex items-center gap-1.5 flex-wrap">
                       {p.roles.map((r) => (
-                        <span class="rounded-full border border-[var(--ghost-edge)] bg-[var(--ghost-bg)] px-2 py-0.5 text-[11px] text-text-muted">
-                          {t(lang, "projects.role_missing")}{r}
+                        // 标签与角色名之间用 flex gap 分隔，不依赖 i18n 值里的尾随空格
+                        // （空格会被格式化/编辑器保存时裁掉，裁掉后英文会粘成 Wanted:Developer）
+                        <span class="inline-flex items-center gap-1 rounded-full border border-[var(--ghost-edge)] bg-[var(--ghost-bg)] px-2 py-0.5 text-[11px] text-text-muted">
+                          {t(lang, "projects.role_missing")}
+                          <span>{r}</span>
                         </span>
                       ))}
                     </div>
                   )}
                 </div>
-              </a>
+              </div>
             ))
           }
         </div>

@@ -76,7 +76,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
       </p>
       <div class="max-w-2xl mx-auto">
         {
-          ml.founderMembers?.map((m) => (
+          ml.founderMembers.map((m) => (
             <MemberCard
               name={m.name ?? ""}
               avatarKey={m.avatarKey}
@@ -99,7 +99,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
     desc={t(lang, "team.general_desc")}
   >
     {
-      ml.generalMembers?.map((m) => (
+      ml.generalMembers.map((m) => (
         <MemberCard
           name={m.name ?? ""}
           avatarKey={m.avatarKey}
@@ -150,7 +150,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
     desc={t(lang, "team.events_desc")}
   >
     {
-      ml.eventsMembers?.map((m) => (
+      ml.eventsMembers.map((m) => (
         <MemberCard
           name={m.name ?? ""}
           avatarKey={m.avatarKey}
@@ -172,7 +172,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
   >
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {
-        ml.newsMembers?.map((m) => (
+        ml.newsMembers.map((m) => (
           <MemberCard
             name={m.name ?? ""}
             avatarKey={m.avatarKey}
@@ -220,7 +220,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
     desc={t(lang, "team.advisors_desc")}
   >
     {
-      ml.advisorMembers?.map((m) => (
+      ml.advisorMembers.map((m) => (
         <MemberCard
           name={m.name ?? ""}
           avatarKey={m.avatarKey}
@@ -271,7 +271,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
     desc={t(lang, "team.tech_desc")}
   >
     {
-      ml.techMembers?.map((m) => (
+      ml.techMembers.map((m) => (
         <MemberCard
           name={m.name ?? ""}
           avatarKey={m.avatarKey}
@@ -346,7 +346,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
       </p>
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {
-          ml.alumniMembers?.map((m) => (
+          ml.alumniMembers.map((m) => (
             <MemberCard
               name={m.name ?? ""}
               avatarKey={m.avatarKey}

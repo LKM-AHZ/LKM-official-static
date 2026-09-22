@@ -3,7 +3,7 @@ import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import OfficialLayout from "../../../layouts/OfficialLayout.astro";
 import { SUPPORTED_LANGS } from "../../../i18n/index";
-import { langUrl } from "../../../i18n/paths";
+import { docHref, docSlug, langUrl } from "../../../i18n/paths";
 import { coverGradient, formatDate, readingMinutes } from "../../../components/news/format";
 
 // docs 多语言存放于 src/content/docs/<lang>/<slug>.md（ID 如 `zh/news-site-launch`）。
@@ -15,16 +15,22 @@ export async function getStaticPaths() {
   for (const d of all) {
     const lang = d.id.split("/")[0];
     if (!SUPPORTED_LANGS.includes(lang as (typeof SUPPORTED_LANGS)[number])) continue;
-    const slug = d.id.split("/").slice(1).join("/");
+    const slug = docSlug(d.id);
     const bucket = buckets.get(lang) ?? [];
     bucket.push({ doc: d, slug });
     buckets.set(lang, bucket);
   }
 
   // 每语言内按 publishDate 升序 → 相邻两篇即为上/下一篇文章
+  // props 里不再放 slug：路由参数由 params 提供，组件也从不读它
   const paths: {
     params: { lang: string; slug: string };
-    props: { doc: CollectionEntry<"docs">; lang: string; slug: string; prev: CollectionEntry<"docs"> | null; next: CollectionEntry<"docs"> | null };
+    props: {
+      doc: CollectionEntry<"docs">;
+      lang: string;
+      prev: CollectionEntry<"docs"> | null;
+      next: CollectionEntry<"docs"> | null;
+    };
   }[] = [];
 
   for (const [lang, bucket] of buckets) {
@@ -35,7 +41,6 @@ export async function getStaticPaths() {
         props: {
           doc: item.doc,
           lang,
-          slug: item.slug,
           prev: idx > 0 ? bucket[idx - 1].doc : null,
           next: idx < bucket.length - 1 ? bucket[idx + 1].doc : null,
         },
@@ -63,7 +68,7 @@ const minutes = readingMinutes(doc.body ?? "");
 const metaMinutes = en ? `${minutes} min read` : `${minutes} 分钟阅读`;
 
 const docLink = (e: CollectionEntry<"docs"> | null) =>
-  e ? langUrl(lang, `/docs/${e.id.split("/").slice(1).join("/")}`) : null;
+  e ? langUrl(lang, docHref(e.id)) : null;
 const prevHref = docLink(prev);
 const nextHref = docLink(next);
 ---
@@ -228,32 +233,36 @@ const nextHref = docLink(next);
 </script>
 
 <style>
-  /* 单篇 markdown 正文（收窄左列内）：prose 非侵入优化 */
-  article.article-prose :where(h2) {
+  /* 单篇 markdown 正文（收窄左列内）：prose 非侵入优化。
+     正文由 <Content /> 渲染，其元素不带本组件的 scope 属性（data-astro-cid-*），
+     所以后代选择器必须用 :global() 包住——否则编译成 [data-astro-cid] :where(h2)，
+     要求 h2 自己带 scope 属性，整块规则永远命不中任何 markdown 元素。 */
+  article.article-prose :global(:where(h2)) {
     margin-top: 2.25rem;
   }
   /* 锚点跳转时避开吸顶导航 */
-  article.article-prose :where(h2, h3, h4) {
+  article.article-prose :global(:where(h2, h3, h4)) {
     scroll-margin-top: calc(var(--nav-h) + 1rem);
   }
-  article.article-prose :where(blockquote) {
+  article.article-prose :global(:where(blockquote)) {
     border-inline-start: 3px solid var(--primary);
     border-radius: 0.25rem;
     background: color-mix(in oklch, var(--primary) 6%, transparent);
   }
-  article.article-prose :where(pre) {
+  article.article-prose :global(:where(pre)) {
     border: 1px solid color-mix(in oklch, var(--text-muted) 20%, transparent);
     border-radius: 0.75rem;
   }
-  article.article-prose :where(:not(pre) > code) {
+  article.article-prose :global(:where(:not(pre) > code)) {
     border-radius: 0.375rem;
     padding: 0.15em 0.3em;
     background: color-mix(in oklch, var(--primary) 10%, transparent);
   }
 </style>
 
-<style is:global>
-  /* 右侧目录（渲染产物动态补入，需 global 命中） */
+<style>
+  /* 右侧目录：目录节点就在本组件模板里渲染（脚本只切换 toc-active 类），
+     因此用普通 scoped 样式即可命中，无需 is:global */
   .article-toc .toc-link {
     color: var(--text-muted);
     text-decoration: none;

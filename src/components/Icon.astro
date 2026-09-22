@@ -108,7 +108,13 @@ const STROKE_ICONS: Record<string, string> = {
   close: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/>',
 };
 
-const body = FILL_ICONS[name] ?? STROKE_ICONS[name] ?? "";
+// 用自身属性判断：普通对象字面量会命中原型链上的 constructor/toString/__proto__ 等键，
+// 那是对象/函数而非图标路径，交给 set:html 会渲染出错误内容。
+const isStroke = Object.hasOwn(STROKE_ICONS, name);
+const body =
+  (Object.hasOwn(FILL_ICONS, name) ? FILL_ICONS[name] : undefined) ??
+  (isStroke ? STROKE_ICONS[name] : undefined) ??
+  "";
 ---
 
 <svg
@@ -116,8 +122,8 @@ const body = FILL_ICONS[name] ?? STROKE_ICONS[name] ?? "";
   width={WIDTH}
   height={HEIGHT}
   viewBox="0 0 24 24"
-  fill={name in STROKE_ICONS ? "none" : undefined}
-  stroke={name in STROKE_ICONS ? "currentColor" : undefined}
+  fill={isStroke ? "none" : undefined}
+  stroke={isStroke ? "currentColor" : undefined}
   class={className}
   set:html={body}
 />

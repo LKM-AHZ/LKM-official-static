@@ -5,6 +5,8 @@ import { en } from "./en";
 
 export const SUPPORTED_LANGS = ["zh", "en"] as const;
 export type Lang = (typeof SUPPORTED_LANGS)[number];
+/** 默认语言：与 astro.config.ts 的 i18n.defaultLocale 保持一致，供 x-default 等场景引用。 */
+export const DEFAULT_LANG: Lang = "zh";
 export type TranslationKey = keyof Zh;
 
 const dicts: Record<Lang, Partial<Zh>> = { zh, en };

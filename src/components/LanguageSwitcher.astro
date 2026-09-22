@@ -1,22 +1,20 @@
 ---
 import { SUPPORTED_LANGS, t } from "../i18n/index";
 import type { Lang } from "../i18n/index";
+import { langUrl, stripLangPrefix } from "../i18n/paths";
 
-// 当前语言：Astro.currentLocale（在 [lang] 路由下由内置 i18n 提供）
-const current = (Astro.currentLocale ?? "zh") as Lang;
+// 当前语言：Astro.currentLocale（在 [lang] 路由下由内置 i18n 提供）。
+// 用 SUPPORTED_LANGS 过滤而非 as 断言：将来多语言/异常取值时不会静默拿到未支持的值。
+const current: Lang =
+  SUPPORTED_LANGS.find((l) => l === Astro.currentLocale) ?? SUPPORTED_LANGS[0];
 const label: Record<Lang, string> = { zh: "中", en: "EN" };
 
 /**
- * 目标语言同页 URL。
+ * 目标语言同页 URL：剥掉当前语言前缀后复用全站 langUrl 规则补前缀。
+ * （zh 首页原先返回 "/" 会多走一次「根路径 301 → /zh/」，且与 en 分支不对称。）
  */
 function localizedHref(target: Lang): string {
-  const pathname = Astro.url.pathname;
-  const base = pathname.replace(/^\/(zh|en)(?=\/|$)/, "") || "/";
-  if (target === "zh") {
-    return base === "/" ? "/" : "/zh" + base;
-  }
-  const withLang = "/en" + (base === "/" ? "/" : base);
-  return withLang === "/en/" ? "/en/" : withLang;
+  return langUrl(target, stripLangPrefix(Astro.url.pathname));
 }
 ---
 
@@ -28,6 +26,7 @@ function localizedHref(target: Lang): string {
     SUPPORTED_LANGS.map((lang) => (
       <a
         href={localizedHref(lang)}
+        data-lang-switch
         hreflang={lang}
         lang={lang}
         aria-current={lang === current ? "true" : undefined}
@@ -43,3 +42,17 @@ function localizedHref(target: Lang): string {
     ))
   }
 </nav>
+
+<script>
+  // 链接是构建期生成的，只有 pathname；访问者所在的 ?query 与 #anchor 拿不到，
+  // 于是从 /zh/team#founder 切语言会丢掉锚点落回页首。点击时从 location 补齐，
+  // 原始 href 记在 dataset 上，避免连点把 query 叠加两次。
+  document
+    .querySelectorAll<HTMLAnchorElement>("a[data-lang-switch]")
+    .forEach((a) => {
+      a.addEventListener("click", () => {
+        const base = (a.dataset.baseHref ??= a.getAttribute("href") ?? "");
+        a.href = `${base}${window.location.search}${window.location.hash}`;
+      });
+    });
+</script>

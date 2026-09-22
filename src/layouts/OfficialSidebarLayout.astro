@@ -40,31 +40,43 @@ const {
   currentPath={currentPath}
 >
   <div class="min-h-screen">
-    <nav
-      class={styles.shell}
-      data-page-sidebar
-      aria-label={t(lang, "common.aria.page_toc")}
-    >
-      <ul class={styles.nav}>
-        {
-          sidebarItems.map((item) => (
-            <li id={`side-${item.href.slice(1)}`}>
-              <a href={item.href}>
-                <div class={styles.icon}>
-                  <Icon name={item.icon} />
-                </div>
-                <div class={styles.text}>{item.text}</div>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
+    {/* 无侧栏项时整块侧栏（含主内容偏移）都不渲染：空 <nav> 既是无意义的
+        地标，也会白占 240px 版面（en 阶段一分类为空即此情形）。 */}
+    {
+      sidebarItems.length > 0 && (
+        <nav
+          class={styles.shell}
+          data-page-sidebar
+          aria-label={t(lang, "common.aria.page_toc")}
+        >
+          <ul class={styles.nav}>
+            {sidebarItems.map((item) => (
+              <li id={`side-${item.href.slice(1)}`}>
+                <a href={item.href}>
+                  <div class={styles.icon}>
+                    <Icon name={item.icon} />
+                  </div>
+                  <div class={styles.text}>{item.text}</div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      )
+    }
 
-    <div class={styles.mainShell}>
+    <div
+      class:list={[
+        styles.mainShell,
+        sidebarItems.length === 0 && styles.mainShellFull,
+      ]}
+    >
       {/* 正文由 section/h2 组成的页面补一个页面级 h1，保证标题层级完整 */}
       {!ownHeading && <h1 class="sr-only">{title}</h1>}
-      <div class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 lg:py-24">
+      <div
+        class="max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-20 lg:py-24"
+        data-page-content
+      >
         <slot />
       </div>
     </div>
@@ -76,10 +88,16 @@ const {
     const sidebar = document.querySelector("[data-page-sidebar]");
     if (!sidebar) return;
     const links = sidebar.querySelectorAll("a[href^='#']");
+    // 只在布局正文区内收集锚点目标并缓存：全文档 querySelectorAll 会连页面其它
+    // section 一起算，且每帧重新收集 + 逐个 getBoundingClientRect 会反复强制重排
+    const content = document.querySelector("[data-page-content]");
+    const sections = content
+      ? Array.from(content.querySelectorAll<HTMLElement>("section[id]"))
+      : [];
 
     function updateActive(): void {
       let current = "";
-      for (const sec of document.querySelectorAll("section[id]")) {
+      for (const sec of sections) {
         const rect = sec.getBoundingClientRect();
         if (rect.top <= 140) current = sec.id;
       }
@@ -91,21 +109,23 @@ const {
       });
     }
 
-    links.forEach((a) => {
-      a.addEventListener("click", (e) => {
-        const id = a.getAttribute("href");
-        if (!id || !id.startsWith("#")) return;
-        const target = document.querySelector(id);
-        if (target) {
-          e.preventDefault();
-          target.scrollIntoView({ behavior: "smooth" });
-        }
-      });
-    });
-
-    window.addEventListener("scroll", () => {
-      requestAnimationFrame(updateActive);
-    });
+    // 锚点点击不做 preventDefault：交给浏览器原生跳转，URL hash 才会更新（深链/后退可用）、
+    // 键盘/读屏焦点也会落到目标区块；平滑滚动由 tech.css 的 html{scroll-behavior:smooth}
+    // 提供，并在 prefers-reduced-motion 下自动降级为瞬时跳转。
+    let ticking = false;
+    window.addEventListener(
+      "scroll",
+      () => {
+        // 滚动事件成串触发：同一帧内只排队一次，否则一次爆发会排入多次全量扫描
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateActive();
+          ticking = false;
+        });
+      },
+      { passive: true },
+    );
     updateActive();
   });
 </script>
@@ -126,8 +146,12 @@ const {
     width: 2px;
     height: 58%;
     border-radius: 9999px;
-    background: linear-gradient(180deg, #7fd4ff, #b9c8ff);
-    box-shadow: 0 0 8px rgba(127, 212, 255, 0.6);
+    background: linear-gradient(
+      180deg,
+      var(--accent-line-from),
+      var(--accent-line-to)
+    );
+    box-shadow: 0 0 8px var(--accent-line-glow);
   }
   .pg-active a > div {
     color: var(--primary);

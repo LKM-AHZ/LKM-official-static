@@ -1,4 +1,6 @@
-# pnpm 11+ 构建脚本许可：esbuild 为 astro 构建所需原生依赖
-# （pnpm 11 起该设置位于此 workspace 文件）
+# 构建脚本许可：esbuild 为 astro 构建所需原生依赖。
+# 键名必须是 allowBuilds —— 这是 pnpm 11 的写法（本仓库 packageManager 锁 pnpm@11.21.0），
+# 值是 <包名>: true 映射；pnpm 10 时代的 onlyBuiltDependencies 列表在本版本已不再被读取，
+# 换成它会让授权静默失效。
 allowBuilds:
   esbuild: true

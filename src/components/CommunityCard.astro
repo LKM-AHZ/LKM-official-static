@@ -25,10 +25,12 @@ const copyLabel = `${t(lang, isQQChannel ? "communities.copy_channel" : "communi
           type="button"
           class="inline-flex items-center gap-1.5 shrink-0 text-xs font-mono bg-surface-3 text-text-muted rounded-[6px] px-2.5 py-1 cursor-pointer select-none hover:bg-primary hover:text-on-primary transition-colors"
           data-copy={qqGroup}
+          data-copied={t(lang, "communities.copied")}
+          data-copy-failed={t(lang, "communities.copy_failed")}
           title={copyLabel}
           aria-label={copyLabel}
         >
-          {isQQChannel && "频道 ID："}
+          {isQQChannel && t(lang, "communities.channel_id_prefix")}
           {qqGroup}
           <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="13" height="13" x="9" y="9" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
         </button>
@@ -39,21 +41,69 @@ const copyLabel = `${t(lang, isQQChannel ? "communities.copy_channel" : "communi
 </div>
 
 <script>
-  // 点击复制群号
+  // 点击复制群号。反馈同时走 title/配色（视觉）与页面级 live region（读屏）：
+  // 只改 title 对辅助技术不可见。
+  const live = document.createElement("p");
+  live.setAttribute("role", "status");
+  live.setAttribute("aria-live", "polite");
+  live.className = "sr-only";
+  document.body.appendChild(live);
+
   document.addEventListener("click", (e) => {
     const target = (e.target as HTMLElement).closest("[data-copy]");
     if (!target) return;
     const text = target.getAttribute("data-copy");
     if (!text) return;
-    navigator.clipboard?.writeText(text)?.then(() => {
-      const el = target as HTMLElement;
-      const prev = el.title;
-      el.title = "已复制！";
-      el.classList.add("!bg-success", "!text-on-success");
-      setTimeout(() => {
-        el.title = prev;
-        el.classList.remove("!bg-success", "!text-on-success");
-      }, 1500);
-    })?.catch(() => {});
+    const el = target as HTMLElement;
+
+    // 非安全上下文（如 http 直连 IP）没有 navigator.clipboard，回退到临时 textarea
+    const fallbackCopy = (): boolean => {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      let ok: boolean;
+      try {
+        ok = document.execCommand("copy");
+      } catch {
+        ok = false;
+      }
+      ta.remove();
+      return ok;
+    };
+
+    const report = (ok: boolean): void => {
+      // 原始 title 必须留底在元素上：连点两次时 el.title 已经是“已复制”，
+      // 再读它恢复会把提示语当成原文；上一次的定时器也要清掉，否则会互相覆盖。
+      el.dataset.baseTitle ??= el.title;
+      const message = ok
+        ? (el.dataset.copied ?? "")
+        : (el.dataset.copyFailed ?? "");
+      el.title = message;
+      el.classList.toggle("!bg-success", ok);
+      el.classList.toggle("!text-on-success", ok);
+      live.textContent = message;
+      const pending = Number(el.dataset.copyTimer);
+      if (pending) clearTimeout(pending);
+      el.dataset.copyTimer = String(
+        window.setTimeout(() => {
+          el.title = el.dataset.baseTitle ?? "";
+          el.classList.remove("!bg-success", "!text-on-success");
+          delete el.dataset.copyTimer;
+        }, 1500),
+      );
+    };
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(text).then(
+        () => report(true),
+        () => report(fallbackCopy()),
+      );
+    } else {
+      report(fallbackCopy());
+    }
   });
 </script>

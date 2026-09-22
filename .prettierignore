@@ -1,6 +1,10 @@
+# 生成物/依赖
 dist
 node_modules
 .astro
+coverage
+# 以下三项刻意排除：.github 是 GitHub 维护的 workflow（避免格式化造成无关 diff），
+# .claude 是本地工具配置，pnpm-lock.yaml/LICENSE.md/头像映射由各自工具生成
 .github
 .claude
 pnpm-lock.yaml

@@ -5,6 +5,7 @@ import CommunityCard from "../../components/CommunityCard.astro";
 import { communityCategories as zhCat, communityNote as zhNote } from "../../data/communities";
 import { communityCategories as enCat, communityNote as enNote } from "../../data/en/communities";
 import { pickByLocale, t } from "../../i18n/index";
+import type { TranslationKey } from "../../i18n/index";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 
@@ -17,18 +18,23 @@ export const getStaticPaths = getStaticPathsForLang;
 const communityCategories = pickByLocale(lang, zhCat, enCat);
 const communityNote = pickByLocale(lang, zhNote, enNote);
 
-const sidebarItems = [
-  { text: t(lang, "communities.sidebar_general"), href: "#general", icon: "users" },
-  { text: t(lang, "communities.sidebar_grades"), href: "#grades", icon: "school" },
-  { text: t(lang, "communities.sidebar_groups"), href: "#groups", icon: "category" },
-  { text: t(lang, "communities.sidebar_basic"), href: "#basic", icon: "atom" },
-  { text: t(lang, "communities.sidebar_applied"), href: "#applied", icon: "robot" },
-  { text: t(lang, "communities.sidebar_hobby"), href: "#hobby", icon: "palette" },
-  { text: t(lang, "communities.sidebar_events"), href: "#events", icon: "calendarStar" },
-  { text: t(lang, "communities.sidebar_legacy"), href: "#legacy", icon: "archive" },
+// 侧栏由实际渲染出的分类派生（锚点/标题/顺序与 section 同源），分类为空(en 阶段一)时
+// 侧栏自然为空，不会再出现指向未渲染 section 的死锚点。图标属展示层，按位置对应。
+const sidebarIcons = [
+  "users",
+  "school",
+  "category",
+  "atom",
+  "robot",
+  "palette",
+  "calendarStar",
+  "archive",
 ];
-
-const sectionIds = ["general", "grades", "groups", "basic", "applied", "hobby", "events", "legacy"];
+const sidebarItems = communityCategories.map((cat, i) => ({
+  text: t(lang, `communities.sidebar_${cat.id}` as TranslationKey),
+  href: `#${cat.id}`,
+  icon: sidebarIcons[i] ?? "users",
+}));
 ---
 
 <OfficialSidebarLayout
@@ -38,8 +44,8 @@ const sectionIds = ["general", "grades", "groups", "basic", "applied", "hobby", 
   sidebarItems={sidebarItems}
 >
   {
-    communityCategories.map((cat, i) => (
-      <CommunitySection id={sectionIds[i]} title={cat.label} intro={cat.intro || undefined}>
+    communityCategories.map((cat) => (
+      <CommunitySection id={cat.id} title={cat.label} intro={cat.intro || undefined}>
         {cat.groups.map((g) => (
           <CommunityCard
             name={g.name}

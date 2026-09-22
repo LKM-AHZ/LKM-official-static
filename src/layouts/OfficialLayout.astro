@@ -10,6 +10,7 @@ import { SITE_NAME } from "../data/config"; // 品牌名不翻译，保持中文
 import { t } from "../i18n/index";
 import type { TranslationKey } from "../i18n/index";
 import { langUrl } from "../i18n/paths";
+import { THEME_STORAGE_KEY } from "../lib/theme";
 
 /**
  * 官网首页布局（官方壳）：悬浮胶囊导航 + 科技感内容区 + 页脚，无侧边栏。
@@ -57,8 +58,8 @@ const footerCols: {
     titleKey: "common.footer.col_community",
     links: [
       { textKey: "common.footer.team", href: "/team" },
-      { textKey: "common.footer.management", href: "/team" },
-      { textKey: "common.footer.timeline", href: "/" },
+      // 发展历程（钟表时间线）在首页的 #timeline 区段，不在 /about
+      { textKey: "common.footer.timeline", href: "/#timeline" },
       { textKey: "common.footer.qq_groups", href: "/communities" },
     ],
   },
@@ -68,7 +69,8 @@ const footerCols: {
       { textKey: "common.nav_services", href: "/services" },
       { textKey: "common.footer.support_us", href: "/pricing" },
       { textKey: "common.footer.contact", href: "/contact" },
-      { textKey: "common.footer.faq", href: "/" },
+      // FAQ 是 /pricing 页内的 #faq 区段，不再指回首页
+      { textKey: "common.footer.faq", href: "/pricing#faq" },
     ],
   },
   {
@@ -88,12 +90,13 @@ const footerCols: {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="generator" content={Astro.generator} />
-    {/* 首屏前恢复主题，避免夜间用户先看到白天再闪一下 */}
-    <script is:inline>
+    {/* 首屏前恢复主题，避免夜间用户先看到白天再闪一下。
+        存储键从 lib/theme 注入，别再手抄字面量，否则改名后这里会静默读不到偏好。 */}
+    <script is:inline define:vars={{ themeStorageKey: THEME_STORAGE_KEY }}>
       (function () {
         let theme = "day";
         try {
-          if (localStorage.getItem("likemi-theme") === "night") theme = "night";
+          if (localStorage.getItem(themeStorageKey) === "night") theme = "night";
         } catch {
           /* 隐私模式：保持默认 */
         }
@@ -143,7 +146,7 @@ const footerCols: {
                 aria-label={t(lang, "common.aria.github")}
                 href="https://github.com/LKM-AHZ"
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
               >
                 <Icon name="github" class="w-5 h-[18px]" />
               </a>
@@ -185,7 +188,10 @@ const footerCols: {
         <div
           class="mt-12 border-t border-[var(--card-edge)] pt-8 text-center text-sm text-text-muted"
         >
-          {t(lang, "common.footer.copyright")}
+          {t(lang, "common.footer.copyright").replace(
+            "{year}",
+            String(new Date().getFullYear()),
+          )}
         </div>
       </div>
     </footer>

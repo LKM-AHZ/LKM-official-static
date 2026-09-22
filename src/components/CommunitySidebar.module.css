@@ -1,4 +1,16 @@
-/* ===== 页内侧边栏 ===== */
+/* ===== 页内侧边栏 =====
+   注意：本模块被两处共用——官方壳侧栏布局 OfficialSidebarLayout.astro 直接引用
+   shell/nav/icon/text/mainShell 这几个类。类名属于跨组件契约，重命名前须同时改那边；
+   真正的解法是把侧栏抽成共享组件/模块（需新建文件），留待后续轮次。 */
+
+/* 侧栏宽度的单一来源：展开/收起（桌面 240/67、移动 200/50）只在这里定义，
+   .shell 的宽度与 .mainShell 的主内容偏移都引用同一变量——两处手抄数值一旦不同步，
+   固定定位的侧栏就会和主内容互相压盖或留缝。放在 :global(:root) 是因为 .shell 与
+   .mainShell 是兄弟节点，需要一个共同祖先来承载变量。 */
+:global(:root) {
+  --sidebar-w: 240px;
+  --sidebar-w-collapsed: 67px;
+}
 
 /* 容器定位/材质：与刘海顶栏同一套玻璃（--nav-* 变量 + 18px 模糊）。
    形状也镜像顶栏——顶栏贴顶只下缘圆角，侧栏贴左只右缘圆角。 */
@@ -6,8 +18,10 @@
   position: fixed;
   top: var(--nav-h);
   left: 0;
+  /* dvh 跟随移动端工具栏收放；100vh 是「大视口」，工具栏展开时会把底部顶出可视区 */
   height: calc(100vh - var(--nav-h));
-  width: 240px;
+  height: calc(100dvh - var(--nav-h));
+  width: var(--sidebar-w);
   background: var(--nav-bg);
   backdrop-filter: blur(18px);
   border-right: 1px solid var(--nav-edge);
@@ -23,34 +37,38 @@
 }
 
 :global(html.sidebar-collapsed) .shell {
-  width: 67px;
+  width: var(--sidebar-w-collapsed);
 }
 
 /* 主内容区偏移：随展开/收起切换（桌面端 240/67） */
 .mainShell {
-  padding-left: 240px;
+  padding-left: var(--sidebar-w);
   transition: padding-left 0.3s;
 }
 
+/* 无侧栏项时（侧栏整体不渲染）主内容占满整行，避免留下 240px 空槽 */
+.mainShellFull {
+  padding-left: 0;
+}
+
 :global(html.sidebar-collapsed) .mainShell {
-  padding-left: 67px;
+  padding-left: var(--sidebar-w-collapsed);
 }
 
 /* 移动端：更窄 + 默认收起 */
 @media (max-width: 767px) {
+  :global(:root) {
+    --sidebar-w: 200px;
+    --sidebar-w-collapsed: 50px;
+  }
   .shell {
-    width: 200px;
     padding-left: 4px;
   }
   :global(html.sidebar-collapsed) .shell {
-    width: 50px;
     padding-left: 4px;
   }
-  .mainShell {
-    padding-left: 200px;
-  }
-  :global(html.sidebar-collapsed) .mainShell {
-    padding-left: 50px;
+  .mainShellFull {
+    padding-left: 0;
   }
   .icon {
     min-width: 36px;
@@ -74,13 +92,18 @@
   }
 }
 
-/* 导航列表 */
+/* 导航列表：撑满 shell 并自行滚动（shell 是 overflow:hidden，否则条目多于视口高度时
+   末尾项永远滚不到），并给绝对定位的开合按钮（bottom:8px、高 36px）留出位置。 */
 .nav {
   position: relative;
-  height: calc(100vh - var(--nav-h));
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
   list-style: none;
   margin: 0;
   padding: 0;
+  padding-bottom: 56px;
 }
 
 .nav li {
@@ -147,8 +170,12 @@
   width: 2px;
   height: 58%;
   border-radius: 9999px;
-  background: linear-gradient(180deg, #7fd4ff, #b9c8ff);
-  box-shadow: 0 0 8px rgba(127, 212, 255, 0.6);
+  background: linear-gradient(
+    180deg,
+    var(--accent-line-from),
+    var(--accent-line-to)
+  );
+  box-shadow: 0 0 8px var(--accent-line-glow);
 }
 
 .nav li.active .icon,

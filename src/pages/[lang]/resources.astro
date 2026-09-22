@@ -15,7 +15,9 @@ const en = lang === "en";
 const nameOf = (r: (typeof RESOURCE_SITES)[number]) => (en ? r.nameEn : r.nameZh);
 const descOf = (r: (typeof RESOURCE_SITES)[number]) => (en ? r.descEn : r.descZh);
 // 目标 URL：/en 下若该站有英文(国际)入口则用之，否则回退默认 url
-const urlOf = (r: (typeof RESOURCE_SITES)[number]) => (en && r.urlEn ? r.urlEn : r.url);
+// 数据契约允许「只有 alts 没有 url」，故再回退到首个备用入口，避免渲染出 href=undefined 的死卡片
+const urlOf = (r: (typeof RESOURCE_SITES)[number]) =>
+  (en && r.urlEn) || r.url || r.alts?.[0]?.url;
 ---
 
 <OfficialLayout
@@ -36,7 +38,9 @@ const urlOf = (r: (typeof RESOURCE_SITES)[number]) => (en && r.urlEn ? r.urlEn :
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {RESOURCE_SITES.map((site) =>
-          site.alts && site.url ? (
+          // 只要该站有备用入口就走镜像卡分支：数据契约允许省略 url（此时首入口回退 alts[0]），
+          // 若这里还要求 url 存在，仅缺 url 的条目会掉进普通卡分支、镜像永远不显示
+          site.alts && site.alts.length > 0 ? (
             // 有备用/镜像入口的站点：首入口可点，另附镜像行
             <div class="card-hover flex flex-col rounded-2xl p-5">
               <div class="flex items-center gap-3">
@@ -56,7 +60,12 @@ const urlOf = (r: (typeof RESOURCE_SITES)[number]) => (en && r.urlEn ? r.urlEn :
                 </div>
               </div>
 
-              <span
+              {/* 按钮样式的整块可点：锚点自己承担 padding/背景/hover/焦点环，
+                  之前套在外层 span 上时填充区域点不动、焦点环也只圈住inline文字 */}
+              <a
+                href={urlOf(site)}
+                target="_blank"
+                rel="noopener noreferrer"
                 class:list={[
                   "mt-4 block rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-colors",
                   site.advisory
@@ -64,10 +73,8 @@ const urlOf = (r: (typeof RESOURCE_SITES)[number]) => (en && r.urlEn ? r.urlEn :
                     : "bg-primary/10 text-primary hover:bg-primary/20",
                 ]}
               >
-                <a href={urlOf(site)} target="_blank" rel="noopener noreferrer">
-                  {t(lang, "resources.go")}
-                </a>
-              </span>
+                {t(lang, "resources.go")}
+              </a>
 
               {site.alts.length > 0 && (
                 <ul class="mt-3 space-y-1 border-t border-[var(--card-edge)] pt-3">
