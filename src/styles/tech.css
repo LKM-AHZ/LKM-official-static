@@ -49,18 +49,17 @@
     min-height: 100vh;
     color: var(--base-content);
     /* 不再用 background-attachment: fixed：iOS Safari 本就不支持（会退化成滚动），
-       桌面端也会为整屏背景付出滚动重绘代价；钉住视口的层次由 ::before（网格）与
-       ::after（侧辉光）这两个 fixed 伪元素承担。 */
+       桌面端也会为整屏背景付出滚动重绘代价；钉住视口的层次由 ::before（网格）、
+       ::after（侧辉光）与 .bg-overlay（暗角/噪点）这些 fixed 层承担。 */
     background: var(--body-bg);
-    /* --body-bg 是三层渐变，多值渐变无法插值，transition: background 只会整块跳变，
-       故只过渡真正能动画的 background-color（主题切换时颜色仍有 500ms 渐变） */
-    transition:
-      background-color 500ms ease,
-      color 400ms ease;
+    /* --body-bg 是渐变层（background-image），无法插值，主题切换时整块切换；
+       能平滑过渡的只有文字色。原先这里还挂着 background-color 的 500ms 过渡，
+       但 background 简写已把它压成 transparent，永远不会触发，故只留 color */
+    transition: color 400ms ease;
     overflow-x: hidden;
   }
 
-  /* 细网格层：简朴、低存在感 */
+  /* 细网格层：简朴、低存在感；向内容列聚拢，四周渐隐以免整屏均匀铺满 */
   body.tech-theme::before {
     content: "";
     position: fixed;
@@ -72,11 +71,15 @@
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
     background-size: 64px 64px;
-    mask-image: radial-gradient(circle at center, black 38%, transparent 88%);
+    mask-image: radial-gradient(
+      ellipse 88% 72% at 50% 38%,
+      black 18%,
+      transparent 100%
+    );
     transition: opacity 400ms ease;
   }
 
-  /* 两侧辉光：透明度随首屏滚动进度变化 */
+  /* 两侧辉光：透明度随整页滚动进度提升，往下滚时两侧的光渐渐显出来 */
   body.tech-theme::after {
     content: "";
     position: fixed;
@@ -90,7 +93,34 @@
       transparent 68%,
       var(--side-glow)
     );
-    opacity: calc(0.1 + var(--hero-progress, 0) * 0.12);
+    opacity: calc(0.09 + var(--scroll-progress, 0) * 0.15);
+  }
+
+  /* 暗角 + 细噪点：前者把视线收拢到中间的内容列，后者抹掉大面积渐变上的色带。
+     两层都不需要 mask，合并成一个层，少一次全屏合成。 */
+  .bg-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    /* 与 #tech-canvas 同层、DOM 靠后：压暗四角时把粒子一起收进去 */
+    z-index: 1;
+    background: radial-gradient(
+      ellipse 116% 90% at 50% 42%,
+      transparent 54%,
+      var(--vignette) 100%
+    );
+  }
+
+  .bg-overlay::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: var(--noise-opacity);
+    /* 去饱和的 feTurbulence 噪声，平铺后作为极淡的胶片颗粒；
+       固定 160px 的块与其自带 stitchTiles 保证拼接处无接缝 */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 160px 160px;
+    transition: opacity 400ms ease;
   }
 
   #tech-canvas {
@@ -161,35 +191,8 @@
     box-shadow: var(--title-glow);
   }
 
-  /* 内容区块玻璃底板 */
   main section {
     position: relative;
-  }
-  .section-panel {
-    position: relative;
-  }
-  .section-panel::before {
-    content: "";
-    position: absolute;
-    inset: 1rem;
-    border-radius: 2rem;
-    background: var(--section-bg);
-    border: 1px solid var(--section-edge);
-    box-shadow: var(--section-shadow);
-    pointer-events: none;
-    transition:
-      background 0.4s ease,
-      border-color 0.4s ease;
-  }
-  .section-panel > .container-x {
-    position: relative;
-    z-index: 1;
-  }
-  @media (max-width: 767px) {
-    .section-panel::before {
-      inset: 0.55rem;
-      border-radius: 1.5rem;
-    }
   }
 
   /* ---------- 小组件 ---------- */

@@ -4,7 +4,7 @@
  *
  * - 青蓝星座网络：节点缓慢漂移，邻近节点细线相连
  * - 滚动视差：滚轮/滑动产生带深度差的下沉、上升冲量
- * - 两团呼吸辉光 + 鼠标轻微视差
+ * - 三团呼吸辉光 + 鼠标轻微视差，辉光随滚动进度对冲迁移
  * - day / night 两套调色板，跟随 <html data-theme>
  * - 尊重 prefers-reduced-motion（只绘制一帧静态图）、DPR ≤ 2、页面隐藏时暂停
  *
@@ -13,6 +13,8 @@
 ---
 
 <canvas id="tech-canvas" aria-hidden="true"></canvas>
+<!-- 与 canvas 同为 z-index 1 且排在它之后：暗角/噪点也盖住粒子，四角收得更干净 -->
+<div class="bg-overlay" aria-hidden="true"></div>
 
 <script>
   import { onThemeChange } from "../lib/theme";
@@ -26,22 +28,24 @@
     const g = ctx;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /** 调色板 */
+    /** 调色板：连线整体收淡，让粒子退到正文之后；三团辉光叠加后与原来的两团等量 */
     function palette(theme: ThemeName) {
       return theme === "day"
         ? {
             node: [36, 84, 150],
             line: [40, 100, 190],
-            lineAlpha: 0.13,
-            glowA: "rgba(79,158,255,0.10)",
-            glowB: "rgba(127,212,255,0.09)",
+            lineAlpha: 0.1,
+            glowA: "rgba(79,158,255,0.085)",
+            glowB: "rgba(127,212,255,0.07)",
+            glowC: "rgba(91,91,214,0.05)",
           }
         : {
             node: [159, 212, 255],
             line: [127, 212, 255],
-            lineAlpha: 0.16,
-            glowA: "rgba(79,158,255,0.07)",
+            lineAlpha: 0.11,
+            glowA: "rgba(79,158,255,0.065)",
             glowB: "rgba(127,212,255,0.05)",
+            glowC: "rgba(91,91,214,0.045)",
           };
     }
 
@@ -72,6 +76,7 @@
     let drift = 0;
     let driftTarget = 0;
     let lastScrollY = window.scrollY;
+    let lastProgress = -1;
 
     function resize(): void {
       w = window.innerWidth;
@@ -82,14 +87,15 @@
       c.style.width = `${w}px`;
       c.style.height = `${h}px`;
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const count = Math.max(36, Math.min(78, Math.floor((w * h) / 26000)));
+      // 密度与速度都往下调：背景只该在余光里，连着线的星座网最抢注意力
+      const count = Math.max(26, Math.min(56, Math.floor((w * h) / 40000)));
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.14,
-        vy: (Math.random() - 0.5) * 0.14,
-        r: Math.random() * 1.4 + 0.5,
-        a: Math.random() * 0.4 + 0.25,
+        vx: (Math.random() - 0.5) * 0.09,
+        vy: (Math.random() - 0.5) * 0.09,
+        r: Math.random() * 1.3 + 0.45,
+        a: Math.random() * 0.32 + 0.18,
         depth: Math.random() * 0.65 + 0.35,
       }));
     }
@@ -106,6 +112,18 @@
     // 在节点上限下会持续给 GC 施压
     const view: { x: number; y: number }[] = [];
 
+    /**
+     * 画一团径向辉光。只填自己的包围盒而非整屏：半径之外全是透明，
+     * 结果与 fillRect(0, 0, w, h) 等价，但每帧省下多次全屏填充。
+     */
+    function drawGlow(x: number, y: number, r: number, color: string): void {
+      const grad = g.createRadialGradient(x, y, 0, x, y, r);
+      grad.addColorStop(0, color);
+      grad.addColorStop(1, "rgba(0,0,0,0)");
+      g.fillStyle = grad;
+      g.fillRect(x - r, y - r, r * 2, r * 2);
+    }
+
     function draw(): void {
       t += 0.004;
 
@@ -121,45 +139,49 @@
 
       g.clearRect(0, 0, w, h);
 
-      // 呼吸辉光（两团，缓慢移动，带轻微视差）
+      // 呼吸辉光：三团光随滚动进度对冲迁移（flow 0→1 时 A 下沉、B 上升、C 常驻），
+      // 长页面滚动时便有了"穿过不同光区"的层次，而不是定格在同一张背景图上
+      const flow = Math.min(drift / (h * 0.42), 1);
       const glowShift = parallax * 0.12;
-      const gx1 = w * 0.22 + Math.sin(t * 0.7) * w * 0.04 + pointer.x * 12;
-      const gy1 = wrap(
-        h * 0.28 + Math.cos(t * 0.5) * h * 0.04 + pointer.y * 8 - glowShift,
-        -h * 0.3,
-        h * 1.3,
-      );
-      const g1 = g.createRadialGradient(
-        gx1,
-        gy1,
-        0,
-        gx1,
-        gy1,
-        Math.max(w, h) * 0.5,
-      );
-      g1.addColorStop(0, colors.glowA);
-      g1.addColorStop(1, "rgba(0,0,0,0)");
-      g.fillStyle = g1;
-      g.fillRect(0, 0, w, h);
 
-      const gx2 = w * 0.8 + Math.cos(t * 0.6) * w * 0.03 - pointer.x * 10;
-      const gy2 = wrap(
-        h * 0.7 + Math.sin(t * 0.45) * h * 0.03 - pointer.y * 6 - glowShift * 0.7,
-        -h * 0.3,
-        h * 1.3,
+      drawGlow(
+        w * 0.22 + Math.sin(t * 0.7) * w * 0.04 + pointer.x * 12,
+        wrap(
+          h * (0.12 + flow * 0.6) +
+            Math.cos(t * 0.5) * h * 0.05 +
+            pointer.y * 8 -
+            glowShift,
+          -h * 0.3,
+          h * 1.3,
+        ),
+        Math.max(w, h) * 0.48,
+        colors.glowA,
       );
-      const g2 = g.createRadialGradient(
-        gx2,
-        gy2,
-        0,
-        gx2,
-        gy2,
+
+      drawGlow(
+        w * 0.78 + Math.cos(t * 0.6) * w * 0.03 - pointer.x * 10,
+        wrap(
+          h * (0.78 - flow * 0.54) +
+            Math.sin(t * 0.45) * h * 0.04 -
+            pointer.y * 6 -
+            glowShift * 0.7,
+          -h * 0.3,
+          h * 1.3,
+        ),
         Math.max(w, h) * 0.42,
+        colors.glowB,
       );
-      g2.addColorStop(0, colors.glowB);
-      g2.addColorStop(1, "rgba(0,0,0,0)");
-      g.fillStyle = g2;
-      g.fillRect(0, 0, w, h);
+
+      drawGlow(
+        w * 0.5 + Math.sin(t * 0.32) * w * 0.06,
+        wrap(
+          h * 0.46 + Math.cos(t * 0.28) * h * 0.05 - glowShift * 0.4,
+          -h * 0.3,
+          h * 1.3,
+        ),
+        Math.max(w, h) * 0.55,
+        colors.glowC,
+      );
 
       // 节点（深度越深，随滚动沉浮越明显）
       view.length = 0;
@@ -183,7 +205,7 @@
       }
 
       // 连线（接缝处自然断开）
-      const max = 132;
+      const max = 104;
       g.strokeStyle = lineColor;
       g.lineWidth = 1;
       for (let i = 0; i < view.length; i++) {
@@ -227,6 +249,17 @@
         // 冲量只由真实滚动增量驱动。此前 wheel 事件也叠加一次同方向冲量，
         // 同一次手势被计两遍，很快把 ±6 钳位打满、失去纵深层次
         impulse = Math.max(-6, Math.min(6, impulse + dy * 0.02));
+      }
+      // 全局滚动进度（0→1）：供 tech.css 的侧辉光消费，让每个页面而不只是首页 Hero
+      // 的背景对滚动有响应。写 CSS 变量会触发一次样式重算，故按 1% 变化阈值节流
+      const maxY = document.documentElement.scrollHeight - h;
+      const progress = maxY > 0 ? Math.min(y / maxY, 1) : 0;
+      if (Math.abs(progress - lastProgress) >= 0.01) {
+        lastProgress = progress;
+        document.documentElement.style.setProperty(
+          "--scroll-progress",
+          progress.toFixed(3),
+        );
       }
     }
 

@@ -7,8 +7,7 @@ import type { Lang } from "../i18n/index";
  * 首屏：打字机轮播 + 滚动渐隐。
  *
  * 视觉移植自「理科迷官网-源代码」的 HeroTyper.vue：渐变遮罩 + 打字光标 +
- * 滚动时把进度写进 --hero-progress（驱动 body::after 侧辉光），
- * 同时让首屏内容随之下沉淡出。
+ * 滚动时让首屏内容下沉淡出。
  */
 interface Props {
   title: string;
@@ -140,13 +139,9 @@ const typingTexts = [title, subtitle].filter(Boolean);
       setTimeout(tick, 700);
     }
 
-    // 首屏随滚动渐隐，并把进度写进 --hero-progress
+    // 首屏随滚动渐隐（背景的滚动响应统一由 TechBackground 写 --scroll-progress）
     const onScroll = (): void => {
       const p = Math.min(window.scrollY / (window.innerHeight * 0.72), 1);
-      document.documentElement.style.setProperty(
-        "--hero-progress",
-        p.toFixed(3),
-      );
       inner.style.opacity = String(1 - p * 0.55);
       if (!reduced) {
         inner.style.transform = `translateY(${p * -26}px)`;
