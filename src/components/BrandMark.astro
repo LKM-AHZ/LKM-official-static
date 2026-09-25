@@ -1,8 +1,8 @@
 ---
 /**
- * 品牌标识：六边形 + 三条椭圆轨道的原子图形。
- * 描边/填充全部走主题 token，故 day / night 自动换色，且可多处复用
- * （不使用 <linearGradient>，避免同一页面出现重复 id）。
+ * 品牌标识：直接引用 public/lkm-logo.svg。
+ * 图自带固定配色（近白圆底 #F6F6F6 + 紫环 #BC93D9 + 浅蓝画 #93D1ED），
+ * 白天原样即可；夜晚靠 filter 近似换色，见下方 <style> 的说明。
  */
 interface Props {
   size?: number;
@@ -12,44 +12,19 @@ interface Props {
 const { size = 38, class: className } = Astro.props;
 ---
 
-<svg
-  width={size}
-  height={size}
-  viewBox="0 0 48 48"
-  fill="none"
-  aria-hidden="true"
-  class={className}
->
-  <path
-    d="M24 3 42 13.5v21L24 45 6 34.5v-21L24 3Z"
-    stroke="var(--primary)"
-    stroke-width="2"
-    fill="color-mix(in srgb, var(--primary) 10%, transparent)"></path>
-  <circle cx="24" cy="24" r="4.2" fill="var(--primary)"></circle>
-  <ellipse
-    cx="24"
-    cy="24"
-    rx="15"
-    ry="6"
-    stroke="var(--primary)"
-    stroke-width="1.3"
-    opacity=".8"></ellipse>
-  <ellipse
-    cx="24"
-    cy="24"
-    rx="15"
-    ry="6"
-    stroke="var(--secondary)"
-    stroke-width="1.3"
-    opacity=".6"
-    transform="rotate(60 24 24)"></ellipse>
-  <ellipse
-    cx="24"
-    cy="24"
-    rx="15"
-    ry="6"
-    stroke="var(--primary)"
-    stroke-width="1.3"
-    opacity=".6"
-    transform="rotate(120 24 24)"></ellipse>
-</svg>
+<img src="/lkm-logo.svg" width={size} height={size} alt="" class={className} />
+
+<style>
+  /*
+   * 夜晚近似换色。单张位图只能套一条 filter，而环与画色相不同、无法同时校正，
+   * 故取「画贴近 --primary」优先。按 CSS Filter Effects 规范矩阵实算的输出：
+   *   画   #93D1ED → #7eaeff（目标 --primary   #7fd4ff，基本一致）
+   *   盘面 #F6F6F6 → #1d1d1d（目标 --card-bg   #121b2d，白底已消除）
+   *   环   #BC93D9 → #ffdcff（目标 --secondary #b9c8ff，偏成浅粉，这是已知偏差）
+   * invert 负责把白底压黑，hue-rotate 把反相后的色相转回蓝紫一侧，brightness 提亮线条。
+   * 白天不套 filter：原图浅彩画 + 白底本就适配浅色页，再增饱和只会更亮、更偏离 --primary。
+   */
+  :global([data-theme="night"]) img {
+    filter: invert(1) hue-rotate(220deg) brightness(3.2) saturate(1.3);
+  }
+</style>

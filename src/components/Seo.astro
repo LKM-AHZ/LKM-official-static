@@ -86,7 +86,7 @@ const organizationJsonLd = {
   alternateName: "LKM",
   // 组织 URL 用站点根，而不是写死中文首页：英文/中立页面不该把 /zh/ 报成机构地址
   url: new URL("/", site).href,
-  logo: new URL("/favicon.svg", site).href,
+  logo: new URL("/lkm-logo.svg", site).href,
   foundingDate: "2014",
 };
 const websiteJsonLd = includeWebsiteJsonLd
@@ -116,7 +116,7 @@ const articleJsonLd =
 ---
 
 <link rel="canonical" href={canonical} />
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="/lkm-logo.svg" type="image/svg+xml" />
 
 <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
 <!-- 初始值对应默认的白天主题；ThemeToggle 的脚本会在切主题时改写 -->
