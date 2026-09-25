@@ -6,6 +6,7 @@ import { langUrl } from "../../i18n/paths";
 import NewsCard from "../../components/news/NewsCard.astro";
 import { readingMinutes } from "../../components/news/format";
 import { getNewsPosts, postSlug } from "../../components/news/posts";
+import { buildSearchText } from "../../components/news/search";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 const isEn = lang === "en";
@@ -50,7 +51,28 @@ const enEmpty = isEn && posts.length === 0;
       )}
 
       {posts.length > 0 && (
-        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="mx-auto mb-10 w-full max-w-md">
+          <input
+            type="search"
+            data-news-search
+            aria-label={t(lang, "common.aria.search")}
+            placeholder={t(lang, "news.search_placeholder")}
+            class="w-full rounded-[var(--radius-field)] border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 py-2.5 text-sm text-base-content transition outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_25%,transparent)]"
+          />
+        </div>
+      )}
+
+      {/* 命中数：与列表的显隐一起由脚本维护，模板经 data 属性下发（客户端脚本取不到 t()） */}
+      <p
+        data-news-count
+        data-count-template={t(lang, "news.search_count")}
+        hidden
+        aria-live="polite"
+        class="mb-6 text-center text-sm text-text-muted"
+      ></p>
+
+      {posts.length > 0 && (
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-news-list>
           {posts.map((doc) => {
             const slug = postSlug(doc);
             const tagLabel = (doc.data.tags ?? [])[0];
@@ -64,11 +86,74 @@ const enEmpty = isEn && posts.length === 0;
                 minutes={readingMinutes(doc.body ?? "")}
                 tagLabel={tagLabel}
                 image={doc.data.image}
+                searchText={buildSearchText([
+                  doc.data.title,
+                  doc.data.description,
+                  ...(doc.data.tags ?? []),
+                ])}
               />
             );
           })}
         </div>
       )}
+
+      <p
+        data-news-empty
+        hidden
+        class="card-hover rounded-2xl px-6 py-12 text-center text-text-muted"
+      >
+        {t(lang, "news.search_empty")}
+      </p>
     </div>
   </section>
 </OfficialLayout>
+
+<script>
+  import { matchesQuery } from "../../components/news/search";
+
+  const input = document.querySelector<HTMLInputElement>("[data-news-search]");
+  const list = document.querySelector<HTMLElement>("[data-news-list]");
+
+  if (input && list) {
+    const cards = Array.from(
+      list.querySelectorAll<HTMLElement>("[data-news-card]"),
+    );
+    const empty = document.querySelector<HTMLElement>("[data-news-empty]");
+    const count = document.querySelector<HTMLElement>("[data-news-count]");
+
+    const apply = (): void => {
+      const query = input.value;
+      let shown = 0;
+      for (const card of cards) {
+        const hit = matchesQuery(card.dataset.searchText ?? "", query);
+        card.hidden = !hit;
+        if (hit) shown += 1;
+      }
+
+      // 未输入时不显示任何结果态，页面保持「全部文章」的原貌
+      const searching = query.trim() !== "";
+      if (empty) empty.hidden = !searching || shown > 0;
+      if (count) {
+        count.hidden = !searching || shown === 0;
+        if (searching && shown > 0) {
+          count.textContent = (count.dataset.countTemplate ?? "{n}").replace(
+            "{n}",
+            String(shown),
+          );
+        }
+      }
+    };
+
+    input.addEventListener("input", apply);
+  }
+</script>
+
+<style is:global>
+  /* 卡片根元素带 flex 类，与 UA 样式表的 [hidden]{display:none} 同为 (0,1,0)
+     特异性却属作者样式，会盖掉后者，使过滤后的卡片只是「不该显示」而非隐藏。
+     这里显式提权。用 is:global 是因为卡片由 NewsCard 子组件渲染，
+     不带本页的 scope 属性，scoped 样式选不中它。 */
+  [data-news-list] > [hidden] {
+    display: none;
+  }
+</style>

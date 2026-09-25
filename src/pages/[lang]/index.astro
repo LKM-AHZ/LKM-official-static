@@ -2,12 +2,10 @@
 import { getCollection } from "astro:content";
 import OfficialLayout from "../../layouts/OfficialLayout.astro";
 import HeroTyper from "../../components/HeroTyper.astro";
-import Gallery from "../../components/Gallery.astro";
 import Icon from "../../components/Icon.astro";
 import NewsCard from "../../components/news/NewsCard.astro";
 import { readingMinutes } from "../../components/news/format";
 import { getNewsPosts, postSlug } from "../../components/news/posts";
-import { buildGalleryItems } from "../../data/gallery";
 import { t } from "../../i18n/index";
 import { langUrl } from "../../i18n/paths";
 
@@ -85,12 +83,10 @@ const faqItems = [
   { title: "有问题或建议怎么联系？", description: "欢迎通过联系我们页面提交你的想法或问题。也可以直接在 QQ 群内向管理团队反馈，我们会认真对待每一条建议。" },
 ];
 
-// 科学影像：复用 docs 集合里带封面图的文章
-const allDocs = await getCollection("docs");
-const galleryItems = buildGalleryItems(allDocs, lang === "en" ? "en" : "zh");
 
 // 最近更新：与 /news 索引页共用同一份过滤/排序（见 components/news/posts.ts），
 // 首页只取最新 6 篇。数据来自 content collection，不再在本文件里手工抄一份。
+const allDocs = await getCollection("docs");
 const newsLang = lang === "en" ? "en" : "zh";
 const newsPosts = getNewsPosts(allDocs, newsLang, 6);
 ---
@@ -135,21 +131,6 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
           ))
         }
       </div>
-    </div>
-  </section>
-
-  {/* ===== 科学影像 ===== */}
-  <section id="gallery" class="section-padding">
-    <div class="container-x">
-      <div class="mb-14 text-center">
-        <h2
-          class="title-underline text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-deep-text"
-        >
-          {t(lang, "home.section_gallery")}
-        </h2>
-        <p class="mt-8 text-sm text-text-muted">{t(lang, "home.gallery_sub")}</p>
-      </div>
-      <Gallery items={galleryItems} />
     </div>
   </section>
 

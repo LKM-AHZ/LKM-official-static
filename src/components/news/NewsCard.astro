@@ -14,15 +14,22 @@ interface Props {
   minutes: number;
   tagLabel?: string;
   image?: string;
+  /** 供 /news 客户端搜索比对的归一化文本；首页不传，属性随之不渲染 */
+  searchText?: string;
 }
 
-const { lang, href, title, desc, date, minutes, tagLabel, image } = Astro.props;
+const { lang, href, title, desc, date, minutes, tagLabel, image, searchText } =
+  Astro.props;
 const dateLabel = formatDate(date, lang);
 const minutesLabel = lang === "en" ? `${minutes} min read` : `${minutes} 分钟`;
 const gradient = coverGradient(title);
 ---
 
-<div class="card-hover group flex h-full flex-col rounded-2xl">
+<div
+  class="card-hover group flex h-full flex-col rounded-2xl"
+  data-news-card
+  data-search-text={searchText}
+>
   <div
     class="relative h-40 w-full shrink-0 overflow-hidden md:h-44"
     style={image ? undefined : { background: gradient }}
