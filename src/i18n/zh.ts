@@ -6,6 +6,7 @@ export const zh = {
   "common.nav_services": "服务",
   "common.nav_team": "团队",
   "common.nav_articles": "文章",
+  "common.nav_resources": "资源",
   "common.nav_communities": "社群",
   // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚），避免每年手改两本字典
   "common.footer.copyright": "理科迷 LKM © {year} · 保留所有权利。",

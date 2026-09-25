@@ -110,38 +110,6 @@ const galleryItems = buildGalleryItems(allDocs, lang === "en" ? "en" : "zh");
     lead={t(lang, "home.hero_kicker")}
   />
 
-  {/* ===== 资源导航入口 ===== */}
-  <section id="resources-entry" class="section-padding">
-    <div class="container-x">
-      <div class="mx-auto max-w-4xl text-center">
-        <a
-          href={langUrl(lang, "/resources")}
-          class="profile-card group block w-full no-underline sm:w-auto sm:inline-block"
-        >
-          <div class="profile-inner flex flex-col items-center gap-4 p-8">
-            <span class="icon-bubble">
-              <Icon name="books" class="h-7 w-7" />
-            </span>
-            <h2
-              class="text-xl font-bold text-deep-text transition-colors group-hover:text-[var(--primary)]"
-            >
-              {t(lang, "home.section_resources")}
-            </h2>
-            <p class="max-w-md text-sm text-text-muted">
-              {t(lang, "home.resources_sub")}
-            </p>
-            <span
-              class="mt-2 inline-flex items-center gap-1 text-sm font-medium text-[var(--primary)]"
-            >
-              {t(lang, "home.resources_btn")}
-              <Icon name="arrowRight" class="h-4 w-4" />
-            </span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
   {/* ===== 推荐板块 ===== */}
   <section id="recommend" class="section-padding">
     <div class="container-x">

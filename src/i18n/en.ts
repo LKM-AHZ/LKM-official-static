@@ -8,6 +8,7 @@ export const en = {
   "common.nav_services": "Services",
   "common.nav_team": "Team",
   "common.nav_articles": "News",
+  "common.nav_resources": "Resources",
   "common.nav_communities": "Community",
   // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚）
   "common.footer.copyright": "LiKeMi LKM © {year} · All rights reserved.",
