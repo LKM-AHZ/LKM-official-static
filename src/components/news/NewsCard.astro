@@ -66,3 +66,14 @@ const gradient = coverGradient(title);
     </div>
   </div>
 </div>
+
+<style>
+  /* 卡内链接必须保持 static。tech.css 的 `body.tech-theme a` 给了全局
+     position: relative，标题链接因此成为自身 ::after 的定位祖先，
+     after:inset-0 便只铺满标题那一小块而非整卡，「整卡可点」随之失效。
+     拉回 static 后，::after 重新以 .card-hover（relative）为包含块。
+     scoped 样式带 data-astro-cid 属性，特异性高于 body.tech-theme a。 */
+  body.tech-theme .card-hover a {
+    position: static;
+  }
+</style>

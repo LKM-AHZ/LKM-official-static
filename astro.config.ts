@@ -8,7 +8,7 @@ const LOCALES = { zh: "zh", en: "en" } as const;
 
 // https://astro.build/config
 export default defineConfig({
-  // 纯静态输出：构建产物只含静态 HTML/CSS/JS，不依赖 node adapter
+  // 纯静态输出：构建产物只含静态 HTML/CSS/JS
   output: "static",
   site: "https://lkm-ahz.icu",
   // 站内链接视口内预取，加快导航

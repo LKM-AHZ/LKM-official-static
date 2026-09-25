@@ -4,6 +4,9 @@ import OfficialLayout from "../../layouts/OfficialLayout.astro";
 import HeroTyper from "../../components/HeroTyper.astro";
 import Gallery from "../../components/Gallery.astro";
 import Icon from "../../components/Icon.astro";
+import NewsCard from "../../components/news/NewsCard.astro";
+import { readingMinutes } from "../../components/news/format";
+import { getNewsPosts, postSlug } from "../../components/news/posts";
 import { buildGalleryItems } from "../../data/gallery";
 import { t } from "../../i18n/index";
 import { langUrl } from "../../i18n/paths";
@@ -33,16 +36,6 @@ const timelineItems = [
   { year: "2025.07 ~ 2025.08", title: "第一次暑假活动落地", description: "首次暑假活动雏形落地。虽在组织细节上仍存不足，人手亦有待扩充，但这是一次珍贵的尝试，为后续活动积累了宝贵经验。" },
   { year: "2025.08.04", title: "网站遭删库，一切归零", description: "网站因意外被删库，所有数据丢失。这次事故让团队深刻认识到备份机制与运维规范的重要性，也成为后续重建的转折点。" },
   { year: "2026.06", title: "涅槃重生：官网重建与第二次暑假筹备", description: "汲取删库教训，以更稳健的架构重建官网与文件库。同期启动第二次暑假活动策划，理科迷以全新的姿态再度启程。" },
-];
-
-// 最近更新
-const newsItems = [
-  { title: "理科迷全新官网正式上线", date: "2026 年 08 月 01 日", desc: "以更稳健的架构重建官网，为你带来更好的在线体验。" },
-  { title: "第二次暑假活动开始筹备", date: "2026 年 06 月 15 日", desc: "活动策划部已启动新一轮活动策划，敬请期待。" },
-  { title: "官方群组重组完成", date: "2025 年 12 月 20 日", desc: "设立初中与高中两个分群，为不同学段成员提供更精准的交流空间。" },
-  { title: "社区重建一周年回顾", date: "2025 年 08 月 04 日", desc: "从删库归零到涅槃重生，社区与大家一起走过的这一年。" },
-  { title: "七月团队·活动策划部 成立", date: "2025 年 04 月 02 日", desc: "启动首次暑假活动策划，翻开社区活动运营新的一页。" },
-  { title: "栏目「科技前沿」上线", date: "2025 年 01 月 08 日", desc: "聚焦前沿科学与技术，分享值得关注的科技资讯与思考。" },
 ];
 
 // 团队成员
@@ -95,6 +88,11 @@ const faqItems = [
 // 科学影像：复用 docs 集合里带封面图的文章
 const allDocs = await getCollection("docs");
 const galleryItems = buildGalleryItems(allDocs, lang === "en" ? "en" : "zh");
+
+// 最近更新：与 /news 索引页共用同一份过滤/排序（见 components/news/posts.ts），
+// 首页只取最新 6 篇。数据来自 content collection，不再在本文件里手工抄一份。
+const newsLang = lang === "en" ? "en" : "zh";
+const newsPosts = getNewsPosts(allDocs, newsLang, 6);
 ---
 
 <OfficialLayout
@@ -327,20 +325,19 @@ const galleryItems = buildGalleryItems(allDocs, lang === "en" ? "en" : "zh");
         </p>
       </div>
 
-      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
-          newsItems.map((n) => (
-            <div class="card-hover rounded-2xl">
-              <div class="flex flex-col gap-2 p-5">
-                <span class="text-xs text-text-muted">{n.date}</span>
-                <h3 class="text-[17px] leading-snug font-semibold text-deep-text">
-                  {n.title}
-                </h3>
-                <p class="mt-1 text-sm leading-relaxed text-text-muted">
-                  {n.desc}
-                </p>
-              </div>
-            </div>
+          newsPosts.map((doc) => (
+            <NewsCard
+              lang={newsLang}
+              href={langUrl(lang, `/docs/${postSlug(doc)}`)}
+              title={doc.data.title}
+              desc={doc.data.description}
+              date={doc.data.publishDate}
+              minutes={readingMinutes(doc.body ?? "")}
+              tagLabel={(doc.data.tags ?? [])[0]}
+              image={doc.data.image}
+            />
           ))
         }
       </div>

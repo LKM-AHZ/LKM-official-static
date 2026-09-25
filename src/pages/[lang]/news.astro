@@ -5,6 +5,7 @@ import { t } from "../../i18n/index";
 import { langUrl } from "../../i18n/paths";
 import NewsCard from "../../components/news/NewsCard.astro";
 import { readingMinutes } from "../../components/news/format";
+import { getNewsPosts, postSlug } from "../../components/news/posts";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 const isEn = lang === "en";
@@ -15,9 +16,7 @@ export const getStaticPaths = getStaticPathsForLang;
 // ===== 文章（资讯）索引：列出来自 /zh(zh)|/en 下 category === "news" 的文章 =====
 const allPosts = await getCollection("docs");
 
-const posts = allPosts
-  .filter((doc) => doc.id.startsWith(`${lang}/`) && doc.data.category === "news")
-  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+const posts = getNewsPosts(allPosts, lang);
 
 const enEmpty = isEn && posts.length === 0;
 ---
@@ -53,7 +52,7 @@ const enEmpty = isEn && posts.length === 0;
       {posts.length > 0 && (
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((doc) => {
-            const slug = doc.id.split("/").slice(1).join("/");
+            const slug = postSlug(doc);
             const tagLabel = (doc.data.tags ?? [])[0];
             return (
               <NewsCard

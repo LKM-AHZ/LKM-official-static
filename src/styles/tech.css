@@ -145,6 +145,11 @@
     z-index: 50;
   }
 
+  /* 让链接/按钮浮在 .card-hover 的两层装饰之上（装饰均为 pointer-events: none）。
+     z-index 需要非 static 的 position 才生效，所以这里的 relative 无法就地去掉。
+     副作用：这些元素会成为自身绝对定位伪元素的包含块 —— 任何「让 ::after 以卡片为
+     基准铺满整卡命中区」的写法（要求链接保持 static）都会被它悄悄破坏。NewsCard
+     踩过这个坑，修复方式见该组件内的局部覆盖；新增此类写法时同样需要覆盖。 */
   body.tech-theme a,
   body.tech-theme button {
     position: relative;
