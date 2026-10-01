@@ -1,0 +1,73 @@
+# LKM 纯静态官网——自包含部署编排（独立服务器）。
+# 与根仓库 LKM-Website 的 docker-compose.yml 完全解耦：本文件是官网唯一的部署入口，随本仓
+# 一起 clone 到目标服务器即可，不含 APISIX/后端/数据库（官网是纯静态站，只需 nginx 提供静态
+# 文件与 TLS，外加 certbot 申请/续期证书）。用法见 ../DEPLOYMENT.md。
+
+# 显式项目名：否则 compose 取所在目录名（deploy），容器/卷名会变成 deploy-static-1 之类
+name: lkm-official-static
+
+services:
+  certs-init:
+    image: alpine:3.19
+    entrypoint: ['sh', '/bootstrap-selfsigned.sh']
+    environment:
+      LKM_SITE_DOMAIN: ${LKM_SITE_DOMAIN:?LKM_SITE_DOMAIN 必填，见 .env.example}
+    volumes:
+      - ./certbot/bootstrap-selfsigned.sh:/bootstrap-selfsigned.sh:ro
+      - certbot_conf:/etc/letsencrypt
+    restart: 'no'
+    networks:
+      - web
+
+  # ── 官网静态站（nginx，终结 TLS）──
+  static:
+    build:
+      # 构建上下文是仓库根（static.Dockerfile 在根目录）
+      context: ..
+      dockerfile: static.Dockerfile
+    image: lkm-official-static:latest
+    depends_on:
+      certs-init:
+        condition: service_completed_successfully
+    ports:
+      - '${LKM_HTTP_PORT:-80}:80'
+      - '${LKM_HTTPS_PORT:-443}:443'
+    environment:
+      # 唯一模板变量：nginx 镜像的 docker-entrypoint.d 用它展开 /etc/nginx/templates/*.template
+      # （只替换已定义的变量名，$host/$request_uri 等 nginx 变量不受影响）
+      LKM_SITE_DOMAIN: ${LKM_SITE_DOMAIN:?LKM_SITE_DOMAIN 必填，见 .env.example}
+    volumes:
+      # 站点配置走模板：容器启动时由镜像自带的 20-envsubst-on-templates.sh 渲染到
+      # /etc/nginx/conf.d/default.conf（覆盖镜像默认站点）
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      # 后台每 6h nginx -s reload：拾取 certbot 续期后的新证书，不必重启容器（无需 docker.sock）
+      - ./nginx/99-cert-reload.sh:/docker-entrypoint.d/99-cert-reload.sh:ro
+      - certbot_conf:/etc/letsencrypt:ro
+      - certbot_www:/var/www/certbot:ro
+    restart: ${LKM_RESTART_POLICY:-no}
+    networks:
+      - web
+
+  # ── certbot 常驻：只做续期（首次签发见 DEPLOYMENT.md 的手动命令）──
+  certbot:
+    image: certbot/certbot
+    entrypoint: ['sh', '/renew-loop.sh']
+    depends_on:
+      - static
+    volumes:
+      - ./certbot/renew-loop.sh:/renew-loop.sh:ro
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    restart: ${LKM_RESTART_POLICY:-no}
+    networks:
+      - web
+
+volumes:
+  # 证书与 ACME webroot：static 只读挂载、certbot 读写挂载。
+  # **注意**：`docker compose down -v` 会删除这两个卷，导致证书丢失并触发重新签发（可能撞
+  # Let's Encrypt 限流）——日常停服请用不带 -v 的 down。
+  certbot_conf:
+  certbot_www:
+
+networks:
+  web:

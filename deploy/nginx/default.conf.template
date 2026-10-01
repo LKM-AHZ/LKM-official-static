@@ -1,0 +1,45 @@
+# 官网站点配置**模板**：容器启动时由 nginx 镜像自带的 20-envsubst-on-templates.sh
+# 用环境变量展开 ${LKM_SITE_DOMAIN}，写入 /etc/nginx/conf.d/default.conf（覆盖镜像默认站点）。
+# 该脚本只替换「已定义的」环境变量名，故 $host / $request_uri 等 nginx 变量不受影响。
+#
+# 只做独立部署必需的事：ACME、http→https、TLS、静态文件服务。
+# 刻意不额外定制缓存头/压缩策略——保持与原（根仓 APISIX + static 容器）部署观感一致。
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name ${LKM_SITE_DOMAIN} www.${LKM_SITE_DOMAIN};
+
+    # ACME http-01 challenge 必须排在 301 之前（^~ 前缀匹配优先级高于 location /），
+    # 否则 Let's Encrypt 的校验请求会被重定向到 https 而失败，证书无法签发/续期。
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/certbot;
+        try_files $uri =404;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name ${LKM_SITE_DOMAIN} www.${LKM_SITE_DOMAIN};
+
+    # 证书由 certbot 卷提供：冷启动时是 certs-init 生成的自签占位，正式证书签发后
+    # 由 99-cert-reload.sh 定期 nginx -s reload 生效。
+    ssl_certificate     /etc/letsencrypt/live/${LKM_SITE_DOMAIN}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${LKM_SITE_DOMAIN}/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_cache shared:SSL:10m;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    # 多页静态站：不做 SPA fallback，未知路径如实 404。
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

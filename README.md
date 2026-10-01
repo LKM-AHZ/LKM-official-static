@@ -30,7 +30,7 @@ src/content/docs/
 
 同一内容的中英文文件应使用相同文件名。新增或更新内容时同时检查标题、发布日期、链接和两种语言的对应关系；历史新闻不应为了统一措辞而改写事实。
 
-团队头像通过 `scripts/sync-team-avatars.mts` 同步。不要直接修改生成产物或 `.astro/`、`dist/` 中的文件。
+团队头像通过 `scripts/sync-team-avatars.mts` 同步。该脚本的源目录是 `../LKM-service/static/avatars/`，因此只能在包含后端仓库的编排检出（`LKM-Website`）里运行，独立 clone 本仓库时不可用——但头像产物已提交进 `public/images/avatars/` 与 `src/data/avatar-map.json`，构建与部署不依赖该脚本。不要直接修改生成产物或 `.astro/`、`dist/` 中的文件。
 
 ## 命令
 
@@ -51,4 +51,15 @@ pnpm test
 pnpm build
 ```
 
-构建成功后抽查首页、中文与英文内容路由、`robots.txt`、站点地图以及 404 页面。生产镜像由 `static.Dockerfile` 构建，根仓库的 `docker-compose.yml` 负责启动。
+构建成功后抽查首页、中文与英文内容路由、`robots.txt`、站点地图以及 404 页面。
+
+## 部署
+
+官网独立部署在一台服务器上（nginx 提供静态文件与 TLS + certbot 申请/续期证书），部署编排
+自包含在本仓库的 `deploy/` 目录，不依赖任何其它仓库。完整步骤见 [`DEPLOYMENT.md`](./DEPLOYMENT.md)：
+
+```sh
+cd deploy
+cp .env.example .env   # 填 LKM_SITE_DOMAIN / LKM_ACME_EMAIL
+docker compose up -d --build
+```
