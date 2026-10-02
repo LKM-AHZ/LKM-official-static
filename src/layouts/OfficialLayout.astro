@@ -6,7 +6,6 @@ import NavBar from "../components/NavBar.astro";
 import TechBackground from "../components/TechBackground.astro";
 import BackToTop from "../components/BackToTop.astro";
 import Seo from "../components/Seo.astro";
-import { SITE_NAME } from "../data/config"; // 品牌名不翻译，保持中文
 import { t } from "../i18n/index";
 import type { TranslationKey } from "../i18n/index";
 import { langUrl } from "../i18n/paths";
@@ -90,13 +89,16 @@ const footerCols: {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="generator" content={Astro.generator} />
-    {/* 首屏前恢复主题，避免夜间用户先看到白天再闪一下。
-        存储键从 lib/theme 注入，别再手抄字面量，否则改名后这里会静默读不到偏好。 */}
+    {
+      /* 首屏前恢复主题，避免夜间用户先看到白天再闪一下。
+        存储键从 lib/theme 注入，别再手抄字面量，否则改名后这里会静默读不到偏好。 */
+    }
     <script is:inline define:vars={{ themeStorageKey: THEME_STORAGE_KEY }}>
       (function () {
         let theme = "day";
         try {
-          if (localStorage.getItem(themeStorageKey) === "night") theme = "night";
+          if (localStorage.getItem(themeStorageKey) === "night")
+            theme = "night";
         } catch {
           /* 隐私模式：保持默认 */
         }
@@ -130,9 +132,14 @@ const footerCols: {
           <div class="md:max-w-sm">
             <div class="mb-4 flex items-center gap-2.5">
               <BrandMark size={34} />
-              <span class="text-xl font-bold text-deep-text"
-                >{SITE_NAME} LKM</span
-              >
+              <span class="text-xl font-bold text-deep-text">
+                {t(lang, "common.brand")}
+                {
+                  lang !== "en" && (
+                    <span class="ml-1 text-[var(--primary)]">PHIENTIST</span>
+                  )
+                }
+              </span>
             </div>
             <p class="text-sm leading-7 text-text-muted">
               {t(lang, "common.site.description")}
@@ -188,10 +195,12 @@ const footerCols: {
         <div
           class="mt-12 border-t border-[var(--card-edge)] pt-8 text-center text-sm text-text-muted"
         >
-          {t(lang, "common.footer.copyright").replace(
-            "{year}",
-            String(new Date().getFullYear()),
-          )}
+          {
+            t(lang, "common.footer.copyright").replace(
+              "{year}",
+              String(new Date().getFullYear()),
+            )
+          }
         </div>
       </div>
     </footer>

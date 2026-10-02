@@ -1,7 +1,7 @@
 {
   "name": "lkm-official-static",
   "version": "0.1.0",
-  "description": "LiKeMi Official Static Website",
+  "description": "Phientist Official Static Website",
   "license": "AGPL-3.0-or-later",
   "type": "module",
   "engines": {

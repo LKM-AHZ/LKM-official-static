@@ -4,7 +4,7 @@ description: Learn how to browse, switch languages, share links, and report issu
 publishDate: 2026-08-20
 ---
 
-The LiKeMi static website is designed primarily for reading and requires no account.
+The Phientist static website is designed primarily for reading and requires no account.
 Its pages are generated from Markdown, making them easy to bookmark, share, and archive.
 
 ## Browse the Site

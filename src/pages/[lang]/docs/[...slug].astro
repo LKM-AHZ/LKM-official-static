@@ -4,17 +4,26 @@ import type { CollectionEntry } from "astro:content";
 import OfficialLayout from "../../../layouts/OfficialLayout.astro";
 import { SUPPORTED_LANGS } from "../../../i18n/index";
 import { docHref, docSlug, langUrl } from "../../../i18n/paths";
-import { coverGradient, formatDate, readingMinutes } from "../../../components/news/format";
+import {
+  coverGradient,
+  formatDate,
+  readingMinutes,
+} from "../../../components/news/format";
+import Icon from "../../../components/Icon.astro";
 
 // docs 多语言存放于 src/content/docs/<lang>/<slug>.md（ID 如 `zh/news-site-launch`）。
 export async function getStaticPaths() {
   const all = await getCollection("docs");
 
   // 按语言分桶
-  const buckets = new Map<string, { doc: CollectionEntry<"docs">; slug: string }[]>();
+  const buckets = new Map<
+    string,
+    { doc: CollectionEntry<"docs">; slug: string }[]
+  >();
   for (const d of all) {
     const lang = d.id.split("/")[0];
-    if (!SUPPORTED_LANGS.includes(lang as (typeof SUPPORTED_LANGS)[number])) continue;
+    if (!SUPPORTED_LANGS.includes(lang as (typeof SUPPORTED_LANGS)[number]))
+      continue;
     const slug = docSlug(d.id);
     const bucket = buckets.get(lang) ?? [];
     bucket.push({ doc: d, slug });
@@ -34,7 +43,10 @@ export async function getStaticPaths() {
   }[] = [];
 
   for (const [lang, bucket] of buckets) {
-    bucket.sort((a, b) => a.doc.data.publishDate.getTime() - b.doc.data.publishDate.getTime());
+    bucket.sort(
+      (a, b) =>
+        a.doc.data.publishDate.getTime() - b.doc.data.publishDate.getTime(),
+    );
     bucket.forEach((item, idx) => {
       paths.push({
         params: { lang, slug: item.slug },
@@ -79,26 +91,32 @@ const nextHref = docLink(next);
   type="article"
   publishedTime={doc.data.publishDate.toISOString()}
 >
-  <div class="container-x gap-x-12 py-10 md:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem]">
+  <div
+    class="container-x gap-x-12 py-10 md:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem]"
+  >
     <div class="min-w-0">
       <article class="article-prose">
         {/* 文章顶部配图（无 image 时才用标题色相渐变兜底） */}
         <div
           class="relative mb-8 aspect-[16/7] w-full overflow-hidden rounded-2xl border border-[var(--card-edge)]"
-          style={doc.data.image ? undefined : { background: coverGradient(doc.data.title) }}
+          style={doc.data.image
+            ? undefined
+            : { background: coverGradient(doc.data.title) }}
         >
-          {doc.data.image && (
-            <img
-              src={doc.data.image}
-              alt=""
-              width="1200"
-              height="525"
-              loading="eager"
-              fetchpriority="high"
-              decoding="async"
-              class="absolute inset-0 h-full w-full object-cover"
-            />
-          )}
+          {
+            doc.data.image && (
+              <img
+                src={doc.data.image}
+                alt=""
+                width="1200"
+                height="525"
+                loading="eager"
+                fetchpriority="high"
+                decoding="async"
+                class="absolute inset-0 h-full w-full object-cover"
+              />
+            )
+          }
         </div>
 
         <a
@@ -109,75 +127,101 @@ const nextHref = docLink(next);
         </a>
 
         <header class="mt-6">
-          <h1 class="font-heading text-3xl md:text-4xl font-bold leading-tight tracking-[-0.01em] text-deep-text">
+          <h1
+            class="font-heading text-3xl md:text-4xl font-bold leading-tight tracking-[-0.01em] text-deep-text"
+          >
             {doc.data.title}
           </h1>
-          <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-muted">
+          <div
+            class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-muted"
+          >
             <time datetime={ymd}>{dateText}</time>
-            <span class="h-1 w-1 rounded-full bg-[var(--surface-3)]" />
+            <span class="h-1 w-1 rounded-full bg-[var(--surface-3)]"></span>
             <span>{metaMinutes}</span>
           </div>
-          {doc.data.description && (
-            <p class="mt-6 text-[17px] leading-relaxed text-text-muted">{doc.data.description}</p>
-          )}
+          {
+            doc.data.description && (
+              <p class="mt-6 text-[17px] leading-relaxed text-text-muted">
+                {doc.data.description}
+              </p>
+            )
+          }
         </header>
 
         <div class="prose mt-8 max-w-none">
           <Content />
         </div>
 
-        {(prevHref || nextHref) && (
-          <nav
-            class="mt-14 flex flex-col gap-3 border-t border-[var(--card-edge)] pt-6 sm:flex-row sm:items-stretch sm:justify-between"
-            aria-label="Previous or next post"
-          >
-            {prevHref && prev ? (
-              <a
-                href={prevHref}
-                class="group inline-flex w-full flex-col gap-1 rounded-lg p-2 transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
-              >
-                <span class="text-xs uppercase tracking-wide text-text-muted">{en ? "Older" : "上一篇"}</span>
-                <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
-                  {prev.data.title}
-                </span>
-              </a>
-            ) : (
-              <span class="hidden flex-1 sm:block" />
-            )}
+        {
+          (prevHref || nextHref) && (
+            <nav
+              class="mt-14 flex flex-col gap-3 border-t border-[var(--card-edge)] pt-6 sm:flex-row sm:items-stretch sm:justify-between"
+              aria-label="Previous or next post"
+            >
+              {prevHref && prev ? (
+                <a
+                  href={prevHref}
+                  class="group inline-flex w-full flex-col gap-1 rounded-lg p-2 transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
+                >
+                  <span class="text-xs uppercase tracking-wide text-text-muted">
+                    {en ? "Older" : "上一篇"}
+                  </span>
+                  <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
+                    {prev.data.title}
+                  </span>
+                </a>
+              ) : (
+                <span class="hidden flex-1 sm:block" />
+              )}
 
-            {nextHref && next ? (
-              <a
-                href={nextHref}
-                class="group inline-flex w-full flex-col items-end gap-1 rounded-lg p-2 text-right transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
-              >
-                <span class="text-xs uppercase tracking-wide text-text-muted">{en ? "Newer" : "下一篇"}</span>
-                <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
-                  {next.data.title}
-                </span>
-              </a>
-            ) : (
-              <span class="hidden flex-1 sm:block" />
-            )}
-          </nav>
-        )}
+              {nextHref && next ? (
+                <a
+                  href={nextHref}
+                  class="group inline-flex w-full flex-col items-end gap-1 rounded-lg p-2 text-right transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
+                >
+                  <span class="text-xs uppercase tracking-wide text-text-muted">
+                    {en ? "Newer" : "下一篇"}
+                  </span>
+                  <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
+                    {next.data.title}
+                  </span>
+                </a>
+              ) : (
+                <span class="hidden flex-1 sm:block" />
+              )}
+            </nav>
+          )
+        }
       </article>
     </div>
 
-    {/* 右侧阅读目录（标题来自正文已渲染的 h2–h4，脚本实时填充） */}
-    <aside class="hidden lg:block" aria-label={en ? "Table of contents" : "阅读目录"}>
-      <div class="article-toc card-hover sticky top-[calc(var(--nav-h)+0.5rem)] max-h-[calc(100vh-8rem)] overflow-auto rounded-2xl p-5">
-        <p class="mb-3 text-xs font-semibold uppercase tracking-wide text-text-muted">
-          {en ? "On this page" : "阅读目录"}
-        </p>
-        <nav data-toc-list class="space-y-1 text-sm">
+    {/* 右侧阅读目录（标题来自正文已渲染的 h2–h4，脚本只更新当前章节） */}
+    <aside
+      class="hidden lg:block"
+      aria-label={en ? "Table of contents" : "阅读目录"}
+    >
+      <div
+        class="article-toc sticky top-[calc(var(--nav-h)+1rem)] max-h-[calc(100vh-var(--nav-h)-2rem)] overflow-y-auto rounded-2xl p-5"
+      >
+        <div class="toc-heading">
+          <span class="toc-heading-icon" aria-hidden="true"
+            ><Icon name="article" class="h-4 w-4" /></span
+          >
+          <p>{en ? "On this page" : "阅读目录"}</p>
+        </div>
+        <nav
+          data-toc-list
+          class="toc-list"
+          aria-label={en ? "Article sections" : "文章章节"}
+        >
           {
             tocHeadings.map((h) => (
               <a
                 href={`#${h.slug}`}
                 class:list={[
-                  "toc-link block truncate rounded px-2 py-1 transition-colors",
-                  h.depth === 3 && "pl-5",
-                  h.depth === 4 && "pl-8",
+                  "toc-link",
+                  h.depth === 3 && "toc-depth-3",
+                  h.depth === 4 && "toc-depth-4",
                 ]}
               >
                 {h.text}
@@ -193,7 +237,9 @@ const nextHref = docLink(next);
 <script>
   // 目录链接已在构建期渲染，这里只做滚动高亮（原生锚点负责跳转）
   document.addEventListener("DOMContentLoaded", () => {
-    const list = document.querySelector("[data-toc-list]") as HTMLElement | null;
+    const list = document.querySelector(
+      "[data-toc-list]",
+    ) as HTMLElement | null;
     if (!list) return;
 
     const entries = Array.from(list.querySelectorAll<HTMLAnchorElement>("a"))
@@ -201,11 +247,18 @@ const nextHref = docLink(next);
         const id = decodeURIComponent(a.hash.slice(1));
         return { a, el: id ? document.getElementById(id) : null };
       })
-      .filter((e): e is { a: HTMLAnchorElement; el: HTMLElement } => e.el !== null);
+      .filter(
+        (e): e is { a: HTMLAnchorElement; el: HTMLElement } => e.el !== null,
+      );
     if (entries.length === 0) return;
 
     const setActive = (idx: number) => {
-      entries.forEach(({ a }, i) => a.classList.toggle("toc-active", i === idx));
+      entries.forEach(({ a }, i) => {
+        const active = i === idx;
+        a.classList.toggle("toc-active", active);
+        if (active) a.setAttribute("aria-current", "location");
+        else a.removeAttribute("aria-current");
+      });
     };
 
     let ticking = false;
@@ -261,18 +314,93 @@ const nextHref = docLink(next);
 </style>
 
 <style>
-  /* 右侧目录：目录节点就在本组件模板里渲染（脚本只切换 toc-active 类），
-     因此用普通 scoped 样式即可命中，无需 is:global */
-  .article-toc .toc-link {
-    color: var(--text-muted);
-    text-decoration: none;
+  .article-toc {
+    position: sticky;
+    isolation: isolate;
+    background: var(--card-bg-grad);
+    border: 1px solid var(--card-edge);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(8px) saturate(118%);
+    scrollbar-width: thin;
   }
-  .article-toc .toc-link:hover {
-    background: color-mix(in oklch, var(--text-muted) 10%, transparent);
+  .article-toc::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 12%;
+    width: 60%;
+    height: 1px;
+    background: var(--card-topline);
+  }
+  .toc-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--line-divider);
+  }
+  .toc-heading-icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--icon-bubble-edge);
+    border-radius: 0.55rem;
+    color: var(--primary);
+    background: var(--icon-bubble-bg);
+  }
+  .toc-heading p {
+    margin: 0;
+    color: var(--deep-text);
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .toc-list {
+    border-left: 1px solid var(--line-color);
+  }
+  .article-toc .toc-link {
+    position: relative;
+    display: block;
+    margin-left: -1px;
+    padding: 0.55rem 0.65rem 0.55rem 0.9rem;
+    border-radius: 0 0.6rem 0.6rem 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+    transition:
+      color var(--duration-fast) var(--ease),
+      background var(--duration-fast) var(--ease);
+  }
+  .article-toc .toc-depth-3 {
+    padding-left: 1.65rem;
+  }
+  .article-toc .toc-depth-4 {
+    padding-left: 2.4rem;
+  }
+  .article-toc .toc-link:hover,
+  .article-toc .toc-link:focus-visible {
+    color: var(--primary);
+    background: var(--social-bg);
   }
   .article-toc .toc-link.toc-active {
     color: var(--primary);
     font-weight: 600;
-    background: color-mix(in oklch, var(--primary) 10%, transparent);
+    background: var(--social-hover-bg);
+  }
+  .article-toc .toc-link.toc-active::before {
+    content: "";
+    position: absolute;
+    top: 0.45rem;
+    bottom: 0.45rem;
+    left: 0;
+    width: 2px;
+    border-radius: 999px;
+    background: linear-gradient(var(--accent-line-from), var(--accent-line-to));
+    box-shadow: 0 0 8px var(--accent-line-glow);
   }
 </style>

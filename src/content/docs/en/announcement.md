@@ -4,7 +4,7 @@ description: How bilingual content, dates, links, and corrections are maintained
 publishDate: 2026-08-27
 ---
 
-The LiKeMi static website has moved beyond its initial structure test and is now maintained
+The Phientist static website has moved beyond its initial structure test and is now maintained
 as a public information archive. Announcements, news, and introductory material are stored
 as Markdown and published through a static build.
 

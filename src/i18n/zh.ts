@@ -9,7 +9,7 @@ export const zh = {
   "common.nav_resources": "资源",
   "common.nav_communities": "社群",
   // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚），避免每年手改两本字典
-  "common.footer.copyright": "理科迷 LKM © {year} · 保留所有权利。",
+  "common.footer.copyright": "理科迷 PHIENTIST © {year} · 保留所有权利。",
   "common.footer.tagline": "让科学回归每一个人",
   "common.footer.col_community": "社区",
   "common.footer.col_pages": "页面",
@@ -36,9 +36,9 @@ export const zh = {
   "common.theme_toggle": "切换主题",
   "common.theme_to_night": "切换到夜晚模式",
   "common.theme_to_day": "切换到白天模式",
-  "common.site.description": "理科迷 (LKM) 独立官网",
+  "common.site.description": "理科迷 (PHIENTIST) 独立官网",
   "seo.home":
-    "理科迷 (LKM) —— 创立于 2014 年的科技爱好者社区，让科学回归每一个人。",
+    "理科迷 (PHIENTIST) —— 创立于 2014 年的科技爱好者社区，让科学回归每一个人。",
   "seo.news": "理科迷官方公告、科技新闻与科普内容。",
   "seo.team":
     "认识理科迷管理团队：总务部、群务部、活动策划部、新闻办、顾问团、专业委员会与技术委员会。",
@@ -87,7 +87,7 @@ export const zh = {
   "home.section_updates_sub": "看看最近发生了什么",
   "home.section_faq": "常见问题",
   "home.section_faq_sub":
-    "以下整理了用户关于 LKM 官方网站的常见疑问，帮助您快速了解项目特性和使用方式。",
+    "以下整理了用户关于 PHIENTIST 官方网站的常见疑问，帮助您快速了解项目特性和使用方式。",
   "team.title": "管理团队 —— 理科迷",
   "team.sidebar_founder": "创始人",
   "team.sidebar_general": "总务部",
@@ -135,7 +135,7 @@ export const zh = {
   "about.description": "关于理科迷社区",
   "about.hero_title": "关于理科迷",
   "about.hero_paragraph":
-    "理科迷 (LKM) 创立于 2014 年，是由科技爱好者组成的社区。我们打破专业门槛，让每一位热爱理性、崇尚科技的人都能在这里找到同频的伙伴，共同探索万物运转的奥秘。",
+    "理科迷 (PHIENTIST) 创立于 2014 年，是由科技爱好者组成的社区。我们打破专业门槛，让每一位热爱理性、崇尚科技的人都能在这里找到同频的伙伴，共同探索万物运转的奥秘。",
   "about.values_title": "让科学回归每一个人",
   "about.values_subtitle": "我们相信，科学与技术应当触手可及，而非高高在上。",
   "about.team_section": "我们的团队",

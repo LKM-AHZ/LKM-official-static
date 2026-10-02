@@ -3,7 +3,6 @@ import Icon from "./Icon.astro";
 import BrandMark from "./BrandMark.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
-import { SITE_NAME } from "../data/config";
 import { t } from "../i18n/index";
 import type { Lang, TranslationKey } from "../i18n/index";
 import { langUrl, stripLangPrefix } from "../i18n/paths";
@@ -28,49 +27,58 @@ const navLinks: { href: string; key: TranslationKey }[] = [
 // 首页只在精确匹配时激活（否则任何路径都会点亮它）；其余按路径段前缀匹配，
 // 这样 /news/<slug> 之类的子页面也能点亮它的父级导航项
 const isActive = (href: string): boolean =>
-  href === "/" ? currentPath === "/" : currentPath === href || currentPath.startsWith(`${href}/`);
+  href === "/"
+    ? currentPath === "/"
+    : currentPath === href || currentPath.startsWith(`${href}/`);
 
 const communityHref = langUrl(lang, "/communities");
 const communityLabel = t(lang, "common.nav_communities");
-const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
+const brandLabel = lang === "en" ? "PHIENTIST" : t(lang, "common.brand");
 ---
 
 <nav
   id="navbar"
-  class="fixed inset-x-0 top-0 z-[9999] px-4 md:px-10 lg:px-20"
+  class="fixed inset-x-0 top-0 z-[9999]"
   aria-label={t(lang, "common.aria.main_nav")}
 >
-  <!-- 刘海式顶栏：贴顶、左右留边、仅下缘圆角；移动面板并入同一块玻璃 -->
-  <div class="nav-shell" data-nav-shell>
+  <!-- 顶栏始终占窗口宽度的 90%，移动面板并入同一块玻璃 -->
+  <div class="nav-shell mx-auto w-[90vw]" data-nav-shell>
     <div
-      class="mx-auto flex w-full max-w-[1160px] items-center px-4 py-3 md:px-5"
+      class="flex min-h-[68px] w-full items-center justify-between gap-3 px-[3%] lg:gap-2"
     >
-      <!-- 品牌：与右侧工具区同为 flex-1，中段导航因而居中于整条刘海 -->
-      <div class="flex flex-1 items-center">
+      <!-- 双行品牌锁定较窄宽度，给导航与工具区留出呼吸空间 -->
+      <div class="flex shrink-0 items-center">
         <a
           href={langUrl(lang, "/")}
-          class="flex items-center gap-2.5 no-underline"
+          class="nav-brand flex items-center gap-3 rounded-xl no-underline"
           data-nav-home
         >
           <BrandMark size={38} />
-          <span class="text-xl font-bold tracking-wide text-deep-text">
+          <span
+            class="flex flex-col justify-center gap-0.5 text-[19px] font-bold leading-none tracking-wide text-deep-text"
+          >
             {brandLabel}
-            {/* en 下 brandLabel 本身已是 "LKM"，再拼一次会得到 "LKMLKM" */}
-            {lang !== "en" && <span class="ml-1 text-[var(--primary)]">LKM</span>}
+            {
+              lang !== "en" && (
+                <span class="text-[10px] font-semibold tracking-[0.2em] text-[var(--primary)]">
+                  PHIENTIST
+                </span>
+              )
+            }
           </span>
         </a>
       </div>
 
       <!-- 中段：主导航 -->
-      <div class="hidden items-center gap-3 md:flex lg:gap-8">
+      <div class="nav-links hidden items-center lg:flex">
         {
           navLinks.map((l) => (
             <a
               href={langUrl(lang, l.href)}
               class:list={[
-                "group relative text-base no-underline transition-colors",
+                "nav-link group relative rounded-xl px-2 py-2 text-[15px] font-medium no-underline transition-colors xl:px-3",
                 isActive(l.href)
-                  ? "text-[var(--primary)]"
+                  ? "is-active text-[var(--primary)]"
                   : "text-text-muted hover:text-deep-text",
               ]}
               aria-current={isActive(l.href) ? "page" : undefined}
@@ -84,16 +92,14 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
 
       <!-- 右段：主题/语言为一组，细线分隔后接社区入口 -->
       <div
-        class="hidden flex-1 items-center justify-end gap-2 md:flex lg:gap-4"
+        class="hidden shrink-0 items-center justify-end gap-2 lg:flex xl:gap-3"
       >
         <ThemeToggle />
         <LanguageSwitcher />
-        <span
-          class="hidden h-6 w-px bg-[var(--nav-edge)] lg:block"
-          aria-hidden="true"></span>
+        <span class="h-6 w-px bg-[var(--nav-edge)]" aria-hidden="true"></span>
         <a
           href={communityHref}
-          class="btn-ghost-pill"
+          class="btn-ghost-pill nav-community"
           aria-label={communityLabel}
         >
           {communityLabel}
@@ -101,11 +107,11 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
         </a>
       </div>
 
-      <div class="flex items-center gap-2 md:hidden">
+      <div class="flex items-center gap-2 lg:hidden">
         <ThemeToggle />
         <button
           type="button"
-          class="flex h-10 w-10 items-center justify-center rounded-lg text-deep-text"
+          class="nav-menu-toggle flex h-10 w-10 items-center justify-center rounded-xl text-deep-text"
           aria-label={t(lang, "common.aria.menu")}
           aria-expanded="false"
           aria-controls="nav-mobile-panel"
@@ -124,18 +130,19 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
     <!-- 移动端菜单：刘海下拉 -->
     <div
       id="nav-mobile-panel"
-      class="nav-mobile-panel max-h-0 md:hidden"
+      class="nav-mobile-panel max-h-0 lg:hidden"
       data-nav-panel
+      inert
     >
       <div
-        class="mx-auto flex w-full max-w-[1160px] flex-col gap-1 px-5 pt-3 pb-4"
+        class="nav-mobile-links mx-auto flex w-full max-w-[1184px] flex-col px-4 pt-3 pb-4 sm:px-5"
       >
         {
           navLinks.map((l) => (
             <a
               href={langUrl(lang, l.href)}
               class:list={[
-                "rounded-lg px-3 py-2.5 text-base no-underline transition-colors",
+                "rounded-xl px-3 py-2.5 text-base tracking-[0.04em] no-underline transition-colors",
                 isActive(l.href)
                   ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
                   : "text-text-muted hover:text-deep-text",
@@ -146,7 +153,9 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
             </a>
           ))
         }
-        {/* 社区入口下方已有 btn-primary 的 CTA，此处不再重复一个同 href 同文案的普通行 */}
+        {
+          /* 社区入口下方已有 btn-primary 的 CTA，此处不再重复一个同 href 同文案的普通行 */
+        }
         <div class="mt-2 flex items-center justify-between px-3">
           <LanguageSwitcher />
           <a href={communityHref} class="btn btn-primary btn-sm">
@@ -175,6 +184,7 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
   if (toggle && panel) {
     const setOpen = (open: boolean): void => {
       panel.style.maxHeight = open ? `${panel.scrollHeight}px` : "0px";
+      panel.inert = !open;
       toggle.setAttribute("aria-expanded", String(open));
       toggle
         .querySelector<HTMLElement>('[data-nav-icon="open"]')
@@ -206,7 +216,7 @@ const brandLabel = lang === "en" ? "LKM" : SITE_NAME;
       }
     });
 
-    window.matchMedia("(min-width: 768px)").addEventListener("change", (e) => {
+    window.matchMedia("(min-width: 1024px)").addEventListener("change", (e) => {
       if (e.matches) setOpen(false);
     });
 

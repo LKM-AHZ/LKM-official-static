@@ -2,7 +2,7 @@
 import type { Zh } from "./zh";
 
 export const en = {
-  "common.brand": "LiKeMi",
+  "common.brand": "Phientist",
   "common.nav_home": "Home",
   "common.nav_about": "About",
   "common.nav_services": "Services",
@@ -11,7 +11,7 @@ export const en = {
   "common.nav_resources": "Resources",
   "common.nav_communities": "Community",
   // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚）
-  "common.footer.copyright": "LiKeMi LKM © {year} · All rights reserved.",
+  "common.footer.copyright": "Phientist © {year} · All rights reserved.",
   "common.footer.tagline": "Bringing science back to everyone",
   "common.footer.col_community": "Community",
   "common.footer.col_pages": "Pages",
@@ -38,34 +38,34 @@ export const en = {
   "common.theme_toggle": "Toggle theme",
   "common.theme_to_night": "Switch to night mode",
   "common.theme_to_day": "Switch to day mode",
-  "common.site.description": "LiKeMi (LKM) Official Website",
+  "common.site.description": "Phientist Official Website",
   "seo.home":
-    "LiKeMi (LKM) — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
+    "Phientist — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
   "seo.news":
-    "Official announcements, tech news and popular-science content from LiKeMi.",
+    "Official announcements, tech news and popular-science content from Phientist.",
   "seo.team":
-    "Meet the LiKeMi management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
+    "Meet the Phientist management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
   "seo.communities":
-    "Browse LiKeMi's QQ communities: general group, grade and subject groups, interest clubs and recurring events.",
+    "Browse Phientist's QQ communities: general group, grade and subject groups, interest clubs and recurring events.",
   "seo.about":
-    "About LiKeMi: a science & technology enthusiast community founded in 2014, breaking down professional barriers so science is within everyone's reach.",
+    "About Phientist: a science & technology enthusiast community founded in 2014, breaking down professional barriers so science is within everyone's reach.",
   "seo.contact":
-    "Contact LiKeMi: join the community, propose collaborations, report issues, or reach us directly.",
+    "Contact Phientist: join the community, propose collaborations, report issues, or reach us directly.",
   "seo.pricing":
-    "Support LiKeMi: a non-profit science & technology community — many ways to take part.",
+    "Support Phientist: a non-profit science & technology community — many ways to take part.",
   "seo.resources":
-    "Curated external resources from LiKeMi: academic institutes, research tools and literature sites.",
+    "Curated external resources from Phientist: academic institutes, research tools and literature sites.",
   "seo.projects":
-    "LiKeMi Project Hub: incubated and co-created community projects.",
+    "Phientist Project Hub: incubated and co-created community projects.",
   "seo.privacy":
-    "LiKeMi static website privacy policy: local theme preferences, hosting logs, and external contact channels.",
+    "Phientist static website privacy policy: local theme preferences, hosting logs, and external contact channels.",
   "seo.terms":
-    "LiKeMi static website terms: please read before using its content and external links.",
-  "home.title": "LiKeMi — For Science & Tech Enthusiasts",
-  "home.hero_title": "LiKeMi!",
+    "Phientist static website terms: please read before using its content and external links.",
+  "home.title": "Phientist — For Science & Tech Enthusiasts",
+  "home.hero_title": "Phientist!",
   "home.hero_subtitle": "A community for science & tech enthusiasts",
   "home.hero_kicker":
-    "LiKeMi is a community made up of science & tech enthusiasts",
+    "Phientist is a community made up of science & tech enthusiasts",
   "home.hero_paragraph":
     "Here, science and technology step out of the ivory tower and become a curiosity that everyone can spark and ask about the world. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works.",
   "home.cta_communities": "Explore Community",
@@ -77,7 +77,7 @@ export const en = {
   "home.section_explore": "Explore Boards",
   "home.section_explore_sub": "Discover content that interests you",
   "home.section_team": "Team Members",
-  "home.section_team_sub": "LiKeMi is better because of you",
+  "home.section_team_sub": "Phientist is better because of you",
   "home.team_more": "More Members",
   "home.team_view_all_hint": "View the full management team",
   "home.team_view_all": "View All →",
@@ -97,8 +97,8 @@ export const en = {
   "home.section_updates_sub": "See what's been happening lately",
   "home.section_faq": "FAQ",
   "home.section_faq_sub":
-    "Common questions about the LKM official website, so you can get started quickly.",
-  "team.title": "Management Team — LiKeMi",
+    "Common questions about the PHIENTIST official website, so you can get started quickly.",
+  "team.title": "Management Team — Phientist",
   "team.sidebar_founder": "Founder",
   "team.sidebar_general": "General Affairs",
   "team.sidebar_affairs": "Community Affairs",
@@ -112,7 +112,7 @@ export const en = {
   "team.sidebar_textbooks": "Textbook Project",
   "team.sidebar_science": "Science Project",
   "team.founder_title": "Founder",
-  "team.founder_subtitle": "Where LiKeMi began — it all started here",
+  "team.founder_subtitle": "Where Phientist began — it all started here",
   "team.general_title": "July Team · General Affairs",
   "team.general_desc":
     "This department coordinates and plans affairs, guiding the team to collaborate and fulfill our shared purpose and goals. General Affairs suits members with strong multitasking and execution skills; cross-department coordination is often required.",
@@ -127,7 +127,7 @@ export const en = {
     "This department runs official promotion accounts on various platforms and handles diplomacy, sustaining outreach and influence. It produces science-promotion content for the public. It oversees a science project group and a translation project group to share knowledge across languages and break down information barriers.",
   "team.advisors_title": "Advisors",
   "team.advisors_desc":
-    "This team comprises external advisors to LiKeMi, supporting our work groups and project groups — for example legal counsel and other social organizations.",
+    "This team comprises external advisors to Phientist, supporting our work groups and project groups — for example legal counsel and other social organizations.",
   "team.professional_title": "Professional Committee",
   "team.professional_desc":
     "This committee provides professional knowledge for activities and projects, enriching the substance of each specialty. Its members are committed to deep work in their fields and will later oversee academic project groups for richer academic exchange.",
@@ -140,26 +140,26 @@ export const en = {
   "team.subgroup_empty": "No members yet — you are welcome to join.",
   "team.alumni_title": "Members Who Have Left",
   "team.alumni_desc":
-    "The members below once contributed to LiKeMi but can no longer be reached. No matter what, LiKeMi's doors will always be open to you.",
+    "The members below once contributed to Phientist but can no longer be reached. No matter what, Phientist's doors will always be open to you.",
   "about.title": "About",
-  "about.description": "About the LiKeMi community",
-  "about.hero_title": "About LiKeMi",
+  "about.description": "About the Phientist community",
+  "about.hero_title": "About Phientist",
   "about.hero_paragraph":
-    "LiKeMi (LKM) was founded in 2014 as a community of science and technology enthusiasts. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works together.",
+    "Phientist was founded in 2014 as a community of science and technology enthusiasts. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works together.",
   "about.values_title": "Bringing science back to everyone",
   "about.values_subtitle":
     "We believe science and technology should be within reach — not out of reach.",
   "about.team_section": "Our Team",
-  "about.team_section_sub": "LiKeMi is better because of you",
+  "about.team_section_sub": "Phientist is better because of you",
   "about.team_more": "More Members",
   "about.timeline_title": "Timeline",
   "about.timeline_subtitle": "Seasons change, and so do we.",
   "about.cta_welcome": "Welcome to ",
-  "about.cta_welcome_accent": "LiKeMi",
+  "about.cta_welcome_accent": "Phientist",
   "about.cta_body":
-    "Whether you want to learn, create, or join our team, LiKeMi welcomes you.",
+    "Whether you want to learn, create, or join our team, Phientist welcomes you.",
   "about.cta_services": "Learn About Services",
-  "communities.title": "QQ Community — LiKeMi",
+  "communities.title": "QQ Community — Phientist",
   "communities.copy": "Copy group number",
   "communities.copy_channel": "Copy channel ID",
   "communities.channel_id_prefix": "Channel ID:",
@@ -192,10 +192,10 @@ export const en = {
     "High-quality content co-created by team members and the community, spanning many fields.",
   "services.section_events": "Community Events",
   "services.section_events_sub":
-    "From online seminars to holiday activities, LiKeMi offers members a rich and varied set of interactions.",
+    "From online seminars to holiday activities, Phientist offers members a rich and varied set of interactions.",
   "services.section_platform": "Knowledge Platform",
   "services.section_platform_sub":
-    "LiKeMi is building a knowledge-management platform for its members, supporting learning and collaboration.",
+    "Phientist is building a knowledge-management platform for its members, supporting learning and collaboration.",
   "projects.title": "Project Hub",
   "projects.pinned": "Pinned",
   "projects.incubated": "Incubated",
@@ -206,14 +206,14 @@ export const en = {
   "pricing.title": "Support Us",
   "pricing.hero_title": "Helping tech reach further",
   "pricing.hero_paragraph":
-    "LiKeMi is a non-profit community of science and technology enthusiasts. Every member's support is what keeps us going.",
+    "Phientist is a non-profit community of science and technology enthusiasts. Every member's support is what keeps us going.",
   "pricing.section_support": "Ways to Support",
   "pricing.section_support_sub":
-    "Every bit of your strength helps LiKeMi get better. Here are some ways to take part in building the community.",
+    "Every bit of your strength helps Phientist get better. Here are some ways to take part in building the community.",
   "pricing.section_faq": "FAQ",
   "pricing.section_faq_sub":
     "Some common questions about ways to support us — hopefully these answer yours.",
-  "pricing.cta_title": "Ready to make a difference for LiKeMi?",
+  "pricing.cta_title": "Ready to make a difference for Phientist?",
   "pricing.cta_body":
     "Join our community and, together with like-minded friends, help tech reach further.",
   "pricing.cta_contact": "Contact Us",
@@ -221,7 +221,7 @@ export const en = {
   "contact.hero_title": "We'd love to hear from you!",
   "contact.section_message": "Leave us a message",
   "contact.section_message_sub":
-    "If you'd like to join LiKeMi, offer suggestions, or propose a collaboration, please reach us via the form below. You can also check the FAQ — the answer may already be there.",
+    "If you'd like to join Phientist, offer suggestions, or propose a collaboration, please reach us via the form below. You can also check the FAQ — the answer may already be there.",
   "contact.label_name": "Your name",
   "contact.label_email": "Email",
   "contact.label_message": "Message",

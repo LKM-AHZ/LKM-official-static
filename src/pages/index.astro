@@ -3,6 +3,7 @@
 // output:static 下不可用 Astro.redirect()，故用 meta refresh + 兜底链接实现静态 301。
 const DEFAULT_HOME = "/zh/";
 ---
+
 <!doctype html>
 <html lang="zh-CN">
   <head>
@@ -10,9 +11,9 @@ const DEFAULT_HOME = "/zh/";
     <meta http-equiv="refresh" content="0; url=/zh/" />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href={DEFAULT_HOME} />
-    <title>理科迷 · LKM</title>
+    <title>理科迷 · PHIENTIST</title>
   </head>
   <body>
-    <p>Redirecting to <a href={DEFAULT_HOME}>理科迷 · LKM</a>...</p>
+    <p>Redirecting to <a href={DEFAULT_HOME}>理科迷 · PHIENTIST</a>...</p>
   </body>
 </html>

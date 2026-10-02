@@ -30,7 +30,10 @@ const {
   title,
   // 默认描述按 locale 取 i18n：原先固定用中文 SITE_DESCRIPTION，会让省略 description
   // 的页面（如 404）在英文站点输出中文描述
-  description = t(Astro.currentLocale ?? DEFAULT_LANG, "common.site.description"),
+  description = t(
+    Astro.currentLocale ?? DEFAULT_LANG,
+    "common.site.description",
+  ),
   image = OG_DEFAULT_IMAGE,
   type = "website",
   noindex = false,
@@ -64,6 +67,7 @@ const ogLocaleAlternate =
     : locale === "en"
       ? "zh_CN"
       : "en_US";
+const localizedSiteName = t(locale ?? DEFAULT_LANG, "common.brand");
 
 // 去掉语言前缀得到语言中立路径，用于生成各语言 alternate
 // （前缀集合由 SUPPORTED_LANGS 派生，新增语言时这里的匹配不会落后于配置）
@@ -83,7 +87,7 @@ const organizationJsonLd = {
   "@type": "Organization",
   "@id": new URL("/#organization", site).href,
   name: SITE_NAME,
-  alternateName: "LKM",
+  alternateName: "PHIENTIST",
   // 组织 URL 用站点根，而不是写死中文首页：英文/中立页面不该把 /zh/ 报成机构地址
   url: new URL("/", site).href,
   logo: new URL("/lkm-logo.svg", site).href,
@@ -94,7 +98,7 @@ const websiteJsonLd = includeWebsiteJsonLd
       "@context": "https://schema.org",
       "@type": "WebSite",
       "@id": new URL("/#website", site).href,
-      name: SITE_NAME,
+      name: localizedSiteName,
       url: canonical,
       inLanguage: locale === "en" ? "en" : "zh-CN",
       publisher: { "@id": organizationJsonLd["@id"] },
@@ -131,26 +135,36 @@ const articleJsonLd =
 {xDefault && <link rel="alternate" hreflang="x-default" href={xDefault} />}
 
 <meta property="og:type" content={type} />
-<meta property="og:site_name" content={SITE_NAME} />
+<meta property="og:site_name" content={localizedSiteName} />
 <meta property="og:title" content={title} />
 {description && <meta property="og:description" content={description} />}
 <meta property="og:url" content={canonical} />
 <meta property="og:image" content={ogImage} />
-{ogImageIsDefault && (
-  <>
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-  </>
-)}
+{
+  ogImageIsDefault && (
+    <>
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
+    </>
+  )
+}
 <meta
   property="og:image:alt"
-  content={locale === "en" ? `${SITE_NAME} official share image` : `${SITE_NAME} 官方分享图`}
+  content={locale === "en"
+    ? `${localizedSiteName} official share image`
+    : `${SITE_NAME} 官方分享图`}
 />
 {ogLocale && <meta property="og:locale" content={ogLocale} />}
-{localized && <meta property="og:locale:alternate" content={ogLocaleAlternate} />}
-{type === "article" && publishedTime && (
-  <meta property="article:published_time" content={publishedTime} />
-)}
+{
+  localized && (
+    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
+  )
+}
+{
+  type === "article" && publishedTime && (
+    <meta property="article:published_time" content={publishedTime} />
+  )
+}
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
@@ -160,10 +174,26 @@ const articleJsonLd =
 {/* 文档页配图来自远程图床，提前做 DNS 预解析 */}
 <link rel="dns-prefetch" href="https://picsum.photos" />
 
-<script is:inline type="application/ld+json" set:html={JSON.stringify(organizationJsonLd)} />
-{websiteJsonLd && (
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteJsonLd)} />
-)}
-{articleJsonLd && (
-  <script is:inline type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} />
-)}
+<script
+  is:inline
+  type="application/ld+json"
+  set:html={JSON.stringify(organizationJsonLd)}
+/>
+{
+  websiteJsonLd && (
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(websiteJsonLd)}
+    />
+  )
+}
+{
+  articleJsonLd && (
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify(articleJsonLd)}
+    />
+  )
+}

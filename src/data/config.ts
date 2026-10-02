@@ -4,4 +4,4 @@ export const SITE_TITLE = SITE_NAME;
 // Seo.astro 已改为按 locale 取 common.site.description，故这里只服务于
 // SITE_NAME 之外需要「不翻译」的场合与数据层测试，勿再单独用于页面。
 export const SITE_DESCRIPTION =
-  "理科迷 (LKM) — 创立于 2014 年的科技爱好者社区。让科学回归每一个人。";
+  "理科迷 (PHIENTIST) — 创立于 2014 年的科技爱好者社区。让科学回归每一个人。";

@@ -12,9 +12,8 @@ describe("i18n", () => {
     expect(t("zh", "common.brand")).toBe("理科迷");
   });
 
-  it("en 缺 key 时回退中文（阶段一英文占位）", () => {
-    // 故意：若 en.ts 未定义某 key，t() 应回退 zh 而非抛错
-    expect(t("en", "common.brand")).toMatch(/理科迷|LiKeMi/);
+  it("英文品牌名使用 Phientist", () => {
+    expect(t("en", "common.brand")).toBe("Phientist");
   });
 
   it("zh key 集合能覆盖结构文案命名规范", () => {

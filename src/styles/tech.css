@@ -279,6 +279,39 @@
     background: var(--nav-bg-scrolled);
   }
 
+  .nav-brand,
+  .nav-menu-toggle {
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+  .nav-brand:hover,
+  .nav-menu-toggle:hover,
+  .nav-menu-toggle[aria-expanded="true"] {
+    background: var(--social-hover-bg);
+  }
+
+  /* 顶栏宽度为 90vw，导航文字间距随它连续变化；极端宽度下保留舒适上下限。 */
+  .nav-links {
+    gap: clamp(0.75rem, 1.26vw, 1.5rem);
+  }
+  .nav-link {
+    white-space: nowrap;
+    letter-spacing: clamp(0.06em, 0.1vw, 0.12em);
+  }
+  .nav-link:hover,
+  .nav-link.is-active {
+    background: var(--social-hover-bg);
+  }
+
+  .nav-community {
+    min-height: 2.5rem;
+    padding: 0.5rem 0.875rem;
+    white-space: nowrap;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
   /* 移动端下拉：与刘海同宽连体，用顶部分隔线区分层次 */
   .nav-mobile-panel {
     border-top: 1px solid var(--nav-edge);
@@ -288,11 +321,14 @@
       max-height 0.3s ease,
       background 0.4s ease;
   }
+  .nav-mobile-links {
+    gap: clamp(0.375rem, 2vw, 0.875rem);
+  }
 
-  /* 导航链接下划线（hover 渐显） */
+  /* 导航链接下划线：选中态常亮，悬停时渐显 */
   .nav-underline {
     position: absolute;
-    bottom: -0.375rem;
+    bottom: 0.25rem;
     left: 50%;
     height: 1px;
     width: 0;
@@ -306,8 +342,9 @@
     transition: width 0.3s ease;
   }
   .group:hover .nav-underline,
+  .nav-link.is-active .nav-underline,
   a:focus-visible .nav-underline {
-    width: 72%;
+    width: 56%;
   }
 
   .back-top {
