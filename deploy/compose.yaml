@@ -9,13 +9,13 @@ name: lkm-official-static
 services:
   certs-init:
     image: alpine:3.19
-    entrypoint: ['sh', '/bootstrap-selfsigned.sh']
+    entrypoint: ["sh", "/bootstrap-selfsigned.sh"]
     environment:
       LKM_SITE_DOMAIN: ${LKM_SITE_DOMAIN:?LKM_SITE_DOMAIN 必填，见 .env.example}
     volumes:
       - ./certbot/bootstrap-selfsigned.sh:/bootstrap-selfsigned.sh:ro
       - certbot_conf:/etc/letsencrypt
-    restart: 'no'
+    restart: "no"
     networks:
       - web
 
@@ -30,8 +30,8 @@ services:
       certs-init:
         condition: service_completed_successfully
     ports:
-      - '${LKM_HTTP_PORT:-80}:80'
-      - '${LKM_HTTPS_PORT:-443}:443'
+      - "${LKM_HTTP_PORT:-80}:80"
+      - "${LKM_HTTPS_PORT:-443}:443"
     environment:
       # 唯一模板变量：nginx 镜像的 docker-entrypoint.d 用它展开 /etc/nginx/templates/*.template
       # （只替换已定义的变量名，$host/$request_uri 等 nginx 变量不受影响）
@@ -51,7 +51,7 @@ services:
   # ── certbot 常驻：只做续期（首次签发见 DEPLOYMENT.md 的手动命令）──
   certbot:
     image: certbot/certbot
-    entrypoint: ['sh', '/renew-loop.sh']
+    entrypoint: ["sh", "/renew-loop.sh"]
     depends_on:
       - static
     volumes:
