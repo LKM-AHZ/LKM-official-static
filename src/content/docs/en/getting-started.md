@@ -2,6 +2,7 @@
 title: Getting Started
 description: Learn how to browse, switch languages, share links, and report issues
 publishDate: 2026-08-20
+tags: [guide, getting-started]
 ---
 
 The Phientist static website is designed primarily for reading and requires no account.

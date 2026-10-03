@@ -17,13 +17,13 @@ export const THEME_EVENT = "likemi:theme";
 
 /**
  * 各主题的浏览器地址栏配色。必须与 variables.css 里的两处声明逐字一致：
- *   day   → :root, [data-theme="day"] 的 --html-bg: #e8f0f9
+ *   day   → :root, [data-theme="day"] 的 --html-bg: #e6f1fd
  *   night → :root[data-theme="night"] 的 --html-bg: #050a14
  * 这里是有意的手工同步（Seo.astro 在构建期就要用到颜色值，读不到 CSS 变量），
  * 改动 variables.css 的 --html-bg 时务必同步这两行。
  */
 export const THEME_COLORS: Record<ThemeName, string> = {
-  day: "#e8f0f9",
+  day: "#e6f1fd",
   night: "#050a14",
 };
 

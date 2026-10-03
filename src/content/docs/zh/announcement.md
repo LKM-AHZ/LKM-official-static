@@ -2,6 +2,7 @@
 title: 静态官网内容维护说明
 description: 说明双语内容、更新时间和反馈修订规则
 publishDate: 2026-08-27
+tags: [公告, 维护]
 ---
 
 PHIENTIST 独立静态官网已经从结构验证阶段进入持续维护。公告、新闻和介绍文章将以 Markdown 保存，

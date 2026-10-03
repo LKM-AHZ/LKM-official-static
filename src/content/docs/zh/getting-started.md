@@ -2,6 +2,7 @@
 title: 快速上手
 description: 了解语言切换、内容分类、链接分享和问题反馈
 publishDate: 2026-08-20
+tags: [指南, 上手]
 ---
 
 PHIENTIST 独立静态官网以阅读为主，不需要注册或登录。页面由 Markdown 内容构建，适合直接收藏、

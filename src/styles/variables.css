@@ -37,7 +37,7 @@
   --neutral-content: #ffffff;
 
   /* 页面与卡片 */
-  --page-bg: #e8f0f9;
+  --page-bg: #e6f1fd;
   --card-bg: #ffffff;
   --surface-3: rgba(70, 120, 190, 0.18);
   --deep-text: #10233d;
@@ -148,8 +148,8 @@
      摊成一片没有形状的淡色。光晕改由 canvas 统一承担（固定在视口、随滚动在
      纵向迁移），背景因此只剩「底色 + 网格 + 侧辉光 + 暗角/噪点 + 粒子」五层，
      不再有两套互相打架的光源。 */
-  --body-bg: linear-gradient(180deg, #f2f7fd 0%, #e8f0f9 46%, #e3ecf7 100%);
-  --html-bg: #e8f0f9;
+  --body-bg: linear-gradient(180deg, #f3f9ff 0%, #e6f1fd 46%, #dcebfb 100%);
+  --html-bg: #e6f1fd;
   --grid-line: rgba(30, 80, 150, 0.06);
   --grid-opacity: 0.3;
   --side-glow: rgba(10, 111, 194, 0.045);

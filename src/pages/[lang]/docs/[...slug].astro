@@ -139,6 +139,31 @@ const nextHref = docLink(next);
             <span class="h-1 w-1 rounded-full bg-[var(--surface-3)]"></span>
             <span>{metaMinutes}</span>
           </div>
+          {/* 标签：新闻类做成链接跳回 /news 并带上 ?tag= 自动筛选；
+              非新闻文档不在 /news 列表里，渲染为不可点的 chip，避免死链 */}
+          {
+            doc.data.tags && doc.data.tags.length > 0 && (
+              <div class="mt-4 flex flex-wrap items-center gap-2">
+                <span class="text-xs uppercase tracking-wide text-text-muted">
+                  {en ? "Tags" : "标签"}
+                </span>
+                {doc.data.tags.map((tag) =>
+                  doc.data.category === "news" ? (
+                    <a
+                      href={`${langUrl(lang, "/news")}?tag=${encodeURIComponent(tag)}`}
+                      class="rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-2.5 py-0.5 text-xs text-text-muted no-underline transition hover:border-[var(--primary)] hover:text-primary"
+                    >
+                      {tag}
+                    </a>
+                  ) : (
+                    <span class="rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-2.5 py-0.5 text-xs text-text-muted">
+                      {tag}
+                    </span>
+                  ),
+                )}
+              </div>
+            )
+          }
           {
             doc.data.description && (
               <p class="mt-6 text-[17px] leading-relaxed text-text-muted">

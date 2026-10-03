@@ -2,6 +2,7 @@
 title: Welcome to Phientist
 description: An introduction to the Phientist community and its static website
 publishDate: 2026-08-25
+tags: [community, intro]
 ---
 
 Phientist is a learning community for people interested in science and technology.

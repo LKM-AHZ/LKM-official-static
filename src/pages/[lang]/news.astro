@@ -7,6 +7,7 @@ import NewsCard from "../../components/news/NewsCard.astro";
 import { readingMinutes } from "../../components/news/format";
 import { getNewsPosts, postSlug } from "../../components/news/posts";
 import { buildSearchText } from "../../components/news/search";
+import { collectTags } from "../../components/news/tags";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 const isEn = lang === "en";
@@ -18,6 +19,9 @@ export const getStaticPaths = getStaticPathsForLang;
 const allPosts = await getCollection("docs");
 
 const posts = getNewsPosts(allPosts, lang);
+
+// 标签去重并按热度排序，构建期渲染成筛选栏（客户端只切换选中态与显隐）
+const tagCounts = collectTags(posts);
 
 const enEmpty = isEn && posts.length === 0;
 ---
@@ -62,6 +66,39 @@ const enEmpty = isEn && posts.length === 0;
         </div>
       )}
 
+      {/* 标签筛选栏：全部 + 每个标签（附文章数）。默认「全部」选中，
+          点标签后与搜索框按 AND 共同过滤；选中态走 aria-pressed */}
+      {
+        tagCounts.length > 0 && (
+          <div
+            data-news-tagbar
+            role="group"
+            aria-label={t(lang, "news.tags_aria")}
+            class="mx-auto mb-8 flex max-w-3xl flex-wrap items-center justify-center gap-2"
+          >
+            <button
+              type="button"
+              data-tag-filter=""
+              aria-pressed="true"
+              class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
+            >
+              {t(lang, "news.tags_all")}
+            </button>
+            {tagCounts.map(({ tag, count }) => (
+              <button
+                type="button"
+                data-tag-filter={tag}
+                aria-pressed="false"
+                class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
+              >
+                {tag}
+                <span class="text-[10px] opacity-70">{count}</span>
+              </button>
+            ))}
+          </div>
+        )
+      }
+
       {/* 命中数：与列表的显隐一起由脚本维护，模板经 data 属性下发（客户端脚本取不到 t()） */}
       <p
         data-news-count
@@ -75,7 +112,6 @@ const enEmpty = isEn && posts.length === 0;
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-news-list>
           {posts.map((doc) => {
             const slug = postSlug(doc);
-            const tagLabel = (doc.data.tags ?? [])[0];
             return (
               <NewsCard
                 lang={isEn ? "en" : "zh"}
@@ -84,7 +120,7 @@ const enEmpty = isEn && posts.length === 0;
                 desc={doc.data.description}
                 date={doc.data.publishDate}
                 minutes={readingMinutes(doc.body ?? "")}
-                tagLabel={tagLabel}
+                tags={doc.data.tags ?? []}
                 image={doc.data.image}
                 searchText={buildSearchText([
                   doc.data.title,
@@ -110,6 +146,7 @@ const enEmpty = isEn && posts.length === 0;
 
 <script>
   import { matchesQuery } from "../../components/news/search";
+  import { matchesTag, pickTagFromSearch } from "../../components/news/tags";
 
   const input = document.querySelector<HTMLInputElement>("[data-news-search]");
   const list = document.querySelector<HTMLElement>("[data-news-list]");
@@ -120,22 +157,53 @@ const enEmpty = isEn && posts.length === 0;
     );
     const empty = document.querySelector<HTMLElement>("[data-news-empty]");
     const count = document.querySelector<HTMLElement>("[data-news-count]");
+    const tagButtons = Array.from(
+      document.querySelectorAll<HTMLButtonElement>("[data-tag-filter]"),
+    );
+
+    // 初始标签来自 URL（详情页点标签跳过来时带着 ?tag=）。
+    // 只认筛选栏里存在的标签，链接过期/手改 URL 时按「全部」处理，避免整页空结果。
+    let activeTag = pickTagFromSearch(location.search);
+    if (activeTag && !tagButtons.some((b) => b.dataset.tagFilter === activeTag)) {
+      activeTag = "";
+    }
+
+    const syncButtons = (): void => {
+      for (const btn of tagButtons) {
+        btn.setAttribute(
+          "aria-pressed",
+          String((btn.dataset.tagFilter ?? "") === activeTag),
+        );
+      }
+    };
+
+    const updateUrl = (): void => {
+      const url = new URL(location.href);
+      if (activeTag) url.searchParams.set("tag", activeTag);
+      else url.searchParams.delete("tag");
+      history.replaceState(null, "", url);
+    };
 
     const apply = (): void => {
       const query = input.value;
       let shown = 0;
       for (const card of cards) {
-        const hit = matchesQuery(card.dataset.searchText ?? "", query);
+        const tags: string[] = card.dataset.tags
+          ? (JSON.parse(card.dataset.tags) as string[])
+          : [];
+        const hit =
+          matchesQuery(card.dataset.searchText ?? "", query) &&
+          matchesTag(tags, activeTag);
         card.hidden = !hit;
         if (hit) shown += 1;
       }
 
-      // 未输入时不显示任何结果态，页面保持「全部文章」的原貌
-      const searching = query.trim() !== "";
-      if (empty) empty.hidden = !searching || shown > 0;
+      // 无关键词且未选标签时不显示结果态，页面保持「全部文章」的原貌
+      const filtering = query.trim() !== "" || activeTag !== "";
+      if (empty) empty.hidden = !filtering || shown > 0;
       if (count) {
-        count.hidden = !searching || shown === 0;
-        if (searching && shown > 0) {
+        count.hidden = !filtering || shown === 0;
+        if (filtering && shown > 0) {
           count.textContent = (count.dataset.countTemplate ?? "{n}").replace(
             "{n}",
             String(shown),
@@ -144,7 +212,18 @@ const enEmpty = isEn && posts.length === 0;
       }
     };
 
+    for (const btn of tagButtons) {
+      btn.addEventListener("click", () => {
+        activeTag = btn.dataset.tagFilter ?? "";
+        syncButtons();
+        updateUrl();
+        apply();
+      });
+    }
     input.addEventListener("input", apply);
+
+    syncButtons();
+    apply();
   }
 </script>
 

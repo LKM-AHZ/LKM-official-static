@@ -112,8 +112,9 @@ const closeLabel = t(lang, "common.aria.close");
         </div>
       </dialog>
 
-      {/* JSON 内联进 <script> 时必须转义 "<"：数据里若出现 "</script>" 会提前闭合标签并注入标记
-          （存储型 XSS）。\u003c 经 JSON.parse 读回仍是同一个字符，数据本身不受影响。 */}
+      {/* JSON 内联进 script 标签时必须转义 "<"：数据里若出现 script 的结束标签
+          会提前闭合标签并注入标记（存储型 XSS）。\u003c 经 JSON.parse 读回仍是
+          同一个字符，数据本身不受影响。 */}
       <script
         is:inline
         type="application/json"

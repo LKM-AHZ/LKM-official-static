@@ -2,6 +2,7 @@
 title: Static Site Content Policy
 description: How bilingual content, dates, links, and corrections are maintained
 publishDate: 2026-08-27
+tags: [announcement, maintenance]
 ---
 
 The Phientist static website has moved beyond its initial structure test and is now maintained

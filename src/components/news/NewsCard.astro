@@ -3,7 +3,7 @@ import { coverGradient, formatDate } from "./format";
 
 /**
  * 文章卡片：顶部封面（有 image 显示真实图；无则回退到标题色相渐变），
- * 摘要与底部元信息。全卡为链接，适配等高网格。
+ * 摘要、标签与底部元信息。全卡为链接，适配等高网格。
  */
 interface Props {
   lang: "zh" | "en";
@@ -12,13 +12,14 @@ interface Props {
   desc?: string;
   date: Date;
   minutes: number;
-  tagLabel?: string;
+  /** 文章的完整标签；卡片底部渲染为 chip，并下发 data-tags 供 /news 筛选 */
+  tags?: string[];
   image?: string;
   /** 供 /news 客户端搜索比对的归一化文本；首页不传，属性随之不渲染 */
   searchText?: string;
 }
 
-const { lang, href, title, desc, date, minutes, tagLabel, image, searchText } =
+const { lang, href, title, desc, date, minutes, tags = [], image, searchText } =
   Astro.props;
 const dateLabel = formatDate(date, lang);
 const minutesLabel = lang === "en" ? `${minutes} min read` : `${minutes} 分钟`;
@@ -29,6 +30,7 @@ const gradient = coverGradient(title);
   class="card-hover group flex h-full flex-col rounded-2xl"
   data-news-card
   data-search-text={searchText}
+  data-tags={tags.length > 0 ? JSON.stringify(tags) : undefined}
 >
   <div
     class="relative h-40 w-full shrink-0 overflow-hidden md:h-44"
@@ -45,11 +47,6 @@ const gradient = coverGradient(title);
         class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
       />
     ) : undefined}
-    {tagLabel && (
-      <span class="absolute bottom-3 left-4 rounded-full bg-black/60 px-2.5 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
-        {tagLabel}
-      </span>
-    )}
   </div>
 
   <div class="flex flex-1 flex-col p-6 pt-5">
@@ -65,6 +62,18 @@ const gradient = coverGradient(title);
     </h2>
 
     {desc && <p class="mt-2 text-sm leading-relaxed text-text-muted line-clamp-3">{desc}</p>}
+
+    {
+      tags.length > 0 && (
+        <div class="mt-4 flex flex-wrap gap-1.5">
+          {tags.map((tag) => (
+            <span class="rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-2 py-0.5 text-[11px] leading-none text-text-muted">
+              {tag}
+            </span>
+          ))}
+        </div>
+      )
+    }
 
     <div class="mt-auto flex items-center gap-3 pt-5 text-xs text-text-muted">
       <time datetime={date.toISOString().slice(0, 10)}>{dateLabel}</time>

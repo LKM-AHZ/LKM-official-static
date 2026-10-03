@@ -316,7 +316,7 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
               desc={doc.data.description}
               date={doc.data.publishDate}
               minutes={readingMinutes(doc.body ?? "")}
-              tagLabel={(doc.data.tags ?? [])[0]}
+              tags={doc.data.tags ?? []}
               image={doc.data.image}
             />
           ))
