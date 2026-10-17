@@ -35,11 +35,11 @@ const enEmpty = isEn && posts.length === 0;
     <div class="container-x">
       <header class="mb-14 text-center">
         <h1
-          class="title-underline font-heading text-3xl font-bold tracking-[-0.01em] text-deep-text md:text-[40px]"
+          class="title-underline font-heading text-section font-bold text-deep-text"
         >
           {t(lang, "news.title")}
         </h1>
-        <p class="mx-auto mt-8 max-w-2xl text-[15px] text-text-muted">
+        <p class="mx-auto mt-8 max-w-2xl text-lead text-text-muted">
           {
             posts.length > 0
               ? `${posts.length} ${isEn ? "articles" : "篇文章"} · ${t(lang, "news.subtitle")}`
@@ -100,7 +100,7 @@ const enEmpty = isEn && posts.length === 0;
                 class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
               >
                 {tag}
-                <span class="text-[10px] opacity-70">{count}</span>
+                <span class="text-[11px] opacity-70">{count}</span>
               </button>
             ))}
           </div>

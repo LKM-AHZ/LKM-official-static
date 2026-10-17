@@ -58,7 +58,7 @@ const projects = [
     <div class="container-x">
       <div class="space-y-6">
         <div class="mb-14 text-center">
-          <h1 class="title-underline text-3xl font-bold text-deep-text">
+          <h1 class="title-underline text-section font-bold text-deep-text">
             {t(lang, "projects.title")}
           </h1>
         </div>
@@ -75,12 +75,12 @@ const projects = [
                       {p.name}
                     </h2>
                     {p.pinned && (
-                      <span class="text-[10px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-medium">
+                      <span class="text-[11px] px-2 py-0.5 rounded-full bg-primary/15 text-primary font-medium">
                         {t(lang, "projects.pinned")}
                       </span>
                     )}
                     {p.incubated && (
-                      <span class="text-[10px] px-2 py-0.5 rounded-full bg-warning/15 text-warning font-medium">
+                      <span class="text-[11px] px-2 py-0.5 rounded-full bg-warning/15 text-warning font-medium">
                         {t(lang, "projects.incubated")}
                       </span>
                     )}
@@ -131,7 +131,7 @@ const projects = [
                       {p.roles.map((r) => (
                         // 标签与角色名之间用 flex gap 分隔，不依赖 i18n 值里的尾随空格
                         // （空格会被格式化/编辑器保存时裁掉，裁掉后英文会粘成 Wanted:Developer）
-                        <span class="inline-flex items-center gap-1 rounded-full border border-[var(--ghost-edge)] bg-[var(--ghost-bg)] px-2 py-0.5 text-[11px] text-text-muted">
+                        <span class="inline-flex items-center gap-1 rounded-full border border-[var(--ghost-edge)] bg-[var(--ghost-bg)] px-2 py-0.5 text-label text-text-muted">
                           {t(lang, "projects.role_missing")}
                           <span>{r}</span>
                         </span>

@@ -90,6 +90,17 @@ const footerCols: {
     <title>{title}</title>
     <meta name="generator" content={Astro.generator} />
     {
+      /* 正文字体只预载 Latin 子集；字体请求必须带 crossorigin，否则会和
+         @font-face 的请求重复下载。中文字体走系统栈，不需要预载。 */
+    }
+    <link
+      rel="preload"
+      href="/fonts/inter-latin-var.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    {
       /* 首屏前恢复主题，避免夜间用户先看到白天再闪一下。
         存储键从 lib/theme 注入，别再手抄字面量，否则改名后这里会静默读不到偏好。 */
     }
@@ -141,10 +152,10 @@ const footerCols: {
                 }
               </span>
             </div>
-            <p class="text-sm leading-7 text-text-muted">
+            <p class="text-note leading-7 text-text-muted">
               {t(lang, "common.site.description")}
             </p>
-            <p class="mt-3 text-sm text-text-muted">
+            <p class="mt-3 text-note text-text-muted">
               {t(lang, "common.footer.tagline")}
             </p>
             <div class="mt-5 flex items-center gap-3">
@@ -174,7 +185,7 @@ const footerCols: {
                   <h4 class="mb-4 font-bold text-deep-text">
                     {t(lang, col.titleKey)}
                   </h4>
-                  <ul class="space-y-2 text-sm">
+                  <ul class="space-y-2 text-note">
                     {col.links.map((l) => (
                       <li>
                         <a

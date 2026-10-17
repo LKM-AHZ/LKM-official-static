@@ -62,7 +62,7 @@ const avatarSize = isLg
         avatarSrc ? (
           <img
             src={avatarSrc}
-            alt={name}
+            alt=""
             width={192}
             height={192}
             class={`${avatarSize} rounded-full object-cover`}
@@ -91,16 +91,18 @@ const avatarSize = isLg
         role && (
           <span
             class={
-              isLg ? "text-primary font-semibold" : "text-xs text-text-muted"
+              isLg
+                ? "text-primary font-semibold"
+                : "text-[0.8125rem] text-text-muted"
             }
           >
             {role}
           </span>
         )
       }
-      {desc && <p class="text-xs text-text-muted mt-1">{desc}</p>}
-      {dream && <p class="text-xs text-secondary mt-1 italic">{dream}</p>}
-      {quote && <p class="text-xs text-primary mt-1">{quote}</p>}
+      {desc && <p class="text-sm text-text-muted mt-1">{desc}</p>}
+      {dream && <p class="text-sm text-secondary mt-1 italic">{dream}</p>}
+      {quote && <p class="text-sm text-primary mt-1">{quote}</p>}
     </div>
   </div>
 </div>

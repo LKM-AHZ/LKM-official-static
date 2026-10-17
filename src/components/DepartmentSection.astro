@@ -17,14 +17,14 @@ const { id, title, desc, noGrid = false } = Astro.props;
   <div class="container-x">
     <h2 class="mb-14 text-center">
       <span
-        class="title-underline font-heading text-xl font-bold text-deep-text"
+        class="title-underline font-heading text-2xl font-bold text-deep-text"
       >
         {title}
       </span>
     </h2>
     {
       desc && (
-        <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-[14px] leading-relaxed text-text-muted">
+        <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-note text-text-muted">
           {desc}
         </p>
       )

@@ -53,11 +53,15 @@ const thumb = image ? coverThumb(image) : undefined;
     style={{ background: gradient }}
   >
     {
+      /* 封面是装饰图：标题就在卡片正文里。alt 留空既避免读屏重复，
+         也避免 lazy 图片加载完成前把 alt 文本画在渐变占位上。 */
+    }
+    {
       image ? (
         <CoverImage
           src={image}
           thumb={thumb}
-          alt={title}
+          alt=""
           width={1200}
           height={650}
           sizes="(min-width: 1024px) 373px, (min-width: 640px) 45vw, calc(100vw - 2rem)"
@@ -81,19 +85,13 @@ const thumb = image ? coverThumb(image) : undefined;
       </a>
     </h2>
 
-    {
-      desc && (
-        <p class="mt-2 text-sm leading-relaxed text-text-muted line-clamp-3">
-          {desc}
-        </p>
-      )
-    }
+    {desc && <p class="mt-2 text-note text-text-muted line-clamp-3">{desc}</p>}
 
     {
       tags.length > 0 && (
         <div class="mt-4 flex flex-wrap gap-1.5">
           {tags.map((tag) => (
-            <span class="rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-2 py-0.5 text-[11px] leading-none text-text-muted">
+            <span class="rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-2 py-0.5 text-label leading-none text-text-muted">
               {tag}
             </span>
           ))}

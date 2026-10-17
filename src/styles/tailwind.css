@@ -22,16 +22,35 @@
 @custom-variant dark (&:where([data-theme='night'], [data-theme='night'] *));
 
 @theme {
-  /* ── 字体系统 ── */
+  /* ── 字体系统 ──
+     拉丁字符用自托管 Inter（见 fonts.css），中文回退到系统 CJK 字体；
+     不整体加载 Noto Sans SC，避免数 MB 的中文字体拖慢首屏。 */
   --font-sans:
-    "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
-  --font-heading:
-    "Noto Sans SC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+    "Inter", "Noto Sans SC", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", system-ui,
+    -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-heading: var(--font-sans);
   --font-mono:
     "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    monospace;
+    "Liberation Mono", monospace;
+
+  /* ── 排版阶梯 ──
+     与 variables.css 的 --type-* 对应，生成 text-body / text-lead /
+     text-section / text-display / text-note / text-label 工具类。
+     行高引用 --leading-*，中英文切换时工具类会一起变化。 */
+  --text-body: var(--type-body);
+  --text-body--line-height: var(--leading-body);
+  --text-lead: var(--type-lead);
+  --text-lead--line-height: var(--leading-body);
+  --text-section: var(--type-section);
+  --text-section--line-height: var(--leading-heading);
+  --text-display: var(--type-display);
+  --text-display--line-height: 1.12;
+  --text-note: var(--type-note);
+  --text-note--line-height: var(--leading-body);
+  --text-label: var(--type-label);
+  --text-label--line-height: 1.45;
+  --text-label--letter-spacing: 0.04em;
 
   /* ── 圆角 Linear 阶梯 ── */
   --radius-xs: 4px;
@@ -68,72 +87,88 @@
   --color-on-error: var(--on-error);
 }
 
-/* ===== 基础排版（复刻主应用 @layer base）===== */
+/* ===== 基础排版 =====
+   正文按中文阅读习惯给 1.75 行高（英文在 variables.css 里收紧到 1.68），
+   标题用流体字号，小屏不再直接吃 56px 的桌面尺寸。 */
 @layer base {
-  html,
-  body {
-    letter-spacing: -0.022em;
+  html {
+    font-family: var(--font-sans);
+    font-size: 100%;
+    letter-spacing: var(--tracking-body);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-size-adjust: 100%;
     background: var(--color-base-100);
     color: var(--color-base-content);
   }
 
-  p {
-    font-size: 17px;
-    font-weight: 400;
-    line-height: 1.47;
-    letter-spacing: -0.022em;
-    margin-bottom: 1.25rem;
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    /* 正文行高只给阅读文本（p / .prose）；body 保持 1.5，避免导航、按钮、
+       徽标等 UI 元素继承 1.75 后被拉高 */
+    line-height: 1.5;
+    letter-spacing: var(--tracking-body);
     color: var(--color-base-content);
   }
 
-  h1 {
+  p {
+    font-size: var(--type-body);
+    font-weight: 400;
+    line-height: var(--leading-body);
+    letter-spacing: var(--tracking-body);
+    margin-bottom: 1.25rem;
+    color: var(--color-base-content);
+    overflow-wrap: break-word;
+    text-wrap: pretty;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
-    font-size: 56px;
     font-weight: 600;
-    line-height: 1.07;
-    letter-spacing: -0.005em;
+    line-height: var(--leading-heading);
+    letter-spacing: var(--tracking-heading);
+    color: var(--deep-text);
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: var(--type-display);
+    font-weight: 700;
+    line-height: var(--leading-heading);
   }
 
   h2 {
-    font-family: var(--font-heading);
-    font-size: 40px;
-    font-weight: 600;
-    line-height: 1.1;
-    letter-spacing: 0;
+    font-size: var(--type-section);
+    font-weight: 700;
+    line-height: var(--leading-heading);
   }
 
   h3 {
-    font-family: var(--font-heading);
-    font-size: 28px;
-    font-weight: 600;
-    line-height: 1.14;
-    letter-spacing: 0.004em;
+    font-size: clamp(1.375rem, 1.2rem + 0.8vw, 1.75rem);
+    line-height: 1.25;
   }
 
   h4 {
-    font-family: var(--font-heading);
-    font-size: 21px;
-    font-weight: 600;
-    line-height: 1.19;
-    letter-spacing: 0.011em;
+    font-size: clamp(1.125rem, 1.05rem + 0.35vw, 1.3125rem);
+    line-height: 1.35;
   }
 
   h5 {
-    font-family: var(--font-heading);
-    font-size: 17px;
-    font-weight: 600;
-    line-height: 1.24;
-    letter-spacing: -0.022em;
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    letter-spacing: var(--tracking-body);
   }
 
   h6 {
-    font-family: var(--font-heading);
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.29;
-    letter-spacing: -0.016em;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    letter-spacing: 0.04em;
   }
 }
 
@@ -648,4 +683,40 @@
   --tw-prose-pre-bg: var(--codeblock-bg);
   --tw-prose-th-borders: var(--surface-3);
   --tw-prose-td-borders: var(--surface-3);
+
+  /* 与站点正文同一套字号/行高，避免文章页的 16px 和列表页的 17px 来回跳 */
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+}
+
+.prose :where(code, kbd, samp, pre) {
+  font-family: var(--font-mono);
+}
+
+/* typography 插件默认的 h2 只有 1.5em（约 24px），在 17px 正文旁边层级偏弱；
+   这里按站点标题阶梯略微放大，正文与章节标题的落差更清楚。 */
+.prose :where(h2) {
+  font-size: 1.75em;
+  line-height: 1.3;
+}
+
+.prose :where(h3) {
+  font-size: 1.375em;
+  line-height: 1.35;
+}
+
+.prose :where(h4) {
+  font-size: 1.175em;
+  line-height: 1.4;
+}
+
+/* 数字等宽：时钟年份、日期、代码行号不会因字形宽度变化而抖动 */
+.font-mono,
+code,
+kbd,
+samp,
+pre,
+time {
+  font-variant-numeric: tabular-nums;
 }

@@ -240,9 +240,7 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   <section id="recommend" class="section-padding">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-deep-text"
-        >
+        <h2 class="title-underline text-section font-bold text-deep-text">
           {t(lang, "home.section_explore")}
         </h2>
         <p class="mt-8 text-text-muted">
@@ -275,9 +273,7 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   <section id="team" class="section-padding">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-deep-text"
-        >
+        <h2 class="title-underline text-section font-bold text-deep-text">
           {t(lang, "home.section_team")}
         </h2>
         <p class="mt-8 text-text-muted">{t(lang, "home.section_team_sub")}</p>
@@ -290,7 +286,7 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
               <div class="profile-inner flex flex-row items-center gap-3 rounded-lg p-4 text-left sm:flex-col sm:p-5 sm:text-center">
                 <img
                   src={m.avatar}
-                  alt={m.name}
+                  alt=""
                   width={96}
                   height={96}
                   class="h-10 w-10 shrink-0 rounded-full object-cover sm:mb-3 sm:h-16 sm:w-16"
@@ -299,7 +295,7 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
                 />
                 <div class="min-w-0 flex-1">
                   <h3 class="text-lg font-bold text-deep-text">{m.name}</h3>
-                  <p class="mt-1 text-xs text-text-muted">{m.desc}</p>
+                  <p class="mt-1 text-[0.8125rem] text-text-muted">{m.desc}</p>
                 </div>
               </div>
             </a>
@@ -328,9 +324,7 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   <section id="timeline" class="section-padding">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-deep-text"
-        >
+        <h2 class="title-underline text-section font-bold text-deep-text">
           {t(lang, "home.section_timeline")}
         </h2>
         <p class="mt-8 text-text-muted">
@@ -353,10 +347,10 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
                         {/* 标题用 h3：18 条时间线条目此前全是 div，读屏无法按标题跳转；
                             年份保持普通文本（它是 "2014 ~ 2016" 这类自由文本，不是合法 datetime，
                             因此不适合用 <time>） */}
-                        <h3 class="mb-3 border-b border-[var(--primary)] pb-2 text-[30px] font-semibold text-deep-text">
+                        <h3 class="mb-3 border-b border-[var(--primary)] pb-2 text-[clamp(1.375rem,2vw,1.875rem)] font-semibold text-deep-text">
                           {item.title}
                         </h3>
-                        <div class="text-[15px] leading-relaxed text-text-muted">
+                        <div class="text-note text-text-muted">
                           {item.description}
                         </div>
                       </div>
@@ -437,9 +431,7 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   <section id="update" class="section-padding">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-deep-text"
-        >
+        <h2 class="title-underline text-section font-bold text-deep-text">
           {t(lang, "home.section_updates")}
         </h2>
         <p class="mt-8 text-text-muted">
@@ -470,12 +462,10 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   <section id="faq" class="section-padding">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-deep-text"
-        >
+        <h2 class="title-underline text-section font-bold text-deep-text">
           {t(lang, "home.section_faq")}
         </h2>
-        <p class="mt-8 leading-relaxed text-text-muted">
+        <p class="mt-8 text-text-muted">
           {t(lang, "home.section_faq_sub")}
         </p>
       </div>
@@ -491,13 +481,11 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
                   name="chevronRight"
                   class="mr-2 mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--primary)]"
                 />
-                <h3 class="text-[17px] leading-snug font-semibold text-deep-text">
+                <h3 class="text-body leading-snug font-semibold text-deep-text">
                   {item.title}
                 </h3>
               </div>
-              <p class="mt-2 text-[14px] leading-relaxed text-text-muted">
-                {item.description}
-              </p>
+              <p class="mt-2 text-note text-text-muted">{item.description}</p>
             </div>
           ))
         }

@@ -154,12 +154,12 @@ const platformItems = [
       <div class="py-8 md:py-12">
         <div class="mx-auto max-w-5xl text-center">
           <h1
-            class="mb-6 font-heading text-[40px] font-semibold leading-[1.07] tracking-[-0.005em] text-deep-text md:text-[56px]"
+            class="mb-6 font-heading text-display font-semibold text-deep-text"
           >
             {t(lang, "about.hero_title")}
           </h1>
           <div class="mx-auto max-w-3xl">
-            <p class="mb-6 text-[17px] leading-relaxed text-text-muted">
+            <p class="mb-6 text-body text-text-muted">
               {t(lang, "about.hero_paragraph")}
             </p>
           </div>
@@ -173,11 +173,11 @@ const platformItems = [
     <div class="container-x">
       <div class="mb-14 text-center">
         <h2
-          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+          class="title-underline font-heading text-section font-semibold text-deep-text"
         >
           {t(lang, "about.values_title")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">
+        <p class="mt-8 text-body text-text-muted">
           {t(lang, "about.values_subtitle")}
         </p>
       </div>
@@ -190,10 +190,10 @@ const platformItems = [
               <div class="flex justify-center">
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
               </div>
-              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
                 {itemTitle(c)}
               </h3>
-              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
+              <p class="mt-2 text-note text-text-muted text-center">
                 {itemDesc(c)}
               </p>
             </div>
@@ -208,11 +208,11 @@ const platformItems = [
     <div class="container-x">
       <div class="mb-14 text-center">
         <h2
-          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+          class="title-underline font-heading text-section font-semibold text-deep-text"
         >
           {t(lang, "services.section_content")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">
+        <p class="mt-8 text-body text-text-muted">
           {t(lang, "services.section_content_sub")}
         </p>
       </div>
@@ -225,12 +225,10 @@ const platformItems = [
               <div class="flex justify-center">
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
               </div>
-              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
                 {c.title}
               </h3>
-              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
-                {c.desc}
-              </p>
+              <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
             </div>
           ))
         }
@@ -243,11 +241,11 @@ const platformItems = [
     <div class="container-x">
       <div class="mb-14 text-center">
         <h2
-          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+          class="title-underline font-heading text-section font-semibold text-deep-text"
         >
           {t(lang, "services.section_events")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">
+        <p class="mt-8 text-body text-text-muted">
           {t(lang, "services.section_events_sub")}
         </p>
       </div>
@@ -258,12 +256,10 @@ const platformItems = [
               <div class="flex justify-center">
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
               </div>
-              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
                 {c.title}
               </h3>
-              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
-                {c.desc}
-              </p>
+              <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
             </div>
           ))
         }
@@ -276,11 +272,11 @@ const platformItems = [
     <div class="container-x">
       <div class="mb-14 text-center">
         <h2
-          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+          class="title-underline font-heading text-section font-semibold text-deep-text"
         >
           {t(lang, "services.section_platform")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">
+        <p class="mt-8 text-body text-text-muted">
           {t(lang, "services.section_platform_sub")}
         </p>
       </div>
@@ -291,12 +287,10 @@ const platformItems = [
               <div class="flex justify-center">
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
               </div>
-              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
                 {c.title}
               </h3>
-              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
-                {c.desc}
-              </p>
+              <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
             </div>
           ))
         }
@@ -309,12 +303,10 @@ const platformItems = [
     <div class="container-x">
       <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
         <div class="mb-0">
-          <h2
-            class="text-[40px] font-semibold tracking-[-0.005em] mb-3 font-heading"
-          >
+          <h2 class="text-section font-semibold mb-3 font-heading">
             {t(lang, "about.cta_welcome")}{t(lang, "about.cta_welcome_accent")}
           </h2>
-          <p class="text-[17px] text-text-muted">
+          <p class="text-body text-text-muted">
             {t(lang, "about.cta_body")}
           </p>
         </div>

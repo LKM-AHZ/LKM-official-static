@@ -16,8 +16,32 @@
   /* 顶栏高度（贴顶刘海高度 + 少量余量），主内容据此留白 */
   --nav-h: 72px;
 
+  /* ===== 字体与排版 =====
+     中文正文用 1.75 行高，英文稍紧凑；字号用 clamp 做 16–17px 的轻微流体缩放，
+     避免小屏正文过小、大屏又显得局促。标题字号在 tailwind.css 的 @theme 里
+     映射成 text-display / text-section 等工具类。 */
+  --type-body: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+  --type-lead: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+  --type-section: clamp(1.75rem, 1.5rem + 1vw, 2.5rem);
+  --type-display: clamp(2.25rem, 1.7rem + 2.4vw, 3.5rem);
+  --type-note: 0.9375rem;
+  --type-label: 0.75rem;
+
+  --leading-body: 1.75;
+  --leading-heading: 1.2;
+  --tracking-body: 0;
+  --tracking-heading: 0.01em;
+
   /* 整页滚动进度（0→1）：由 TechBackground 写入，驱动 body::after 侧辉光 */
   --scroll-progress: 0;
+}
+
+/* 英文页面的行高/字距单独收紧：中文需要更大的行距来区分行，英文则不需要。 */
+html:lang(en) {
+  --leading-body: 1.68;
+  --leading-heading: 1.15;
+  --tracking-body: -0.011em;
+  --tracking-heading: -0.022em;
 }
 
 /* ============================================================

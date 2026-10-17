@@ -60,9 +60,7 @@ const contactItems = [
   <section class="section-padding">
     <div class="container-x">
       <div class="py-8 text-center md:py-12">
-        <h1
-          class="font-heading text-[40px] font-semibold leading-[1.07] tracking-[-0.005em] text-deep-text md:text-[56px]"
-        >
+        <h1 class="font-heading text-display font-semibold text-deep-text">
           {t(lang, "contact.hero_title")}
         </h1>
       </div>
@@ -74,11 +72,11 @@ const contactItems = [
     <div class="container-x">
       <div class="mb-14 text-center">
         <h2
-          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+          class="title-underline font-heading text-section font-semibold text-deep-text"
         >
           {t(lang, "contact.section_message")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">
+        <p class="mt-8 text-body text-text-muted">
           {t(lang, "contact.section_message_sub")}
         </p>
       </div>
@@ -159,7 +157,7 @@ const contactItems = [
     <div class="container-x">
       <div class="mb-14 text-center">
         <h2
-          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+          class="title-underline font-heading text-section font-semibold text-deep-text"
         >
           {t(lang, "contact.section_contact")}
         </h2>
@@ -176,12 +174,10 @@ const contactItems = [
                 class="card-hover flex flex-col rounded-2xl p-6 no-underline"
               >
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
-                <h3 class="text-[17px] font-semibold text-deep-text leading-snug">
+                <h3 class="text-body font-semibold text-deep-text leading-snug">
                   {c.title}
                 </h3>
-                <p class="mt-2 text-[14px] text-text-muted leading-relaxed">
-                  {c.desc}
-                </p>
+                <p class="mt-2 text-note text-text-muted">{c.desc}</p>
                 {c.action && (
                   <span class="mt-4 inline-flex items-center gap-1 text-sm text-primary font-medium">
                     {c.action}
@@ -192,12 +188,10 @@ const contactItems = [
             ) : (
               <div class="card-hover flex flex-col rounded-2xl p-6 no-underline">
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
-                <h3 class="text-[17px] font-semibold text-deep-text leading-snug">
+                <h3 class="text-body font-semibold text-deep-text leading-snug">
                   {c.title}
                 </h3>
-                <p class="mt-2 text-[14px] text-text-muted leading-relaxed">
-                  {c.desc}
-                </p>
+                <p class="mt-2 text-note text-text-muted">{c.desc}</p>
               </div>
             ),
           )

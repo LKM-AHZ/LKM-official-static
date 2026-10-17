@@ -34,6 +34,12 @@ src/content/docs/
 
 文章封面同样随仓库托管在 `public/images/covers/`：每篇文章一张 1200w 主图（`<name>.webp`）和一张 800w 缩略图（`<name>-800w.webp`），Markdown 的 `image` 指向站内路径。列表与移动端走 `srcset` 选缩略图，详情页 hero 再按视口取主图；图片失败时组件会先回退到主图，再失败则露出标题渐变占位。不要改回 `picsum.photos` 等外部图床——多一次 302 跳转和第三方可用性都会让图片偶发加载失败。
 
+## 字体与排版
+
+拉丁字符使用自托管的 Inter Latin 子集，中文由系统 CJK 字体（PingFang SC / Microsoft YaHei / Noto Sans CJK SC）渲染，不整体加载数 MB 的中文字体；字体文件、来源与 OFL 许可证见 [`public/fonts/README.md`](public/fonts/README.md)。
+
+字号与行高 token 集中在 `src/styles/variables.css`（`--type-*`、`--leading-*`、`--tracking-*`），并在 `src/styles/tailwind.css` 中映射为 `text-body` / `text-lead` / `text-section` / `text-display` / `text-note` / `text-label`。中文正文行高 1.75、英文 1.68；新增页面优先复用这些工具类，不要再散写 `text-[17px]` 之类的固定字号。
+
 ## 命令
 
 | 命令           | 用途                             |
