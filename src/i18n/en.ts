@@ -6,7 +6,7 @@ export const en = {
   "common.nav_home": "Home",
   "common.nav_about": "About",
   "common.nav_services": "Services",
-  "common.nav_team": "Team",
+  "common.nav_team": "Teams",
   "common.nav_products": "Products",
   "common.nav_articles": "Articles",
   "common.nav_resources": "Resources",
@@ -48,6 +48,8 @@ export const en = {
     "Phientist products, projects, and studios — what we build and what each one does.",
   "seo.team":
     "Meet the Phientist management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
+  "seo.team_projects":
+    "Meet the Phientist project teams: the Textbook Project and Science Communication Project.",
   "seo.communities":
     "Browse Phientist's QQ communities: general group, grade and subject groups, interest clubs and recurring events.",
   "seo.about":
@@ -69,10 +71,6 @@ export const en = {
     "Here, science and technology step out of the ivory tower and become a curiosity that everyone can spark and ask about the world. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works.",
   "home.cta_communities": "Explore Community",
   "home.cta_about": "Get Help",
-  "home.join_title": "Welcome to Phientist",
-  "home.join_body":
-    "Whether you want to learn, create, or join our team, Phientist welcomes you.",
-  "home.join_cta": "Explore Community",
   "home.future_title": "Our Future Outlook",
   "home.future_body":
     "We plan to launch animated shorts, narrated stories, and themed merchandise. Our goal is to become a more influential independent content platform where every explorer can find their own kind of fun.",
@@ -111,6 +109,12 @@ export const en = {
   "home.section_faq_sub":
     "Common questions about the PHIENTIST official website, so you can get started quickly.",
   "team.title": "Management Team — Phientist",
+  "team.tab_management": "Management Team",
+  "team.tab_projects": "Project Teams",
+  "team.tabs_aria": "Switch team pages",
+  "team.management_subtitle":
+    "The team that runs day-to-day community operations, content, and technical support.",
+  "team.projects_page_title": "Project Teams — Phientist",
   "team.sidebar_founder": "Founder",
   "team.sidebar_general": "General Affairs",
   "team.sidebar_affairs": "Community Affairs",
@@ -166,6 +170,10 @@ export const en = {
   "about.team_more": "More Members",
   "about.timeline_title": "Timeline",
   "about.timeline_subtitle": "Seasons change, and so do we.",
+  "about.support_title": "Support Us",
+  "about.support_body":
+    "Phientist is a non-profit community. Every contribution goes toward servers, domains, events, and content.",
+  "about.support_cta": "Ways to support",
   "about.communities_title": "QQ Community",
   "about.communities_subtitle":
     "Find the group that fits your stage, subject, and interests.",

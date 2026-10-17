@@ -397,88 +397,10 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
     </div>
   </section>
 
-  {/* ===== 常见问题 ===== */}
-  <section id="faq" class="section-padding">
+  {/* ===== 联系我们 ===== */}
+  <section id="contact" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
-      <div class="mb-14 text-center">
-        <h2 class="title-underline text-section font-bold text-deep-text">
-          {t(lang, "home.section_faq")}
-        </h2>
-        <p class="mt-8 text-text-muted">
-          {t(lang, "home.section_faq_sub")}
-        </p>
-      </div>
-
-      <div
-        class="mx-auto grid max-w-4xl gap-8 gap-y-8 sm:grid-cols-2 md:gap-y-12"
-      >
-        {
-          faqItems.map((item) => (
-            <div>
-              <div class="flex max-w-none flex-row">
-                <Icon
-                  name="chevronRight"
-                  class="mr-2 mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--primary)]"
-                />
-                <h3 class="text-body leading-snug font-semibold text-deep-text">
-                  {item.title}
-                </h3>
-              </div>
-              <p class="mt-2 text-note text-text-muted">{item.description}</p>
-            </div>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  {/* ===== 加入理科迷 ===== */}
-  <section class="section-padding">
-    <div class="container-x">
-      <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
-        <h2 class="text-section font-semibold mb-3 font-heading">
-          {t(lang, "home.join_title")}
-        </h2>
-        <p class="text-body text-text-muted">{t(lang, "home.join_body")}</p>
-        <div class="max-w-xs sm:max-w-md m-auto mt-6 flex justify-center">
-          <a
-            href={langUrl(lang, "/about#communities")}
-            class="btn btn-primary w-full sm:w-auto"
-          >
-            {t(lang, "home.join_cta")}
-            <Icon name="arrowRight" class="w-5 h-5 inline-block" />
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ===== 未来展望 + 联系我们 ===== */}
-  <section class="section-padding">
-    <div class="container-x">
-      <div class="mx-auto max-w-4xl text-center">
-        <h2
-          class="title-underline font-heading text-section font-bold text-deep-text"
-        >
-          {t(lang, "home.future_title")}
-        </h2>
-        <p
-          class="mx-auto mt-8 max-w-3xl text-lead leading-relaxed text-text-muted"
-        >
-          {t(lang, "home.future_body")}
-        </p>
-        <div class="mt-10 flex justify-center">
-          <a href={langUrl(lang, "/about#communities")} class="btn btn-primary">
-            {t(lang, "home.future_cta")}
-            <Icon name="arrowRight" class="h-5 w-5" />
-          </a>
-        </div>
-      </div>
-
-      <div
-        id="contact"
-        class="mx-auto mt-20 max-w-3xl scroll-mt-[var(--nav-h)] text-center"
-      >
+      <div class="mx-auto max-w-3xl text-center">
         <h2
           class="title-underline font-heading text-section font-bold text-deep-text"
         >
@@ -546,6 +468,65 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
             {t(lang, "home.contact_note")}
           </p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 未来展望 ===== */}
+  <section class="section-padding">
+    <div class="container-x">
+      <div class="mx-auto max-w-4xl text-center">
+        <h2
+          class="title-underline font-heading text-section font-bold text-deep-text"
+        >
+          {t(lang, "home.future_title")}
+        </h2>
+        <p
+          class="mx-auto mt-8 max-w-3xl text-lead leading-relaxed text-text-muted"
+        >
+          {t(lang, "home.future_body")}
+        </p>
+        <div class="mt-10 flex justify-center">
+          <a href={langUrl(lang, "/about#communities")} class="btn btn-primary">
+            {t(lang, "home.future_cta")}
+            <Icon name="arrowRight" class="h-5 w-5" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 常见问题 ===== */}
+  <section id="faq" class="section-padding">
+    <div class="container-x">
+      <div class="mb-14 text-center">
+        <h2 class="title-underline text-section font-bold text-deep-text">
+          {t(lang, "home.section_faq")}
+        </h2>
+        <p class="mt-8 text-text-muted">
+          {t(lang, "home.section_faq_sub")}
+        </p>
+      </div>
+
+      <div
+        class="mx-auto grid max-w-4xl gap-8 gap-y-8 sm:grid-cols-2 md:gap-y-12"
+      >
+        {
+          faqItems.map((item) => (
+            <div>
+              <div class="flex max-w-none flex-row">
+                <Icon
+                  name="chevronRight"
+                  class="mr-2 mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--primary)]"
+                />
+                <h3 class="text-body leading-snug font-semibold text-deep-text">
+                  {item.title}
+                </h3>
+              </div>
+              <p class="mt-2 text-note text-text-muted">{item.description}</p>
+            </div>
+          ))
+        }
       </div>
     </div>
   </section>

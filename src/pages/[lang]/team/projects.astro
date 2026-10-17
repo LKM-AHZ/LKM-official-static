@@ -1,0 +1,94 @@
+---
+import OfficialSidebarLayout from "../../../layouts/OfficialSidebarLayout.astro";
+import MemberCard from "../../../components/MemberCard.astro";
+import TeamTabs from "../../../components/TeamTabs.astro";
+import { teamData as zhTeam } from "../../../data/team-data";
+import { teamData as enTeam } from "../../../data/en/team-data";
+import { pickByLocale, t } from "../../../i18n/index";
+import type { SubGroupMaps, TeamData } from "../../../data/team-types";
+
+const lang = (Astro.currentLocale ?? "zh") as string;
+
+import { getStaticPathsForLang } from "../../../i18n/paths";
+export const getStaticPaths = getStaticPathsForLang;
+
+// ===== 项目团队页 =====
+const team = pickByLocale<TeamData>(lang, zhTeam, enTeam);
+const sg: SubGroupMaps = team.subGroupMaps;
+const projectGroups = Object.entries(sg.projectSubGroups ?? {});
+
+const sidebarItems = [
+  {
+    text: t(lang, "team.sidebar_project"),
+    href: "#project",
+    icon: "rocket",
+  },
+  ...projectGroups.map(([key, group]) => ({
+    text: group.label,
+    href: `#project-${key}`,
+    icon: key === "textbooks" ? "book" : "atom",
+  })),
+];
+---
+
+<OfficialSidebarLayout
+  title={t(lang, "team.projects_page_title")}
+  description={t(lang, "seo.team_projects")}
+  currentPath="/team/projects"
+  sidebarItems={sidebarItems}
+>
+  <section class="pb-2 pt-8">
+    <div class="container-x text-center">
+      <h1
+        class="title-underline font-heading text-section font-bold text-deep-text"
+      >
+        {t(lang, "team.project_title")}
+      </h1>
+      <p class="mx-auto mt-8 max-w-3xl text-body text-text-muted">
+        {t(lang, "team.project_desc")}
+      </p>
+    </div>
+  </section>
+
+  <TeamTabs current="projects" />
+
+  <section id="project" class="section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="space-y-12">
+        {
+          projectGroups.map(([key, group]) => (
+            <section id={`project-${key}`} class="scroll-mt-[var(--nav-h)]">
+              <h2 class="mb-3 text-center text-xl font-bold text-deep-text">
+                {group.label}
+              </h2>
+              {group.desc && (
+                <p class="mx-auto mb-6 max-w-3xl text-center text-note text-text-muted">
+                  {group.desc}
+                </p>
+              )}
+              {group.members?.length ? (
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.members.map((m) => (
+                    <MemberCard
+                      name={m.name ?? ""}
+                      avatarKey={m.avatarKey}
+                      role={m.role}
+                      desc={m.desc}
+                      dream={m.dream}
+                      quote={m.quote}
+                      level={4}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p class="text-center text-sm text-text-muted">
+                  {t(lang, "team.subgroup_empty")}
+                </p>
+              )}
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</OfficialSidebarLayout>

@@ -16,7 +16,7 @@ import type { TranslationKey } from "../../i18n/index";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 
-import { getStaticPathsForLang } from "../../i18n/paths";
+import { getStaticPathsForLang, langUrl } from "../../i18n/paths";
 export const getStaticPaths = getStaticPathsForLang;
 
 // 社区理念 —— 三张价值观卡（双语正文；不进 i18n dict）
@@ -336,6 +336,24 @@ const sidebarItems = [
             </div>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  {/* ===== 支持我们 ===== */}
+  <section id="support" class="section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
+        <h2 class="text-section font-semibold mb-3 font-heading">
+          {t(lang, "about.support_title")}
+        </h2>
+        <p class="text-body text-text-muted">{t(lang, "about.support_body")}</p>
+        <div class="mt-6 flex justify-center">
+          <a href={langUrl(lang, "/pricing")} class="btn btn-primary">
+            {t(lang, "about.support_cta")}
+            <Icon name="arrowRight" class="h-5 w-5" />
+          </a>
+        </div>
       </div>
     </div>
   </section>

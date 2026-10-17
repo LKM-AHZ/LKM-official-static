@@ -2,6 +2,7 @@
 import OfficialSidebarLayout from "../../layouts/OfficialSidebarLayout.astro";
 import MemberCard from "../../components/MemberCard.astro";
 import DepartmentSection from "../../components/DepartmentSection.astro";
+import TeamTabs from "../../components/TeamTabs.astro";
 import { teamData as zhTeam } from "../../data/team-data";
 import { teamData as enTeam } from "../../data/en/team-data";
 import { pickByLocale, t } from "../../i18n/index";
@@ -44,7 +45,6 @@ const sidebarItems = [
     icon: "certificate",
   },
   { text: t(lang, "team.sidebar_tech"), href: "#tech", icon: "code" },
-  { text: t(lang, "team.sidebar_project"), href: "#project", icon: "rocket" },
   { text: t(lang, "team.sidebar_alumni"), href: "#alumni", icon: "userX" },
 ];
 
@@ -58,6 +58,21 @@ const sg: SubGroupMaps = team.subGroupMaps;
   currentPath="/team"
   sidebarItems={sidebarItems}
 >
+  <section class="pb-2 pt-8">
+    <div class="container-x text-center">
+      <h1
+        class="title-underline font-heading text-section font-bold text-deep-text"
+      >
+        {t(lang, "team.tab_management")}
+      </h1>
+      <p class="mx-auto mt-8 max-w-3xl text-body text-text-muted">
+        {t(lang, "team.management_subtitle")}
+      </p>
+    </div>
+  </section>
+
+  <TeamTabs current="management" />
+
   {/* 创始人 */}
   <section id="founder" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
@@ -277,48 +292,6 @@ const sg: SubGroupMaps = team.subGroupMaps;
           dream={m.dream}
           quote={m.quote}
         />
-      ))
-    }
-  </DepartmentSection>
-
-  {/* 项目团队 */}
-  <DepartmentSection
-    id="project"
-    title={t(lang, "team.project_title")}
-    desc={t(lang, "team.project_desc")}
-    noGrid
-  >
-    {
-      Object.entries(sg.projectSubGroups ?? {}).map(([, group]) => (
-        <div class="mb-12">
-          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
-            {group.label}
-          </h3>
-          {group.desc && (
-            <p class="mx-auto mb-6 max-w-3xl text-center text-note text-text-muted">
-              {group.desc}
-            </p>
-          )}
-          {group.members?.length ? (
-            <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {group.members.map((m) => (
-                <MemberCard
-                  name={m.name ?? ""}
-                  avatarKey={m.avatarKey}
-                  role={m.role}
-                  desc={m.desc}
-                  dream={m.dream}
-                  quote={m.quote}
-                  level={4}
-                />
-              ))}
-            </div>
-          ) : (
-            <p class="text-center text-sm text-text-muted">
-              {t(lang, "team.subgroup_empty")}
-            </p>
-          )}
-        </div>
       ))
     }
   </DepartmentSection>
