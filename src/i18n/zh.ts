@@ -64,8 +64,6 @@ export const zh = {
   "home.section_resources": "延伸资源网站",
   "home.resources_sub": "学术机构、科研工具、文献站点汇总（目前正在完善中）",
   "home.resources_btn": "前往资源页",
-  "home.section_explore": "探索板块",
-  "home.section_explore_sub": "发现你感兴趣的内容",
   "home.section_team": "团队成员",
   "home.section_team_sub": "理科迷因为有你，所以更加精彩",
   "home.team_more": "更多成员",
@@ -148,6 +146,9 @@ export const zh = {
   "about.cta_body":
     "无论你是想学习交流、参与创作，还是加入我们的团队，理科迷都欢迎你。",
   "about.cta_services": "了解服务",
+  "about.cta_communities": "查看社群",
+  "about.communities_title": "QQ 社群",
+  "about.communities_subtitle": "按年级、学科与兴趣，加入适合自己的群组。",
   "communities.title": "QQ社群 —— 理科迷",
   "communities.copy": "复制群号",
   "communities.copy_channel": "复制频道 ID",

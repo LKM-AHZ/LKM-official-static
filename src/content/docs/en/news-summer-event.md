@@ -63,5 +63,5 @@ questions for an hour on the day — is already useful. Contact the office in an
 you are interested.
 
 Related reading: [Event Planning Office Established](/en/docs/news-team-activity) ·
-[Community](/en/communities) ·
+[Community](/en/about#communities) ·
 [Getting Started](/en/docs/getting-started)

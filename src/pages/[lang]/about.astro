@@ -1,7 +1,18 @@
 ---
 import OfficialSidebarLayout from "../../layouts/OfficialSidebarLayout.astro";
 import Icon from "../../components/Icon.astro";
-import { t } from "../../i18n/index";
+import CommunitySection from "../../components/CommunitySection.astro";
+import CommunityCard from "../../components/CommunityCard.astro";
+import {
+  communityCategories as zhCommunityCategories,
+  communityNote as zhCommunityNote,
+} from "../../data/communities";
+import {
+  communityCategories as enCommunityCategories,
+  communityNote as enCommunityNote,
+} from "../../data/en/communities";
+import { pickByLocale, t } from "../../i18n/index";
+import type { TranslationKey } from "../../i18n/index";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 
@@ -123,6 +134,53 @@ const platformItems = [
     desc: "支持 Markdown 和 MDX 格式的文章发布，分类与标签过滤、阅读时间估算、RSS 订阅等功能一应俱全。",
   },
 ];
+
+// 社群数据（原 /communities 页面内容随页并入本页）
+const communityCategories = pickByLocale(
+  lang,
+  zhCommunityCategories,
+  enCommunityCategories,
+);
+const communityNote = pickByLocale(lang, zhCommunityNote, enCommunityNote);
+const communityIcons = [
+  "users",
+  "school",
+  "category",
+  "atom",
+  "robot",
+  "palette",
+  "calendarStar",
+  "archive",
+];
+
+// 页内侧栏：服务区块 + QQ 社群总览 + 各社群分类（锚点与下方 section 同源）
+const sidebarItems = [
+  {
+    text: t(lang, "services.sidebar_content"),
+    href: "#content",
+    icon: "pencil",
+  },
+  {
+    text: t(lang, "services.sidebar_events"),
+    href: "#events",
+    icon: "confetti",
+  },
+  {
+    text: t(lang, "services.sidebar_platform"),
+    href: "#platform",
+    icon: "database",
+  },
+  {
+    text: t(lang, "about.communities_title"),
+    href: "#communities",
+    icon: "forum",
+  },
+  ...communityCategories.map((cat, i) => ({
+    text: t(lang, `communities.sidebar_${cat.id}` as TranslationKey),
+    href: `#community-${cat.id}`,
+    icon: communityIcons[i] ?? "users",
+  })),
+];
 ---
 
 <OfficialSidebarLayout
@@ -130,23 +188,7 @@ const platformItems = [
   description={t(lang, "seo.about")}
   currentPath="/about"
   ownHeading
-  sidebarItems={[
-    {
-      text: t(lang, "services.sidebar_content"),
-      href: "#content",
-      icon: "pencil",
-    },
-    {
-      text: t(lang, "services.sidebar_events"),
-      href: "#events",
-      icon: "confetti",
-    },
-    {
-      text: t(lang, "services.sidebar_platform"),
-      href: "#platform",
-      icon: "database",
-    },
-  ]}
+  sidebarItems={sidebarItems}
 >
   {/* HeroText */}
   <section class="section-padding">
@@ -298,6 +340,45 @@ const platformItems = [
     </div>
   </section>
 
+  {/* ===== QQ 社群（原 /communities 页面内容并入） ===== */}
+  <section id="communities" class="scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="text-center">
+        <h2
+          class="title-underline font-heading text-section font-semibold text-deep-text"
+        >
+          {t(lang, "about.communities_title")}
+        </h2>
+        <p class="mt-8 text-body text-text-muted">
+          {t(lang, "about.communities_subtitle")}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {
+    communityCategories.map((cat) => (
+      <CommunitySection
+        id={`community-${cat.id}`}
+        title={cat.label}
+        intro={cat.intro || undefined}
+      >
+        {cat.groups.map((g) => (
+          <CommunityCard
+            name={g.name}
+            qqGroup={g.qqGroup}
+            desc={g.desc}
+            isQQChannel={g.isQQChannel}
+          />
+        ))}
+      </CommunitySection>
+    ))
+  }
+
+  <div class="container-x pb-8">
+    <p class="text-center text-sm italic text-text-muted">{communityNote}</p>
+  </div>
+
   {/* ===== 行动号召 ===== */}
   <section class="section-padding">
     <div class="container-x">
@@ -315,8 +396,8 @@ const platformItems = [
             这几个从别处带过来的死类 */
         }
         <div class="max-w-xs sm:max-w-md m-auto mt-6 flex justify-center">
-          <a href="#content" class="btn btn-primary w-full sm:w-auto">
-            {t(lang, "about.cta_services")}
+          <a href="#communities" class="btn btn-primary w-full sm:w-auto">
+            {t(lang, "about.cta_communities")}
             <Icon name="arrowRight" class="w-5 h-5 inline-block" />
           </a>
         </div>

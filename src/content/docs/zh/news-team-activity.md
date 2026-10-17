@@ -49,4 +49,4 @@ lang: zh
 
 相关阅读：[第二次暑假活动开始筹备](/zh/docs/news-summer-event) ·
 [团队页面](/zh/team) ·
-[社群页面](/zh/communities)
+[社群](/zh/about#communities)

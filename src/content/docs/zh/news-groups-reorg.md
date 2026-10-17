@@ -55,6 +55,6 @@ lang: zh
 如果你或你的朋友正处在对应学段想回到组织，把这篇转给他就好——分群是为长在一起，不是把
 人拆散。
 
-加入入口与群组说明见[社群页面](/zh/communities)。相关阅读：
+加入入口与群组说明见[关于页的社群部分](/zh/about#communities)。相关阅读：
 [社区重建一周年回顾](/zh/docs/news-anniversary) ·
 [快速上手](/zh/docs/getting-started)

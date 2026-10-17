@@ -31,7 +31,7 @@ const isActive = (href: string): boolean =>
     ? currentPath === "/"
     : currentPath === href || currentPath.startsWith(`${href}/`);
 
-const communityHref = langUrl(lang, "/communities");
+const communityHref = langUrl(lang, "/about#communities");
 const communityLabel = t(lang, "common.nav_communities");
 const brandLabel = lang === "en" ? "PHIENTIST" : t(lang, "common.brand");
 ---

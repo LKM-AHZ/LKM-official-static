@@ -42,7 +42,7 @@ belong to the PHIENTIST community service; this site focuses on reliable public 
 
 1. Read [Getting Started](/en/docs/getting-started) for language switching, search, and feedback.
 2. Browse the [article list](/en/news) or the home page's recent updates to see what has changed.
-3. To meet people, start with the [community page](/en/communities).
+3. To meet people, start with the [community section](/en/about#communities).
 4. To help maintain content, read the [Editing Guide](/en/docs/editing-guide).
 
 ## Taking Part

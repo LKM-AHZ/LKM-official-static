@@ -51,5 +51,5 @@ lang: zh
 整理一份报名表、在当天做一小时答疑——就已经很有用。有意向可以在官方群组联系活动策划部。
 
 相关阅读：[七月团队·活动策划部 成立](/zh/docs/news-team-activity) ·
-[社群页面](/zh/communities) ·
+[社群](/zh/about#communities) ·
 [快速上手](/zh/docs/getting-started)

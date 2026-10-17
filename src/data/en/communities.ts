@@ -9,4 +9,4 @@ export const communityCategories: CommunityCategory[] = [];
 // 阶段一分类为空时页面只剩顶部/底部，给一句说明避免看起来像坏页面。
 // 阶段二补齐分类后，这里应换成正式的页脚注记（同中文源的 communityNote）。
 export const communityNote =
-  "The English community listing is still being prepared. For now, please see the Chinese page for all QQ groups and channels.";
+  "The English community listing is still being prepared. For now, please see the Chinese version of this section on the About page.";

@@ -58,4 +58,4 @@ welcome.
 
 Related reading: [Preparing the Second Summer Event](/en/docs/news-summer-event) ·
 [Team](/en/team) ·
-[Community](/en/communities)
+[Community](/en/about#communities)

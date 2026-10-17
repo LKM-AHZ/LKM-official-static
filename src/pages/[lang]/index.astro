@@ -154,34 +154,6 @@ const teamMembers = [
   },
 ];
 
-// 推荐板块 4 卡
-const exploreCards = [
-  {
-    href: "/communities",
-    title: "基础学科",
-    stats: "1.2k 成员 · 今日 45 帖",
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="M2 12h4"></path><path d="M18 12h4"></path><path d="m4.93 4.93 2.83 2.83"></path><path d="m16.24 16.24 2.83 2.83"></path><path d="m4.93 19.07 2.83-2.83"></path><path d="m16.24 7.76 2.83-2.83"></path></svg>',
-  },
-  {
-    href: "/communities",
-    title: "应用学科",
-    stats: "890 成员 · 今日 32 帖",
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>',
-  },
-  {
-    href: "/communities",
-    title: "兴趣板块",
-    stats: "520 成员 · 今日 28 帖",
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>',
-  },
-  {
-    href: "/communities",
-    title: "专栏",
-    stats: "深度长文 · 专业认证",
-    icon: '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>',
-  },
-];
-
 // 常见问题
 const faqItems = [
   {
@@ -234,40 +206,8 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
     title={t(lang, "home.hero_title")}
     subtitle={t(lang, "home.hero_subtitle")}
     lead={t(lang, "home.hero_kicker")}
+    nextAnchor="team"
   />
-
-  {/* ===== 推荐板块 ===== */}
-  <section id="recommend" class="section-padding">
-    <div class="container-x">
-      <div class="mb-14 text-center">
-        <h2 class="title-underline text-section font-bold text-deep-text">
-          {t(lang, "home.section_explore")}
-        </h2>
-        <p class="mt-8 text-text-muted">
-          {t(lang, "home.section_explore_sub")}
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {
-          exploreCards.map((c) => (
-            <a
-              href={langUrl(lang, c.href)}
-              class="profile-card group no-underline"
-            >
-              <div class="profile-inner flex flex-col items-center gap-2 p-5 text-center">
-                <span class="icon-bubble h-12 w-12" set:html={c.icon} />
-                <h3 class="font-semibold text-deep-text transition-colors group-hover:text-[var(--primary)]">
-                  {c.title}
-                </h3>
-                <p class="text-xs text-text-muted">{c.stats}</p>
-              </div>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </section>
 
   {/* ===== 团队成员 ===== */}
   <section id="team" class="section-padding">

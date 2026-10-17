@@ -74,8 +74,6 @@ export const en = {
   "home.resources_sub":
     "A curated collection of academic institutions, research tools, and literature sites (still in progress)",
   "home.resources_btn": "Go to Resources",
-  "home.section_explore": "Explore Boards",
-  "home.section_explore_sub": "Discover content that interests you",
   "home.section_team": "Team Members",
   "home.section_team_sub": "Phientist is better because of you",
   "home.team_more": "More Members",
@@ -159,6 +157,10 @@ export const en = {
   "about.cta_body":
     "Whether you want to learn, create, or join our team, Phientist welcomes you.",
   "about.cta_services": "Learn About Services",
+  "about.cta_communities": "Explore Community",
+  "about.communities_title": "QQ Community",
+  "about.communities_subtitle":
+    "Find the group that fits your stage, subject, and interests.",
   "communities.title": "QQ Community — Phientist",
   "communities.copy": "Copy group number",
   "communities.copy_channel": "Copy channel ID",

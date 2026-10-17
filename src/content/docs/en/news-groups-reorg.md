@@ -64,6 +64,6 @@ choosing a group isn't guesswork, and light posting rules keep the daily feed us
 If you or a friend are in that stage and want back in, pass this note along. We split to grow
 together, not apart.
 
-See the [community page](/en/communities) for entry points and group descriptions. Related
-reading: [One Year After the Rebuild](/en/docs/news-anniversary) ·
+See the [community section of the About page](/en/about#communities) for entry points and group
+descriptions. Related reading: [One Year After the Rebuild](/en/docs/news-anniversary) ·
 [Getting Started](/en/docs/getting-started)
