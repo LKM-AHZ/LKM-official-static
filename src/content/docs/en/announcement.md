@@ -2,6 +2,7 @@
 title: Static Site Content Policy
 description: Rules for bilingual content, publication dates, factual corrections, and release checks
 publishDate: 2026-08-27
+image: /images/covers/announcement.webp
 tags: [announcement, maintenance]
 ---
 

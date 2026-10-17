@@ -4,8 +4,9 @@ import { coverThumb } from "../../lib/images";
 import { coverGradient, formatDate } from "./format";
 
 /**
- * 文章卡片：顶部封面（有 image 显示真实图；无则回退到标题色相渐变），
- * 摘要、标签与底部元信息。全卡为链接，适配等高网格。
+ * 文章卡片：新闻区与指南区共用同一套视觉。
+ * `kind` 只用于搜索脚本区分两区卡片，`headingLevel` 控制标题层级
+ * （指南区在 section 标题下使用 h3）。
  */
 interface Props {
   lang: "zh" | "en";
@@ -14,11 +15,15 @@ interface Props {
   desc?: string;
   date: Date;
   minutes: number;
-  /** 文章的完整标签；卡片底部渲染为 chip，并下发 data-tags 供 /news 筛选 */
+  /** 文章的完整标签；卡片底部渲染为 chip，并下发 data-tags 供筛选 */
   tags?: string[];
   image?: string;
-  /** 供 /news 客户端搜索比对的归一化文本；首页不传，属性随之不渲染 */
+  /** 供客户端搜索比对的归一化文本；首页不传，属性随之不渲染 */
   searchText?: string;
+  /** 卡片所属区域：新闻或指南/文档 */
+  kind?: "news" | "guide";
+  /** 标题层级：新闻卡默认 h2，指南卡在区块标题下用 h3 */
+  headingLevel?: 2 | 3;
 }
 
 const {
@@ -31,16 +36,19 @@ const {
   tags = [],
   image,
   searchText,
+  kind = "news",
+  headingLevel = 2,
 } = Astro.props;
 const dateLabel = formatDate(date, lang);
 const minutesLabel = lang === "en" ? `${minutes} min read` : `${minutes} 分钟`;
 const gradient = coverGradient(title);
 const thumb = image ? coverThumb(image) : undefined;
+const Heading = headingLevel === 3 ? "h3" : "h2";
 ---
 
 <div
   class="card-hover group flex h-full flex-col rounded-2xl"
-  data-news-card
+  data-card-kind={kind}
   data-search-text={searchText}
   data-tags={tags.length > 0 ? JSON.stringify(tags) : undefined}
 >
@@ -76,14 +84,14 @@ const thumb = image ? coverThumb(image) : undefined;
       /* 链接只包标题（可访问名就是标题，不再把摘要/日期/时长都念出来），
         再用 ::after 铺满整卡保留「整卡可点」的命中区 */
     }
-    <h2 class="text-lg font-bold leading-snug text-deep-text">
+    <Heading class="text-lg font-bold leading-snug text-deep-text">
       <a
         href={href}
         class="no-underline transition-colors group-hover:text-primary after:absolute after:inset-0 after:content-['']"
       >
         {title}
       </a>
-    </h2>
+    </Heading>
 
     {desc && <p class="mt-2 text-note text-text-muted line-clamp-3">{desc}</p>}
 

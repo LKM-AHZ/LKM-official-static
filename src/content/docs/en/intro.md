@@ -2,6 +2,7 @@
 title: Welcome to Phientist
 description: Meet the Phientist community, its static website, and the paths to start reading and taking part
 publishDate: 2026-08-25
+image: /images/covers/intro.webp
 tags: [community, intro]
 ---
 

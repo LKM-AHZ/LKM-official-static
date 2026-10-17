@@ -2,6 +2,7 @@
 title: 欢迎来到理科迷
 description: 认识理科迷社区、它的静态官网，以及从这里开始阅读与参与的几条路径
 publishDate: 2026-08-25
+image: /images/covers/intro.webp
 tags: [社区, 介绍]
 ---
 

@@ -2,6 +2,7 @@
 title: Getting Started
 description: A quick tour of browsing, search, sharing, and feedback on the Phientist static site
 publishDate: 2026-08-20
+image: /images/covers/getting-started.webp
 tags: [guide, getting-started]
 ---
 

@@ -2,6 +2,7 @@
 title: 静态官网内容维护说明
 description: 双语内容、发布日期、事实修订与发布流程的维护约定
 publishDate: 2026-08-27
+image: /images/covers/announcement.webp
 tags: [公告, 维护]
 ---
 
