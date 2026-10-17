@@ -20,13 +20,17 @@
   import { onThemeChange } from "../lib/theme";
   import type { ThemeName } from "../lib/theme";
 
-  const canvas = document.getElementById("tech-canvas") as HTMLCanvasElement | null;
+  const canvas = document.getElementById(
+    "tech-canvas",
+  ) as HTMLCanvasElement | null;
   const ctx = canvas?.getContext("2d") ?? null;
 
   if (canvas && ctx) {
     const c = canvas;
     const g = ctx;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
 
     /** 调色板：连线整体收淡，让粒子退到正文之后；三团辉光叠加后与原来的两团等量 */
     function palette(theme: ThemeName) {

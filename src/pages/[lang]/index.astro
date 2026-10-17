@@ -16,33 +16,142 @@ export const getStaticPaths = getStaticPathsForLang;
 
 // 发展历程 · 时间线数据
 const timelineItems = [
-  { year: "2014.08.01", title: "可琪创立理科迷", description: "可琪创建了第一个群聊——〔理科迷宅基地〕，后几经更名，如〔理科α旗舰〕等。他是理科迷最初的创始人，社区现有的大部分框架与制度，都建立在他开创的基础之上。" },
-  { year: "2014 ~ 2016", title: "群组扩张，与百度贴吧建立联系", description: "理科迷群组进入快速扩张期，从百度物理吧、数学吧、化学吧等社区吸收大量成员，其中与物理吧的联系最为密切。群友涵盖理科生与竞赛生，早期管理员团队也由活跃群友中选拔组建。" },
-  { year: "2015 ~ 2016", title: "学科分群体系建立", description: "各学科分群陆续创立：数学（2015.12.22）、物理学、化学、生物学（2015.12.25），以及高中数学、物理、化学（2016.2.5），初中数学、生物（2016.2.4）。早期的学科分群体系初步成型。" },
-  { year: "2016", title: "兴趣群组持续扩展", description: "物理部落群（2016.4.2）、信息技术群（2016.2.5）、科技世界群（2016.2.15）、心理学群（2016.10.7）等兴趣群组相继建立，社群生态进一步丰富。" },
-  { year: "2017 ~ 2018", title: "网站规划与新闻社构想", description: "线上网站曾有过规划并短暂试运行，但未能正式搭建运营。同期设想的新闻社——用于发布科技资讯——也仅停留在纸面阶段，未最终落地。" },
-  { year: "2018", title: "创始人淡出，花花接续坚守", description: "可琪因学业原因逐渐淡出，理科迷随之陷入低迷。现任团队组长花花接替创始人职责，每年自费维持理科迷的 SVIP 及物理部落的日常运营。后来腾讯部落功能下架，所有帖子一夜间消失，公众号也随之停用。" },
-  { year: "2018.02", title: "七月团队早期架构建立", description: "七月团队·群务组（2018.2.19）与总务组（2018.2.21）相继成立，同期创办棋社、料理学、HIFI 等兴趣群。由可琪召集组建的早期管理团队，为后续的组织运转奠定了制度基础。" },
-  { year: "2019.08.15", title: "千寻入群，短暂回暖", description: "千寻加入理科迷群聊，原本沉寂已久的群聊开始重现活力。" },
-  { year: "2020", title: "再度沉寂：千寻备战中考", description: "千寻因年龄尚小、需全力备战中考，2020 年后逐渐淡出，群聊再度归于沉寂。理科迷历经聚散，一群人数跌落至仅 800 人。" },
-  { year: "2024.04.19", title: "群管理的呼唤，重建之心萌芽", description: "群管理再次找到千寻，诉说群人数已不足 800、社区沉寂已久。千寻内心开始动摇，重建理科迷的念头悄然萌芽。" },
-  { year: "2024.07.30", title: "下定决心，启动重建计划", description: "千寻正式下定决心重建并发展理科迷，开始向此前组织团队成员阐述视频宣传计划，为后续宣传攻势做铺垫。" },
-  { year: "2024.08.10", title: "官方宣传账号成立，首条视频走红", description: "理科迷官方宣传账号正式上线，首条视频获 7800+ 播放量，社区迅速恢复活跃，理科迷迎来新生。" },
-  { year: "2025.01.08", title: "官方群组重组", description: "重新组建理科迷官方群组，设立﹝理科迷·初中﹞与﹝理科迷·高中﹞两个分群，为不同学段的成员提供更精准的交流空间。" },
-  { year: "2025.04", title: "团队组建与官网建设", description: "开始吸纳组建新团队，重新建设官网，打造面向社区内部的实用型知识平台。" },
-  { year: "2025.04.02", title: "七月团队·活动策划部 成立", description: "组建﹝七月团队·活动策划部﹞，启动首次暑假活动策划。理科迷从线上交流走向有组织的活动运营，翻开新的一页。" },
-  { year: "2025.07 ~ 2025.08", title: "第一次暑假活动落地", description: "首次暑假活动雏形落地。虽在组织细节上仍存不足，人手亦有待扩充，但这是一次珍贵的尝试，为后续活动积累了宝贵经验。" },
-  { year: "2025.08.04", title: "网站遭删库，一切归零", description: "网站因意外被删库，所有数据丢失。这次事故让团队深刻认识到备份机制与运维规范的重要性，也成为后续重建的转折点。" },
-  { year: "2026.06", title: "涅槃重生：官网重建与第二次暑假筹备", description: "汲取删库教训，以更稳健的架构重建官网与文件库。同期启动第二次暑假活动策划，理科迷以全新的姿态再度启程。" },
+  {
+    year: "2014.08.01",
+    title: "可琪创立理科迷",
+    description:
+      "可琪创建了第一个群聊——〔理科迷宅基地〕，后几经更名，如〔理科α旗舰〕等。他是理科迷最初的创始人，社区现有的大部分框架与制度，都建立在他开创的基础之上。",
+  },
+  {
+    year: "2014 ~ 2016",
+    title: "群组扩张，与百度贴吧建立联系",
+    description:
+      "理科迷群组进入快速扩张期，从百度物理吧、数学吧、化学吧等社区吸收大量成员，其中与物理吧的联系最为密切。群友涵盖理科生与竞赛生，早期管理员团队也由活跃群友中选拔组建。",
+  },
+  {
+    year: "2015 ~ 2016",
+    title: "学科分群体系建立",
+    description:
+      "各学科分群陆续创立：数学（2015.12.22）、物理学、化学、生物学（2015.12.25），以及高中数学、物理、化学（2016.2.5），初中数学、生物（2016.2.4）。早期的学科分群体系初步成型。",
+  },
+  {
+    year: "2016",
+    title: "兴趣群组持续扩展",
+    description:
+      "物理部落群（2016.4.2）、信息技术群（2016.2.5）、科技世界群（2016.2.15）、心理学群（2016.10.7）等兴趣群组相继建立，社群生态进一步丰富。",
+  },
+  {
+    year: "2017 ~ 2018",
+    title: "网站规划与新闻社构想",
+    description:
+      "线上网站曾有过规划并短暂试运行，但未能正式搭建运营。同期设想的新闻社——用于发布科技资讯——也仅停留在纸面阶段，未最终落地。",
+  },
+  {
+    year: "2018",
+    title: "创始人淡出，花花接续坚守",
+    description:
+      "可琪因学业原因逐渐淡出，理科迷随之陷入低迷。现任团队组长花花接替创始人职责，每年自费维持理科迷的 SVIP 及物理部落的日常运营。后来腾讯部落功能下架，所有帖子一夜间消失，公众号也随之停用。",
+  },
+  {
+    year: "2018.02",
+    title: "七月团队早期架构建立",
+    description:
+      "七月团队·群务组（2018.2.19）与总务组（2018.2.21）相继成立，同期创办棋社、料理学、HIFI 等兴趣群。由可琪召集组建的早期管理团队，为后续的组织运转奠定了制度基础。",
+  },
+  {
+    year: "2019.08.15",
+    title: "千寻入群，短暂回暖",
+    description: "千寻加入理科迷群聊，原本沉寂已久的群聊开始重现活力。",
+  },
+  {
+    year: "2020",
+    title: "再度沉寂：千寻备战中考",
+    description:
+      "千寻因年龄尚小、需全力备战中考，2020 年后逐渐淡出，群聊再度归于沉寂。理科迷历经聚散，一群人数跌落至仅 800 人。",
+  },
+  {
+    year: "2024.04.19",
+    title: "群管理的呼唤，重建之心萌芽",
+    description:
+      "群管理再次找到千寻，诉说群人数已不足 800、社区沉寂已久。千寻内心开始动摇，重建理科迷的念头悄然萌芽。",
+  },
+  {
+    year: "2024.07.30",
+    title: "下定决心，启动重建计划",
+    description:
+      "千寻正式下定决心重建并发展理科迷，开始向此前组织团队成员阐述视频宣传计划，为后续宣传攻势做铺垫。",
+  },
+  {
+    year: "2024.08.10",
+    title: "官方宣传账号成立，首条视频走红",
+    description:
+      "理科迷官方宣传账号正式上线，首条视频获 7800+ 播放量，社区迅速恢复活跃，理科迷迎来新生。",
+  },
+  {
+    year: "2025.01.08",
+    title: "官方群组重组",
+    description:
+      "重新组建理科迷官方群组，设立﹝理科迷·初中﹞与﹝理科迷·高中﹞两个分群，为不同学段的成员提供更精准的交流空间。",
+  },
+  {
+    year: "2025.04",
+    title: "团队组建与官网建设",
+    description:
+      "开始吸纳组建新团队，重新建设官网，打造面向社区内部的实用型知识平台。",
+  },
+  {
+    year: "2025.04.02",
+    title: "七月团队·活动策划部 成立",
+    description:
+      "组建﹝七月团队·活动策划部﹞，启动首次暑假活动策划。理科迷从线上交流走向有组织的活动运营，翻开新的一页。",
+  },
+  {
+    year: "2025.07 ~ 2025.08",
+    title: "第一次暑假活动落地",
+    description:
+      "首次暑假活动雏形落地。虽在组织细节上仍存不足，人手亦有待扩充，但这是一次珍贵的尝试，为后续活动积累了宝贵经验。",
+  },
+  {
+    year: "2025.08.04",
+    title: "网站遭删库，一切归零",
+    description:
+      "网站因意外被删库，所有数据丢失。这次事故让团队深刻认识到备份机制与运维规范的重要性，也成为后续重建的转折点。",
+  },
+  {
+    year: "2026.06",
+    title: "涅槃重生：官网重建与第二次暑假筹备",
+    description:
+      "汲取删库教训，以更稳健的架构重建官网与文件库。同期启动第二次暑假活动策划，理科迷以全新的姿态再度启程。",
+  },
 ];
 
 // 团队成员
 const teamMembers = [
-  { name: "七月O", desc: "中国科学院国家天文台博士，引力波与黑洞物理方向", avatar: "/images/avatars/july-o.webp" },
-  { name: "七月花", desc: "一个有理想的博士，梦想：每个孩子都能接触科学", avatar: "/images/avatars/july-hua.webp" },
-  { name: "七月墨染", desc: "双非物理，卧薪尝胆三千日，大雪深埋终成金", avatar: "/images/avatars/july-moran.webp" },
-  { name: "七月郁离", desc: "群务组组长，群务无小事，用心皆风景", avatar: "/images/avatars/july-yuli.webp" },
-  { name: "七月有枝", desc: "前活动策划组组员，且停且忘且随风，且行且看且从容", avatar: "/images/avatars/july-youzhi.webp" },
+  {
+    name: "七月O",
+    desc: "中国科学院国家天文台博士，引力波与黑洞物理方向",
+    avatar: "/images/avatars/july-o.webp",
+  },
+  {
+    name: "七月花",
+    desc: "一个有理想的博士，梦想：每个孩子都能接触科学",
+    avatar: "/images/avatars/july-hua.webp",
+  },
+  {
+    name: "七月墨染",
+    desc: "双非物理，卧薪尝胆三千日，大雪深埋终成金",
+    avatar: "/images/avatars/july-moran.webp",
+  },
+  {
+    name: "七月郁离",
+    desc: "群务组组长，群务无小事，用心皆风景",
+    avatar: "/images/avatars/july-yuli.webp",
+  },
+  {
+    name: "七月有枝",
+    desc: "前活动策划组组员，且停且忘且随风，且行且看且从容",
+    avatar: "/images/avatars/july-youzhi.webp",
+  },
 ];
 
 // 推荐板块 4 卡
@@ -75,14 +184,37 @@ const exploreCards = [
 
 // 常见问题
 const faqItems = [
-  { title: "理科迷是什么？", description: "理科迷是一个由科技爱好者组成的社区，创立于 2014 年。我们打破专业门槛，让每一位热爱理性、崇尚科技的人都能在这里找到同频的伙伴，共同探索万物运转的奥秘。" },
-  { title: "如何加入理科迷？", description: "你可以通过理科迷官方 QQ 群组加入我们。目前设有初中群和高中群两个分群，还有完整的基础学科和应用学科群，对不同学段、不同专业的成员提供更精准的交流空间。具体群号请查看联系我们页面。" },
-  { title: "理科迷有哪些活动？", description: "理科迷定期举办假期活动、学科研讨会、科普内容创作等。七月团队·活动策划部负责统筹各项活动，欢迎关注官方宣传账号获取最新动态。" },
-  { title: "如何参与社区建设？", description: "理科迷是一个共建共享的社区。你可以加入管理团队（总务部、群务部、新闻办等），也可以加入项目团队（教材编写项目组、科普产出项目组等），也可以投稿作品文章、参加活动、帮忙宣传和推广。" },
-  { title: "理科迷有官网吗？", description: "是的。理科迷拥有官方网站，2026 年我们以更稳健的架构重建了官网，为你提供更好的在线体验。" },
-  { title: "有问题或建议怎么联系？", description: "欢迎通过联系我们页面提交你的想法或问题。也可以直接在 QQ 群内向管理团队反馈，我们会认真对待每一条建议。" },
+  {
+    title: "理科迷是什么？",
+    description:
+      "理科迷是一个由科技爱好者组成的社区，创立于 2014 年。我们打破专业门槛，让每一位热爱理性、崇尚科技的人都能在这里找到同频的伙伴，共同探索万物运转的奥秘。",
+  },
+  {
+    title: "如何加入理科迷？",
+    description:
+      "你可以通过理科迷官方 QQ 群组加入我们。目前设有初中群和高中群两个分群，还有完整的基础学科和应用学科群，对不同学段、不同专业的成员提供更精准的交流空间。具体群号请查看联系我们页面。",
+  },
+  {
+    title: "理科迷有哪些活动？",
+    description:
+      "理科迷定期举办假期活动、学科研讨会、科普内容创作等。七月团队·活动策划部负责统筹各项活动，欢迎关注官方宣传账号获取最新动态。",
+  },
+  {
+    title: "如何参与社区建设？",
+    description:
+      "理科迷是一个共建共享的社区。你可以加入管理团队（总务部、群务部、新闻办等），也可以加入项目团队（教材编写项目组、科普产出项目组等），也可以投稿作品文章、参加活动、帮忙宣传和推广。",
+  },
+  {
+    title: "理科迷有官网吗？",
+    description:
+      "是的。理科迷拥有官方网站，2026 年我们以更稳健的架构重建了官网，为你提供更好的在线体验。",
+  },
+  {
+    title: "有问题或建议怎么联系？",
+    description:
+      "欢迎通过联系我们页面提交你的想法或问题。也可以直接在 QQ 群内向管理团队反馈，我们会认真对待每一条建议。",
+  },
 ];
-
 
 // 最近更新：与 /news 索引页共用同一份过滤/排序（见 components/news/posts.ts），
 // 首页只取最新 6 篇。数据来自 content collection，不再在本文件里手工抄一份。
@@ -113,13 +245,18 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
         >
           {t(lang, "home.section_explore")}
         </h2>
-        <p class="mt-8 text-text-muted">{t(lang, "home.section_explore_sub")}</p>
+        <p class="mt-8 text-text-muted">
+          {t(lang, "home.section_explore_sub")}
+        </p>
       </div>
 
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {
           exploreCards.map((c) => (
-            <a href={langUrl(lang, c.href)} class="profile-card group no-underline">
+            <a
+              href={langUrl(lang, c.href)}
+              class="profile-card group no-underline"
+            >
               <div class="profile-inner flex flex-col items-center gap-2 p-5 text-center">
                 <span class="icon-bubble h-12 w-12" set:html={c.icon} />
                 <h3 class="font-semibold text-deep-text transition-colors group-hover:text-[var(--primary)]">
@@ -169,7 +306,9 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
           ))
         }
         <a href={langUrl(lang, "/team")} class="profile-card no-underline">
-          <div class="profile-inner flex min-h-full flex-col items-center justify-center gap-3 rounded-lg p-4 text-center sm:p-5">
+          <div
+            class="profile-inner flex min-h-full flex-col items-center justify-center gap-3 rounded-lg p-4 text-center sm:p-5"
+          >
             <span class="text-lg font-bold text-deep-text">
               {t(lang, "home.team_more")}
             </span>
@@ -260,7 +399,9 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
             </div>
           </div>
 
-          {/* 钟面为可视化索引，其交互（切换当前条目）已由下方上一/下一按钮提供键盘入口，故对辅助技术隐藏 */}
+          {
+            /* 钟面为可视化索引，其交互（切换当前条目）已由下方上一/下一按钮提供键盘入口，故对辅助技术隐藏 */
+          }
           <div class="ct-clock-col" data-ct-clock-col aria-hidden="true">
             <div class="clock-face">
               <div class="clock-pointer" data-ct-pointer>
@@ -339,7 +480,9 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
         </p>
       </div>
 
-      <div class="mx-auto grid max-w-4xl gap-8 gap-y-8 sm:grid-cols-2 md:gap-y-12">
+      <div
+        class="mx-auto grid max-w-4xl gap-8 gap-y-8 sm:grid-cols-2 md:gap-y-12"
+      >
         {
           faqItems.map((item) => (
             <div>
@@ -371,7 +514,13 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
       const clockCol = root.querySelector("[data-ct-clock-col]") as HTMLElement;
       const allPrevBtns = root.querySelectorAll("[data-ct-arrow='prev']");
       const allNextBtns = root.querySelectorAll("[data-ct-arrow='next']");
-      if (!track || !clockCol || allPrevBtns.length === 0 || allNextBtns.length === 0) return;
+      if (
+        !track ||
+        !clockCol ||
+        allPrevBtns.length === 0 ||
+        allNextBtns.length === 0
+      )
+        return;
 
       const cards = Array.from(track.querySelectorAll<HTMLElement>(".ct-card"));
       const total = cards.length;
@@ -385,26 +534,33 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
         const offset = cards[currentIndex].offsetTop - cards[0].offsetTop;
         track.style.transform = `translate3d(0, -${offset}px, 0)`;
         const pointer = clockCol.querySelector(".clock-pointer") as HTMLElement;
-        if (pointer) pointer.style.transform = `rotate(${currentIndex * angleStep}deg)`;
+        if (pointer)
+          pointer.style.transform = `rotate(${currentIndex * angleStep}deg)`;
         clockCol.querySelectorAll("[data-ct-tick]").forEach((el) => {
           const idx = parseInt(el.getAttribute("data-ct-tick") || "0");
           el.classList.toggle("clock-tick-active", idx === currentIndex);
         });
       }
 
-      allPrevBtns.forEach((btn) => btn.addEventListener("click", () => {
-        currentIndex = currentIndex <= 0 ? total - 1 : currentIndex - 1;
-        update();
-      }));
-      allNextBtns.forEach((btn) => btn.addEventListener("click", () => {
-        currentIndex = currentIndex >= total - 1 ? 0 : currentIndex + 1;
-        update();
-      }));
-      clockCol.querySelectorAll("[data-ct-tick]").forEach((tick) => tick.addEventListener("click", () => {
-        const idx = parseInt(tick.getAttribute("data-ct-tick") || "0");
-        currentIndex = idx;
-        update();
-      }));
+      allPrevBtns.forEach((btn) =>
+        btn.addEventListener("click", () => {
+          currentIndex = currentIndex <= 0 ? total - 1 : currentIndex - 1;
+          update();
+        }),
+      );
+      allNextBtns.forEach((btn) =>
+        btn.addEventListener("click", () => {
+          currentIndex = currentIndex >= total - 1 ? 0 : currentIndex + 1;
+          update();
+        }),
+      );
+      clockCol.querySelectorAll("[data-ct-tick]").forEach((tick) =>
+        tick.addEventListener("click", () => {
+          const idx = parseInt(tick.getAttribute("data-ct-tick") || "0");
+          currentIndex = idx;
+          update();
+        }),
+      );
 
       // 跨断点时卡片尺寸变化，按新尺寸重算偏移
       window.addEventListener("resize", update);

@@ -12,8 +12,10 @@ export const getStaticPaths = getStaticPathsForLang;
 const en = lang === "en";
 
 // 取双语文案（站名/简介多数没有现成中文译名，原文保留）
-const nameOf = (r: (typeof RESOURCE_SITES)[number]) => (en ? r.nameEn : r.nameZh);
-const descOf = (r: (typeof RESOURCE_SITES)[number]) => (en ? r.descEn : r.descZh);
+const nameOf = (r: (typeof RESOURCE_SITES)[number]) =>
+  en ? r.nameEn : r.nameZh;
+const descOf = (r: (typeof RESOURCE_SITES)[number]) =>
+  en ? r.descEn : r.descZh;
 // 目标 URL：/en 下若该站有英文(国际)入口则用之，否则回退默认 url
 // 数据契约允许「只有 alts 没有 url」，故再回退到首个备用入口，避免渲染出 href=undefined 的死卡片
 const urlOf = (r: (typeof RESOURCE_SITES)[number]) =>
@@ -28,7 +30,9 @@ const urlOf = (r: (typeof RESOURCE_SITES)[number]) =>
   <section class="section-padding">
     <div class="container-x">
       <header class="mb-14 text-center">
-        <h1 class="title-underline mb-0 font-heading text-3xl font-bold text-deep-text md:text-[40px]">
+        <h1
+          class="title-underline mb-0 font-heading text-3xl font-bold text-deep-text md:text-[40px]"
+        >
           {t(lang, "resources.page_title")}
         </h1>
         <p class="mx-auto mt-8 max-w-2xl text-text-muted">
@@ -37,89 +41,95 @@ const urlOf = (r: (typeof RESOURCE_SITES)[number]) =>
       </header>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {RESOURCE_SITES.map((site) =>
-          // 只要该站有备用入口就走镜像卡分支：数据契约允许省略 url（此时首入口回退 alts[0]），
-          // 若这里还要求 url 存在，仅缺 url 的条目会掉进普通卡分支、镜像永远不显示
-          site.alts && site.alts.length > 0 ? (
-            // 有备用/镜像入口的站点：首入口可点，另附镜像行
-            <div class="card-hover flex flex-col rounded-2xl p-5">
-              <div class="flex items-center gap-3">
-                <span
+        {
+          RESOURCE_SITES.map((site) =>
+            // 只要该站有备用入口就走镜像卡分支：数据契约允许省略 url（此时首入口回退 alts[0]），
+            // 若这里还要求 url 存在，仅缺 url 的条目会掉进普通卡分支、镜像永远不显示
+            site.alts && site.alts.length > 0 ? (
+              // 有备用/镜像入口的站点：首入口可点，另附镜像行
+              <div class="card-hover flex flex-col rounded-2xl p-5">
+                <div class="flex items-center gap-3">
+                  <span
+                    class:list={[
+                      "w-11 h-11 shrink-0 rounded-full flex items-center justify-center font-bold text-lg",
+                      site.advisory
+                        ? "bg-[color-mix(in_srgb,var(--warning)_14%,transparent)] text-[var(--warning)]"
+                        : "bg-primary/10 text-primary",
+                    ]}
+                  >
+                    {site.abbr}
+                  </span>
+                  <div class="min-w-0">
+                    <h3 class="font-semibold text-deep-text leading-tight">
+                      {nameOf(site)}
+                    </h3>
+                    <p class="text-xs text-text-muted mt-0.5">{descOf(site)}</p>
+                  </div>
+                </div>
+
+                {/* 按钮样式的整块可点：锚点自己承担 padding/背景/hover/焦点环，
+                  之前套在外层 span 上时填充区域点不动、焦点环也只圈住inline文字 */}
+                <a
+                  href={urlOf(site)}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   class:list={[
-                    "w-11 h-11 shrink-0 rounded-full flex items-center justify-center font-bold text-lg",
+                    "mt-4 block rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-colors",
                     site.advisory
-                      ? "bg-[color-mix(in_srgb,var(--warning)_14%,transparent)] text-[var(--warning)]"
-                      : "bg-primary/10 text-primary",
+                      ? "bg-[color-mix(in_srgb,var(--warning)_12%,transparent)] text-[var(--warning)] hover:bg-[color-mix(in_srgb,var(--warning)_20%,transparent)]"
+                      : "bg-primary/10 text-primary hover:bg-primary/20",
                   ]}
                 >
-                  {site.abbr}
-                </span>
-                <div class="min-w-0">
-                  <h3 class="font-semibold text-deep-text leading-tight">{nameOf(site)}</h3>
-                  <p class="text-xs text-text-muted mt-0.5">{descOf(site)}</p>
-                </div>
-              </div>
+                  {t(lang, "resources.go")}
+                </a>
 
-              {/* 按钮样式的整块可点：锚点自己承担 padding/背景/hover/焦点环，
-                  之前套在外层 span 上时填充区域点不动、焦点环也只圈住inline文字 */}
+                {site.alts.length > 0 && (
+                  <ul class="mt-3 space-y-1 border-t border-[var(--card-edge)] pt-3">
+                    {site.alts.map((alt) => (
+                      <li>
+                        <a
+                          href={alt.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          class="text-xs text-text-muted hover:text-primary underline decoration-dotted underline-offset-4"
+                        >
+                          {alt.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ) : (
+              // 普通站点：整卡可点
               <a
                 href={urlOf(site)}
                 target="_blank"
                 rel="noopener noreferrer"
-                class:list={[
-                  "mt-4 block rounded-lg px-4 py-2.5 text-sm font-medium text-center transition-colors",
-                  site.advisory
-                    ? "bg-[color-mix(in_srgb,var(--warning)_12%,transparent)] text-[var(--warning)] hover:bg-[color-mix(in_srgb,var(--warning)_20%,transparent)]"
-                    : "bg-primary/10 text-primary hover:bg-primary/20",
-                ]}
+                class="profile-card group"
               >
-                {t(lang, "resources.go")}
+                <div class="profile-inner p-5 flex flex-col items-center text-center gap-2">
+                  <span
+                    class:list={[
+                      "w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl",
+                      site.advisory
+                        ? "bg-[color-mix(in_srgb,var(--warning)_14%,transparent)] text-[var(--warning)]"
+                        : "bg-primary/10 text-primary",
+                    ]}
+                  >
+                    {site.abbr}
+                  </span>
+                  <h3 class="font-semibold text-deep-text group-hover:text-primary transition-colors">
+                    {nameOf(site)}
+                  </h3>
+                  <p class="text-xs text-text-muted max-w-[22rem]">
+                    {descOf(site)}
+                  </p>
+                </div>
               </a>
-
-              {site.alts.length > 0 && (
-                <ul class="mt-3 space-y-1 border-t border-[var(--card-edge)] pt-3">
-                  {site.alts.map((alt) => (
-                    <li>
-                      <a
-                        href={alt.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="text-xs text-text-muted hover:text-primary underline decoration-dotted underline-offset-4"
-                      >
-                        {alt.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ) : (
-            // 普通站点：整卡可点
-            <a
-              href={urlOf(site)}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="profile-card group"
-            >
-              <div class="profile-inner p-5 flex flex-col items-center text-center gap-2">
-                <span
-                  class:list={[
-                    "w-12 h-12 rounded-full flex items-center justify-center font-bold text-xl",
-                    site.advisory
-                      ? "bg-[color-mix(in_srgb,var(--warning)_14%,transparent)] text-[var(--warning)]"
-                      : "bg-primary/10 text-primary",
-                  ]}
-                >
-                  {site.abbr}
-                </span>
-                <h3 class="font-semibold text-deep-text group-hover:text-primary transition-colors">
-                  {nameOf(site)}
-                </h3>
-                <p class="text-xs text-text-muted max-w-[22rem]">{descOf(site)}</p>
-              </div>
-            </a>
-          ),
-        )}
+            ),
+          )
+        }
       </div>
 
       <p class="mt-10 text-center text-sm text-text-muted">

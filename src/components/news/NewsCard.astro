@@ -21,8 +21,17 @@ interface Props {
   searchText?: string;
 }
 
-const { lang, href, title, desc, date, minutes, tags = [], image, searchText } =
-  Astro.props;
+const {
+  lang,
+  href,
+  title,
+  desc,
+  date,
+  minutes,
+  tags = [],
+  image,
+  searchText,
+} = Astro.props;
 const dateLabel = formatDate(date, lang);
 const minutesLabel = lang === "en" ? `${minutes} min read` : `${minutes} 分钟`;
 const gradient = coverGradient(title);
@@ -35,28 +44,34 @@ const thumb = image ? coverThumb(image) : undefined;
   data-search-text={searchText}
   data-tags={tags.length > 0 ? JSON.stringify(tags) : undefined}
 >
-  {/* 渐变始终铺在底层：图片加载中或失败时露出的都是与文章标题对应的色块，
-      而不是空白或破图图标 */}
+  {
+    /* 渐变始终铺在底层：图片加载中或失败时露出的都是与文章标题对应的色块，
+      而不是空白或破图图标 */
+  }
   <div
     class="relative h-40 w-full shrink-0 overflow-hidden md:h-44"
     style={{ background: gradient }}
   >
-    {image ? (
-      <CoverImage
-        src={image}
-        thumb={thumb}
-        alt={title}
-        width={1200}
-        height={650}
-        sizes="(min-width: 1024px) 373px, (min-width: 640px) 45vw, calc(100vw - 2rem)"
-        class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-      />
-    ) : undefined}
+    {
+      image ? (
+        <CoverImage
+          src={image}
+          thumb={thumb}
+          alt={title}
+          width={1200}
+          height={650}
+          sizes="(min-width: 1024px) 373px, (min-width: 640px) 45vw, calc(100vw - 2rem)"
+          class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+      ) : undefined
+    }
   </div>
 
   <div class="flex flex-1 flex-col p-6 pt-5">
-    {/* 链接只包标题（可访问名就是标题，不再把摘要/日期/时长都念出来），
-        再用 ::after 铺满整卡保留「整卡可点」的命中区 */}
+    {
+      /* 链接只包标题（可访问名就是标题，不再把摘要/日期/时长都念出来），
+        再用 ::after 铺满整卡保留「整卡可点」的命中区 */
+    }
     <h2 class="text-lg font-bold leading-snug text-deep-text">
       <a
         href={href}
@@ -66,7 +81,13 @@ const thumb = image ? coverThumb(image) : undefined;
       </a>
     </h2>
 
-    {desc && <p class="mt-2 text-sm leading-relaxed text-text-muted line-clamp-3">{desc}</p>}
+    {
+      desc && (
+        <p class="mt-2 text-sm leading-relaxed text-text-muted line-clamp-3">
+          {desc}
+        </p>
+      )
+    }
 
     {
       tags.length > 0 && (
@@ -82,7 +103,7 @@ const thumb = image ? coverThumb(image) : undefined;
 
     <div class="mt-auto flex items-center gap-3 pt-5 text-xs text-text-muted">
       <time datetime={date.toISOString().slice(0, 10)}>{dateLabel}</time>
-      <span class="h-1 w-1 rounded-full bg-surface-3" />
+      <span class="h-1 w-1 rounded-full bg-surface-3"></span>
       <span>{minutesLabel}</span>
     </div>
   </div>

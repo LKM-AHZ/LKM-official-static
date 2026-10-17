@@ -36,30 +36,92 @@ const valueItems = [
   },
 ];
 const en = lang === "en";
-const itemTitle = (c: (typeof valueItems)[number]) => (en ? c.title.en : c.title.zh);
-const itemDesc = (c: (typeof valueItems)[number]) => (en ? c.desc.en : c.desc.zh);
+const itemTitle = (c: (typeof valueItems)[number]) =>
+  en ? c.title.en : c.title.zh;
+const itemDesc = (c: (typeof valueItems)[number]) =>
+  en ? c.desc.en : c.desc.zh;
 
 // 「我们的服务」下设三个板块（原 /services 数据随页并入本页，文案沿用服务页）
 const contentItems = [
-  { icon: "news", title: "科技新闻", desc: "追踪全球科技前沿动态，用通俗易懂的语言解读最新科学发现与技术突破，让你第一时间掌握科技脉搏。" },
-  { icon: "atom", title: "学科科普", desc: "覆盖数学、物理、化学、生物、信息技术等核心学科，从基础概念到前沿理论，循序渐进带你进入科学的世界。" },
-  { icon: "video", title: "视频创作", desc: "通过B站等视频平台发布教学、科普视频，以及硬核优质内容，以生动直观的方式展现科学与技术知识点，让抽象的公理和理论变得眼见为实。" },
-  { icon: "helpCircle", title: "相关帮助", desc: "我们会提供不限于学习、竞赛、专业、考试、技能和方向等等具有实质性并且最新的建议，打破参考和意见，打破信息差。" },
-  { icon: "fileText", title: "专题深度", desc: "针对热门科学话题推出系列专题文章，深入浅出地剖析背后的科学原理，培养批判性思维和科学素养。" },
-  { icon: "trophy", title: "知识竞赛", desc: "定期举办线上学科知识竞赛，寓教于乐，激发学习兴趣，在轻松的氛围中检验和巩固所学知识。" },
-  { icon: "books", title: "资源分享", desc: "整理和分享优质学习资料、书籍推荐、在线课程等学习资源，帮助社区成员找到最适合自己的学习路径。" },
-  { icon: "book", title: "科技期刊", desc: "在未来我们会组建期刊项目组，给大家呈现一年或半年内，社区共建共享所产出的实质性内容和成果，如优秀的文章、科普、创作作品等等。" },
-  { icon: "language", title: "中外交流", desc: "在未来我们会组建翻译组，传播和搬运中外优质的科技论文、文章、讲解和讲课视频，做到双向的输入输出。" },
+  {
+    icon: "news",
+    title: "科技新闻",
+    desc: "追踪全球科技前沿动态，用通俗易懂的语言解读最新科学发现与技术突破，让你第一时间掌握科技脉搏。",
+  },
+  {
+    icon: "atom",
+    title: "学科科普",
+    desc: "覆盖数学、物理、化学、生物、信息技术等核心学科，从基础概念到前沿理论，循序渐进带你进入科学的世界。",
+  },
+  {
+    icon: "video",
+    title: "视频创作",
+    desc: "通过B站等视频平台发布教学、科普视频，以及硬核优质内容，以生动直观的方式展现科学与技术知识点，让抽象的公理和理论变得眼见为实。",
+  },
+  {
+    icon: "helpCircle",
+    title: "相关帮助",
+    desc: "我们会提供不限于学习、竞赛、专业、考试、技能和方向等等具有实质性并且最新的建议，打破参考和意见，打破信息差。",
+  },
+  {
+    icon: "fileText",
+    title: "专题深度",
+    desc: "针对热门科学话题推出系列专题文章，深入浅出地剖析背后的科学原理，培养批判性思维和科学素养。",
+  },
+  {
+    icon: "trophy",
+    title: "知识竞赛",
+    desc: "定期举办线上学科知识竞赛，寓教于乐，激发学习兴趣，在轻松的氛围中检验和巩固所学知识。",
+  },
+  {
+    icon: "books",
+    title: "资源分享",
+    desc: "整理和分享优质学习资料、书籍推荐、在线课程等学习资源，帮助社区成员找到最适合自己的学习路径。",
+  },
+  {
+    icon: "book",
+    title: "科技期刊",
+    desc: "在未来我们会组建期刊项目组，给大家呈现一年或半年内，社区共建共享所产出的实质性内容和成果，如优秀的文章、科普、创作作品等等。",
+  },
+  {
+    icon: "language",
+    title: "中外交流",
+    desc: "在未来我们会组建翻译组，传播和搬运中外优质的科技论文、文章、讲解和讲课视频，做到双向的输入输出。",
+  },
 ];
 const eventItems = [
-  { icon: "sun", title: "假期活动", desc: "一年一度的寒暑假主题活动，由七月团队·活动策划部统筹组织。汇集线上讲座、学科研讨、趣味竞赛等多种形式，是社区每年最大的盛事。" },
-  { icon: "presentation", title: "学科研讨会", desc: "由专业委员会委员和各学科爱好者共同参与，定期举办专题研讨，针对特定科学话题展开深入讨论与交流。" },
-  { icon: "messages", title: "社群交流", desc: "我们设有不同年级阶段、职业相关交流群，以及各学科方向分群，为不同阶段和类型的成员提供精准高效的交流空间。" },
-  { icon: "brandYoutube", title: "宣传推广", desc: "通过官方宣传账号在 B 站等平台持续输出，扩大社区影响力，吸引更多热爱科技的伙伴加入我们。" },
+  {
+    icon: "sun",
+    title: "假期活动",
+    desc: "一年一度的寒暑假主题活动，由七月团队·活动策划部统筹组织。汇集线上讲座、学科研讨、趣味竞赛等多种形式，是社区每年最大的盛事。",
+  },
+  {
+    icon: "presentation",
+    title: "学科研讨会",
+    desc: "由专业委员会委员和各学科爱好者共同参与，定期举办专题研讨，针对特定科学话题展开深入讨论与交流。",
+  },
+  {
+    icon: "messages",
+    title: "社群交流",
+    desc: "我们设有不同年级阶段、职业相关交流群，以及各学科方向分群，为不同阶段和类型的成员提供精准高效的交流空间。",
+  },
+  {
+    icon: "brandYoutube",
+    title: "宣传推广",
+    desc: "通过官方宣传账号在 B 站等平台持续输出，扩大社区影响力，吸引更多热爱科技的伙伴加入我们。",
+  },
 ];
 const platformItems = [
-  { icon: "worldWww", title: "官方网站", desc: "理科迷的线上门户，集成社区介绍、团队展示、博客文章、文档资源等功能，是我们面向公众的第一窗口。" },
-  { icon: "fileText", title: "博客系统", desc: "支持 Markdown 和 MDX 格式的文章发布，分类与标签过滤、阅读时间估算、RSS 订阅等功能一应俱全。" },
+  {
+    icon: "worldWww",
+    title: "官方网站",
+    desc: "理科迷的线上门户，集成社区介绍、团队展示、博客文章、文档资源等功能，是我们面向公众的第一窗口。",
+  },
+  {
+    icon: "fileText",
+    title: "博客系统",
+    desc: "支持 Markdown 和 MDX 格式的文章发布，分类与标签过滤、阅读时间估算、RSS 订阅等功能一应俱全。",
+  },
 ];
 ---
 
@@ -69,9 +131,21 @@ const platformItems = [
   currentPath="/about"
   ownHeading
   sidebarItems={[
-    { text: t(lang, "services.sidebar_content"), href: "#content", icon: "pencil" },
-    { text: t(lang, "services.sidebar_events"), href: "#events", icon: "confetti" },
-    { text: t(lang, "services.sidebar_platform"), href: "#platform", icon: "database" },
+    {
+      text: t(lang, "services.sidebar_content"),
+      href: "#content",
+      icon: "pencil",
+    },
+    {
+      text: t(lang, "services.sidebar_events"),
+      href: "#events",
+      icon: "confetti",
+    },
+    {
+      text: t(lang, "services.sidebar_platform"),
+      href: "#platform",
+      icon: "database",
+    },
   ]}
 >
   {/* HeroText */}
@@ -98,22 +172,30 @@ const platformItems = [
   <section id="values" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
+        <h2
+          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+        >
           {t(lang, "about.values_title")}
         </h2>
         <p class="mt-8 text-[17px] text-text-muted">
           {t(lang, "about.values_subtitle")}
         </p>
       </div>
-      <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3"
+      >
         {
           valueItems.map((c) => (
             <div class="card-hover flex flex-col rounded-2xl p-6">
               <div class="flex justify-center">
                 <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
               </div>
-              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">{itemTitle(c)}</h3>
-              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">{itemDesc(c)}</p>
+              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+                {itemTitle(c)}
+              </h3>
+              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
+                {itemDesc(c)}
+              </p>
             </div>
           ))
         }
@@ -125,21 +207,33 @@ const platformItems = [
   <section id="content" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
+        <h2
+          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+        >
           {t(lang, "services.section_content")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">{t(lang, "services.section_content_sub")}</p>
+        <p class="mt-8 text-[17px] text-text-muted">
+          {t(lang, "services.section_content_sub")}
+        </p>
       </div>
-      <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-        {contentItems.map((c) => (
-          <div class="card-hover flex flex-col rounded-2xl p-6">
-            <div class="flex justify-center">
-              <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
+      <div
+        class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {
+          contentItems.map((c) => (
+            <div class="card-hover flex flex-col rounded-2xl p-6">
+              <div class="flex justify-center">
+                <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
+              </div>
+              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+                {c.title}
+              </h3>
+              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
+                {c.desc}
+              </p>
             </div>
-            <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">{c.title}</h3>
-            <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">{c.desc}</p>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
@@ -148,21 +242,31 @@ const platformItems = [
   <section id="events" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
+        <h2
+          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+        >
           {t(lang, "services.section_events")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">{t(lang, "services.section_events_sub")}</p>
+        <p class="mt-8 text-[17px] text-text-muted">
+          {t(lang, "services.section_events_sub")}
+        </p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2">
-        {eventItems.map((c) => (
-          <div class="card-hover flex flex-col rounded-2xl p-6">
-            <div class="flex justify-center">
-              <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
+        {
+          eventItems.map((c) => (
+            <div class="card-hover flex flex-col rounded-2xl p-6">
+              <div class="flex justify-center">
+                <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
+              </div>
+              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+                {c.title}
+              </h3>
+              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
+                {c.desc}
+              </p>
             </div>
-            <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">{c.title}</h3>
-            <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">{c.desc}</p>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
@@ -171,21 +275,31 @@ const platformItems = [
   <section id="platform" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2 class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]">
+        <h2
+          class="title-underline font-heading text-3xl font-semibold tracking-[-0.005em] text-deep-text md:text-[40px]"
+        >
           {t(lang, "services.section_platform")}
         </h2>
-        <p class="mt-8 text-[17px] text-text-muted">{t(lang, "services.section_platform_sub")}</p>
+        <p class="mt-8 text-[17px] text-text-muted">
+          {t(lang, "services.section_platform_sub")}
+        </p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2">
-        {platformItems.map((c) => (
-          <div class="card-hover flex flex-col rounded-2xl p-6">
-            <div class="flex justify-center">
-              <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
+        {
+          platformItems.map((c) => (
+            <div class="card-hover flex flex-col rounded-2xl p-6">
+              <div class="flex justify-center">
+                <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
+              </div>
+              <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">
+                {c.title}
+              </h3>
+              <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">
+                {c.desc}
+              </p>
             </div>
-            <h3 class="text-[17px] font-semibold text-deep-text leading-snug text-center">{c.title}</h3>
-            <p class="mt-2 text-[14px] text-text-muted leading-relaxed text-center">{c.desc}</p>
-          </div>
-        ))}
+          ))
+        }
       </div>
     </div>
   </section>
@@ -195,15 +309,19 @@ const platformItems = [
     <div class="container-x">
       <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
         <div class="mb-0">
-          <h2 class="text-[40px] font-semibold tracking-[-0.005em] mb-3 font-heading">
+          <h2
+            class="text-[40px] font-semibold tracking-[-0.005em] mb-3 font-heading"
+          >
             {t(lang, "about.cta_welcome")}{t(lang, "about.cta_welcome_accent")}
           </h2>
           <p class="text-[17px] text-text-muted">
             {t(lang, "about.cta_body")}
           </p>
         </div>
-        {/* 单个 CTA：父容器已是 flex，去掉多余包裹层与 w-full/sm:mb-0/pointer-events-auto
-            这几个从别处带过来的死类 */}
+        {
+          /* 单个 CTA：父容器已是 flex，去掉多余包裹层与 w-full/sm:mb-0/pointer-events-auto
+            这几个从别处带过来的死类 */
+        }
         <div class="max-w-xs sm:max-w-md m-auto mt-6 flex justify-center">
           <a href="#content" class="btn btn-primary w-full sm:w-auto">
             {t(lang, "about.cta_services")}

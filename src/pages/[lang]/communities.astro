@@ -2,8 +2,14 @@
 import OfficialSidebarLayout from "../../layouts/OfficialSidebarLayout.astro";
 import CommunitySection from "../../components/CommunitySection.astro";
 import CommunityCard from "../../components/CommunityCard.astro";
-import { communityCategories as zhCat, communityNote as zhNote } from "../../data/communities";
-import { communityCategories as enCat, communityNote as enNote } from "../../data/en/communities";
+import {
+  communityCategories as zhCat,
+  communityNote as zhNote,
+} from "../../data/communities";
+import {
+  communityCategories as enCat,
+  communityNote as enNote,
+} from "../../data/en/communities";
 import { pickByLocale, t } from "../../i18n/index";
 import type { TranslationKey } from "../../i18n/index";
 
@@ -45,7 +51,11 @@ const sidebarItems = communityCategories.map((cat, i) => ({
 >
   {
     communityCategories.map((cat) => (
-      <CommunitySection id={cat.id} title={cat.label} intro={cat.intro || undefined}>
+      <CommunitySection
+        id={cat.id}
+        title={cat.label}
+        intro={cat.intro || undefined}
+      >
         {cat.groups.map((g) => (
           <CommunityCard
             name={g.name}

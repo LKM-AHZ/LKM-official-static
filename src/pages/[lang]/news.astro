@@ -40,34 +40,42 @@ const enEmpty = isEn && posts.length === 0;
           {t(lang, "news.title")}
         </h1>
         <p class="mx-auto mt-8 max-w-2xl text-[15px] text-text-muted">
-          {posts.length > 0
-            ? `${posts.length} ${isEn ? "articles" : "篇文章"} · ${t(lang, "news.subtitle")}`
-            : t(lang, "news.subtitle")}
+          {
+            posts.length > 0
+              ? `${posts.length} ${isEn ? "articles" : "篇文章"} · ${t(lang, "news.subtitle")}`
+              : t(lang, "news.subtitle")
+          }
         </p>
       </header>
 
-      {enEmpty && (
-        <div class="card-hover rounded-2xl px-6 py-12 text-center text-text-muted">
-          {isEn
-            ? "English translations are being prepared — check back soon."
-            : "暂无文章。"}
-        </div>
-      )}
+      {
+        enEmpty && (
+          <div class="card-hover rounded-2xl px-6 py-12 text-center text-text-muted">
+            {isEn
+              ? "English translations are being prepared — check back soon."
+              : "暂无文章。"}
+          </div>
+        )
+      }
 
-      {posts.length > 0 && (
-        <div class="mx-auto mb-10 w-full max-w-md">
-          <input
-            type="search"
-            data-news-search
-            aria-label={t(lang, "common.aria.search")}
-            placeholder={t(lang, "news.search_placeholder")}
-            class="w-full rounded-[var(--radius-field)] border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 py-2.5 text-sm text-base-content transition outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_25%,transparent)]"
-          />
-        </div>
-      )}
+      {
+        posts.length > 0 && (
+          <div class="mx-auto mb-10 w-full max-w-md">
+            <input
+              type="search"
+              data-news-search
+              aria-label={t(lang, "common.aria.search")}
+              placeholder={t(lang, "news.search_placeholder")}
+              class="w-full rounded-[var(--radius-field)] border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 py-2.5 text-sm text-base-content transition outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_25%,transparent)]"
+            />
+          </div>
+        )
+      }
 
-      {/* 标签筛选栏：全部 + 每个标签（附文章数）。默认「全部」选中，
-          点标签后与搜索框按 AND 共同过滤；选中态走 aria-pressed */}
+      {
+        /* 标签筛选栏：全部 + 每个标签（附文章数）。默认「全部」选中，
+          点标签后与搜索框按 AND 共同过滤；选中态走 aria-pressed */
+      }
       {
         tagCounts.length > 0 && (
           <div
@@ -99,39 +107,44 @@ const enEmpty = isEn && posts.length === 0;
         )
       }
 
-      {/* 命中数：与列表的显隐一起由脚本维护，模板经 data 属性下发（客户端脚本取不到 t()） */}
+      {
+        /* 命中数：与列表的显隐一起由脚本维护，模板经 data 属性下发（客户端脚本取不到 t()） */
+      }
       <p
         data-news-count
         data-count-template={t(lang, "news.search_count")}
         hidden
         aria-live="polite"
         class="mb-6 text-center text-sm text-text-muted"
-      ></p>
+      >
+      </p>
 
-      {posts.length > 0 && (
-        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-news-list>
-          {posts.map((doc) => {
-            const slug = postSlug(doc);
-            return (
-              <NewsCard
-                lang={isEn ? "en" : "zh"}
-                href={langUrl(lang, `/docs/${slug}`)}
-                title={doc.data.title}
-                desc={doc.data.description}
-                date={doc.data.publishDate}
-                minutes={readingMinutes(doc.body ?? "")}
-                tags={doc.data.tags ?? []}
-                image={doc.data.image}
-                searchText={buildSearchText([
-                  doc.data.title,
-                  doc.data.description,
-                  ...(doc.data.tags ?? []),
-                ])}
-              />
-            );
-          })}
-        </div>
-      )}
+      {
+        posts.length > 0 && (
+          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-news-list>
+            {posts.map((doc) => {
+              const slug = postSlug(doc);
+              return (
+                <NewsCard
+                  lang={isEn ? "en" : "zh"}
+                  href={langUrl(lang, `/docs/${slug}`)}
+                  title={doc.data.title}
+                  desc={doc.data.description}
+                  date={doc.data.publishDate}
+                  minutes={readingMinutes(doc.body ?? "")}
+                  tags={doc.data.tags ?? []}
+                  image={doc.data.image}
+                  searchText={buildSearchText([
+                    doc.data.title,
+                    doc.data.description,
+                    ...(doc.data.tags ?? []),
+                  ])}
+                />
+              );
+            })}
+          </div>
+        )
+      }
 
       <p
         data-news-empty
@@ -164,7 +177,10 @@ const enEmpty = isEn && posts.length === 0;
     // 初始标签来自 URL（详情页点标签跳过来时带着 ?tag=）。
     // 只认筛选栏里存在的标签，链接过期/手改 URL 时按「全部」处理，避免整页空结果。
     let activeTag = pickTagFromSearch(location.search);
-    if (activeTag && !tagButtons.some((b) => b.dataset.tagFilter === activeTag)) {
+    if (
+      activeTag &&
+      !tagButtons.some((b) => b.dataset.tagFilter === activeTag)
+    ) {
       activeTag = "";
     }
 

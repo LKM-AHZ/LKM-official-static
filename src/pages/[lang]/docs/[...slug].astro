@@ -98,8 +98,10 @@ const nextHref = docLink(next);
   >
     <div class="min-w-0">
       <article class="article-prose">
-        {/* 文章顶部配图。渐变始终铺底：无 image 时它本身就是占位封面，
-            有 image 时则在图片加载中/失败后接管，不会露出空白 */}
+        {
+          /* 文章顶部配图。渐变始终铺底：无 image 时它本身就是占位封面，
+            有 image 时则在图片加载中/失败后接管，不会露出空白 */
+        }
         <div
           class="relative mb-8 aspect-[16/7] w-full overflow-hidden rounded-2xl border border-[var(--card-edge)]"
           style={{ background: coverGradient(doc.data.title) }}
@@ -141,8 +143,10 @@ const nextHref = docLink(next);
             <span class="h-1 w-1 rounded-full bg-[var(--surface-3)]"></span>
             <span>{metaMinutes}</span>
           </div>
-          {/* 标签：新闻类做成链接跳回 /news 并带上 ?tag= 自动筛选；
-              非新闻文档不在 /news 列表里，渲染为不可点的 chip，避免死链 */}
+          {
+            /* 标签：新闻类做成链接跳回 /news 并带上 ?tag= 自动筛选；
+              非新闻文档不在 /news 列表里，渲染为不可点的 chip，避免死链 */
+          }
           {
             doc.data.tags && doc.data.tags.length > 0 && (
               <div class="mt-4 flex flex-wrap items-center gap-2">

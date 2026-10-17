@@ -140,8 +140,12 @@ const closeLabel = t(lang, "common.aria.close");
   const lightbox = document.querySelector<HTMLDialogElement>(
     "[data-gallery-lightbox]",
   );
-  const dataEl = document.querySelector<HTMLScriptElement>("[data-gallery-data]");
-  const triggers = document.querySelectorAll<HTMLElement>("[data-gallery-item]");
+  const dataEl = document.querySelector<HTMLScriptElement>(
+    "[data-gallery-data]",
+  );
+  const triggers = document.querySelectorAll<HTMLElement>(
+    "[data-gallery-item]",
+  );
 
   if (lightbox && dataEl && triggers.length > 0) {
     const dialog = lightbox;
@@ -157,12 +161,16 @@ const closeLabel = t(lang, "common.aria.close");
     } catch {
       items = [];
     }
-    const image = dialog.querySelector<HTMLImageElement>("[data-gallery-image]");
+    const image = dialog.querySelector<HTMLImageElement>(
+      "[data-gallery-image]",
+    );
     const titleEl = dialog.querySelector<HTMLElement>("[data-gallery-title]");
     const captionEl = dialog.querySelector<HTMLElement>(
       "[data-gallery-caption]",
     );
-    const linkEl = dialog.querySelector<HTMLAnchorElement>("[data-gallery-link]");
+    const linkEl = dialog.querySelector<HTMLAnchorElement>(
+      "[data-gallery-link]",
+    );
     let index = 0;
 
     function render(): void {

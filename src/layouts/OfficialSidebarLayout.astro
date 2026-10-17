@@ -40,8 +40,10 @@ const {
   currentPath={currentPath}
 >
   <div class="min-h-screen">
-    {/* 无侧栏项时整块侧栏（含主内容偏移）都不渲染：空 <nav> 既是无意义的
-        地标，也会白占 240px 版面（en 阶段一分类为空即此情形）。 */}
+    {
+      /* 无侧栏项时整块侧栏（含主内容偏移）都不渲染：空 <nav> 既是无意义的
+        地标，也会白占 240px 版面（en 阶段一分类为空即此情形）。 */
+    }
     {
       sidebarItems.length > 0 && (
         <nav
