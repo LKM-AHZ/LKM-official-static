@@ -168,15 +168,26 @@ html:lang(en) {
   --radius-selector: 0.375rem;
 
   /* ---------- 科技感外壳（供 tech.css 消费） ---------- */
-  /* 底色只留一层竖向渐变：原先两团角部光斑是按 body 尺寸定位的，长页面上会被
-     摊成一片没有形状的淡色。光晕改由 canvas 统一承担（固定在视口、随滚动在
-     纵向迁移），背景因此只剩「底色 + 网格 + 侧辉光 + 暗角/噪点 + 粒子」五层，
-     不再有两套互相打架的光源。 */
-  --body-bg: linear-gradient(180deg, #f3f9ff 0%, #e6f1fd 46%, #dcebfb 100%);
+  /* 背景分五层：固定视口的极光光场、蓝图网格、侧辉光、暗角/噪点、canvas 粒子。
+     极光用 fixed 伪元素而非 body 背景，长页面不会被竖向摊成一片没有形状的淡色。 */
+  --body-bg: linear-gradient(
+    180deg,
+    #f7fbff 0%,
+    #eaf4ff 38%,
+    #e0effd 72%,
+    #d8e9fb 100%
+  );
   --html-bg: #e6f1fd;
   --grid-line: rgba(30, 80, 150, 0.06);
+  --grid-dot: rgba(30, 80, 150, 0.11);
   --grid-opacity: 0.3;
   --side-glow: rgba(10, 111, 194, 0.045);
+  /* 极光色场：透明度已经很低，作为底色上的一层气氛，不抢正文 */
+  --aurora-a: rgba(56, 189, 248, 0.16);
+  --aurora-b: rgba(129, 140, 248, 0.12);
+  --aurora-c: rgba(255, 255, 255, 0.34);
+  --aurora-bottom: rgba(79, 158, 255, 0.12);
+  --aurora-opacity: 0.72;
   /* 四角压暗的强度，与细噪点的叠加透明度 */
   --vignette: rgba(16, 35, 61, 0.1);
   --noise-opacity: 0.022;
@@ -253,23 +264,32 @@ html:lang(en) {
 
   --hero-text-shadow: 0 4px 18px rgba(255, 255, 255, 0.55);
   --hero-overlay:
+    radial-gradient(
+      ellipse 44% 26% at 50% 38%,
+      rgba(255, 255, 255, 0.32),
+      transparent 72%
+    ),
     linear-gradient(
       115deg,
-      rgba(150, 200, 248, 0.32),
-      rgba(238, 245, 253, 0.12) 42%,
-      rgba(140, 195, 245, 0.26)
+      rgba(150, 200, 248, 0.24),
+      rgba(238, 245, 253, 0.06) 42%,
+      rgba(140, 195, 245, 0.18)
     ),
     radial-gradient(
       circle at 12% 50%,
-      rgba(91, 184, 255, 0.14),
+      rgba(91, 184, 255, 0.16),
       transparent 30%
     ),
     radial-gradient(
       circle at 82% 48%,
-      rgba(127, 212, 255, 0.12),
+      rgba(127, 212, 255, 0.14),
       transparent 28%
     ),
-    linear-gradient(135deg, rgba(241, 246, 252, 0.5), rgba(226, 235, 246, 0.3));
+    linear-gradient(
+      135deg,
+      rgba(241, 246, 252, 0.38),
+      rgba(226, 235, 246, 0.22)
+    );
   --hero-fade: linear-gradient(
     180deg,
     rgba(255, 255, 255, 0.3),
@@ -375,13 +395,19 @@ html:lang(en) {
   --toc-item-active: #9fd4ff;
 
   /* ---------- 科技感外壳 ---------- */
-  --body-bg: linear-gradient(180deg, #050a14 0%, #081120 46%, #04080f 100%);
+  --body-bg: linear-gradient(180deg, #050a14 0%, #07101f 42%, #040a14 100%);
   --html-bg: #050a14;
-  --grid-line: rgba(159, 212, 255, 0.042);
-  --grid-opacity: 0.13;
+  --grid-line: rgba(159, 212, 255, 0.05);
+  --grid-dot: rgba(159, 212, 255, 0.075);
+  --grid-opacity: 0.14;
   --side-glow: rgba(79, 158, 255, 0.05);
-  --vignette: rgba(0, 0, 0, 0.4);
-  --noise-opacity: 0.035;
+  --aurora-a: rgba(34, 211, 238, 0.1);
+  --aurora-b: rgba(99, 102, 241, 0.12);
+  --aurora-c: rgba(127, 212, 255, 0.07);
+  --aurora-bottom: rgba(79, 158, 255, 0.08);
+  --aurora-opacity: 0.7;
+  --vignette: rgba(0, 0, 0, 0.42);
+  --noise-opacity: 0.032;
 
   --card-bg-grad: linear-gradient(
     145deg,
@@ -453,11 +479,16 @@ html:lang(en) {
 
   --hero-text-shadow: 0 10px 30px rgba(0, 0, 0, 0.34);
   --hero-overlay:
+    radial-gradient(
+      ellipse 55% 48% at 50% 45%,
+      rgba(127, 212, 255, 0.14),
+      transparent 66%
+    ),
     linear-gradient(
       115deg,
-      rgba(40, 110, 210, 0.4),
-      rgba(13, 18, 34, 0.55) 42%,
-      rgba(90, 170, 255, 0.32)
+      rgba(40, 110, 210, 0.36),
+      rgba(13, 18, 34, 0.5) 42%,
+      rgba(90, 170, 255, 0.28)
     ),
     radial-gradient(
       circle at 12% 50%,
@@ -469,7 +500,7 @@ html:lang(en) {
       rgba(127, 212, 255, 0.16),
       transparent 28%
     ),
-    linear-gradient(135deg, rgba(6, 9, 18, 0.92), rgba(10, 14, 24, 0.72));
+    linear-gradient(135deg, rgba(6, 9, 18, 0.9), rgba(10, 14, 24, 0.68));
   --hero-fade: linear-gradient(
     180deg,
     rgba(4, 8, 16, 0.35),

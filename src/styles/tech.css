@@ -59,7 +59,8 @@
     overflow-x: hidden;
   }
 
-  /* 细网格层：简朴、低存在感；向内容列聚拢，四周渐隐以免整屏均匀铺满 */
+  /* 蓝图网格层：16px 点阵 + 64px 细线。点阵给近处一点质感，细线负责空间感；
+     向内容列聚拢，四周渐隐以免整屏均匀铺满。 */
   body.tech-theme::before {
     content: "";
     position: fixed;
@@ -68,10 +69,19 @@
     z-index: 0;
     opacity: var(--grid-opacity);
     background-image:
+      radial-gradient(circle, var(--grid-dot) 1px, transparent 1.6px),
       linear-gradient(var(--grid-line) 1px, transparent 1px),
       linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-    background-size: 64px 64px;
+    background-size:
+      16px 16px,
+      64px 64px,
+      64px 64px;
     mask-image: radial-gradient(
+      ellipse 88% 72% at 50% 38%,
+      black 18%,
+      transparent 100%
+    );
+    -webkit-mask-image: radial-gradient(
       ellipse 88% 72% at 50% 38%,
       black 18%,
       transparent 100%
@@ -79,36 +89,63 @@
     transition: opacity 400ms ease;
   }
 
-  /* 两侧辉光：透明度随整页滚动进度提升，往下滚时两侧的光渐渐显出来 */
+  /* 极光光场：固定视口的大尺度径向色团，透明度随整页滚动略微增强。
+     与 canvas 的呼吸辉光叠加，但色相更偏青/靛，负责长页面的空间层次，
+     而不是在 body 上铺一张会被页面高度拉长的渐变。 */
   body.tech-theme::after {
     content: "";
     position: fixed;
     inset: 0;
     pointer-events: none;
     z-index: 0;
-    background: linear-gradient(
-      90deg,
-      var(--side-glow),
-      transparent 32%,
-      transparent 68%,
-      var(--side-glow)
-    );
-    opacity: calc(0.09 + var(--scroll-progress, 0) * 0.15);
+    background:
+      radial-gradient(
+        ellipse 58% 46% at 8% -6%,
+        var(--aurora-a),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 52% 42% at 96% 10%,
+        var(--aurora-b),
+        transparent 70%
+      ),
+      radial-gradient(
+        ellipse 64% 36% at 50% -12%,
+        var(--aurora-c),
+        transparent 72%
+      ),
+      radial-gradient(
+        ellipse 86% 48% at 50% 108%,
+        var(--aurora-bottom),
+        transparent 72%
+      );
+    opacity: calc(var(--aurora-opacity) + var(--scroll-progress, 0) * 0.12);
   }
 
-  /* 暗角 + 细噪点：前者把视线收拢到中间的内容列，后者抹掉大面积渐变上的色带。
-     两层都不需要 mask，合并成一个层，少一次全屏合成。 */
+  /* 暗角 + 侧辉光 + 细噪点：暗角把视线收拢到中间的内容列，侧辉光给两侧留一点
+     空气感，噪点抹掉大面积渐变上的色带。 */
   .bg-overlay {
     position: fixed;
     inset: 0;
     pointer-events: none;
     /* 与 #tech-canvas 同层、DOM 靠后：压暗四角时把粒子一起收进去 */
     z-index: 1;
-    background: radial-gradient(
-      ellipse 116% 90% at 50% 42%,
-      transparent 54%,
-      var(--vignette) 100%
-    );
+    background:
+      radial-gradient(
+        ellipse 38% 62% at 0% 42%,
+        var(--side-glow),
+        transparent 72%
+      ),
+      radial-gradient(
+        ellipse 38% 62% at 100% 42%,
+        var(--side-glow),
+        transparent 72%
+      ),
+      radial-gradient(
+        ellipse 116% 90% at 50% 42%,
+        transparent 54%,
+        var(--vignette) 100%
+      );
   }
 
   .bg-overlay::after {
