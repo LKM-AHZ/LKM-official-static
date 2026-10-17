@@ -337,7 +337,7 @@
 
   /* 顶栏宽度为 90vw，导航文字间距随它连续变化；极端宽度下保留舒适上下限。 */
   .nav-links {
-    gap: clamp(0.75rem, 1.26vw, 1.5rem);
+    gap: clamp(0.5rem, 1.26vw, 1.5rem);
   }
   .nav-link {
     white-space: nowrap;

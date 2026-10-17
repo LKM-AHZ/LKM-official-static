@@ -7,6 +7,7 @@ export const en = {
   "common.nav_about": "About",
   "common.nav_services": "Services",
   "common.nav_team": "Team",
+  "common.nav_products": "Products",
   "common.nav_articles": "Articles",
   "common.nav_resources": "Resources",
   "common.nav_communities": "Community",
@@ -42,6 +43,8 @@ export const en = {
     "Phientist — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
   "seo.news":
     "Official announcements, tech news, guides, and documentation from Phientist.",
+  "seo.products":
+    "Phientist products, projects, and studios — what we build and what each one does.",
   "seo.team":
     "Meet the Phientist management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
   "seo.communities":
@@ -185,6 +188,25 @@ export const en = {
   "news.guides_title": "Guides & Docs",
   "news.guides_subtitle":
     "Getting started, community introduction, and maintenance notes",
+  "products.title": "Products & Projects",
+  "products.subtitle":
+    "The projects, products, and studios we build — and what each one does.",
+  "products.filter_aria": "Filter by category",
+  "products.all": "All",
+  "products.showing": "Showing {n} items",
+  "products.empty": "Nothing in this category.",
+  "products.type_product": "Product",
+  "products.type_project": "Project",
+  "products.type_studio": "Studio",
+  "products.status_live": "Live",
+  "products.status_ongoing": "Ongoing",
+  "products.status_recruiting": "Recruiting",
+  "products.status_preparing": "Preparing",
+  "products.features_title": "What it does",
+  "products.view": "Learn more",
+  "products.cta_title": "Have a product idea or a project to build together?",
+  "products.cta_body": "Join the community and talk with the relevant studio.",
+  "products.cta_button": "Join Community",
   "services.sidebar_content": "Content",
   "services.sidebar_events": "Community Events",
   "services.sidebar_platform": "Knowledge Platform",

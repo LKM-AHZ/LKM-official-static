@@ -21,6 +21,7 @@ const navLinks: { href: string; key: TranslationKey }[] = [
   { href: "/news", key: "common.nav_articles" },
   { href: "/about", key: "common.nav_about" },
   { href: "/team", key: "common.nav_team" },
+  { href: "/products", key: "common.nav_products" },
   { href: "/resources", key: "common.nav_resources" },
 ];
 
@@ -76,7 +77,7 @@ const brandLabel = lang === "en" ? "PHIENTIST" : t(lang, "common.brand");
             <a
               href={langUrl(lang, l.href)}
               class:list={[
-                "nav-link group relative rounded-xl px-2 py-2 text-[15px] font-medium no-underline transition-colors xl:px-3",
+                "nav-link group relative rounded-xl px-1.5 py-2 text-[14px] font-medium no-underline transition-colors xl:px-3 xl:text-[15px]",
                 isActive(l.href)
                   ? "is-active text-[var(--primary)]"
                   : "text-text-muted hover:text-deep-text",
