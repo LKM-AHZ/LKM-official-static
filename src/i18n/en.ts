@@ -70,6 +70,10 @@ export const en = {
     "Here, science and technology step out of the ivory tower and become a curiosity that everyone can spark and ask about the world. We break down professional barriers so every lover of reason and technology can find like-minded peers and explore how everything works.",
   "home.cta_communities": "Explore Community",
   "home.cta_about": "Get Help",
+  "home.join_title": "Welcome to Phientist",
+  "home.join_body":
+    "Whether you want to learn, create, or join our team, Phientist welcomes you.",
+  "home.join_cta": "Explore Community",
   "home.section_resources": "Extended Resource Sites",
   "home.resources_sub":
     "A curated collection of academic institutions, research tools, and literature sites (still in progress)",
@@ -152,12 +156,6 @@ export const en = {
   "about.team_more": "More Members",
   "about.timeline_title": "Timeline",
   "about.timeline_subtitle": "Seasons change, and so do we.",
-  "about.cta_welcome": "Welcome to ",
-  "about.cta_welcome_accent": "Phientist",
-  "about.cta_body":
-    "Whether you want to learn, create, or join our team, Phientist welcomes you.",
-  "about.cta_services": "Learn About Services",
-  "about.cta_communities": "Explore Community",
   "about.communities_title": "QQ Community",
   "about.communities_subtitle":
     "Find the group that fits your stage, subject, and interests.",

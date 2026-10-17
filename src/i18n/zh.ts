@@ -61,6 +61,10 @@ export const zh = {
     '在这里，科学与技术都脱离了学术象牙塔的刻板与遥远，变成每一位都能够去迸发、对于世界发问的好奇心。触手可及，摆脱功利视角，让更多人迸发对于知识的渴望，感受到理工科的美。我们打破专业门槛，让每一位热爱理性，崇尚科技的"爱好者"，也都能在这里找到同频的伙伴，共探万物运转的奥秘。',
   "home.cta_communities": "社区简介",
   "home.cta_about": "寻求帮助",
+  "home.join_title": "欢迎加入理科迷",
+  "home.join_body":
+    "无论你是想学习交流、参与创作，还是加入我们的团队，理科迷都欢迎你。",
+  "home.join_cta": "查看社群",
   "home.section_resources": "延伸资源网站",
   "home.resources_sub": "学术机构、科研工具、文献站点汇总（目前正在完善中）",
   "home.resources_btn": "前往资源页",
@@ -141,12 +145,6 @@ export const zh = {
   "about.team_more": "更多成员",
   "about.timeline_title": "发展历程",
   "about.timeline_subtitle": "物换星移，春秋代序。",
-  "about.cta_welcome": "欢迎加入",
-  "about.cta_welcome_accent": "理科迷",
-  "about.cta_body":
-    "无论你是想学习交流、参与创作，还是加入我们的团队，理科迷都欢迎你。",
-  "about.cta_services": "了解服务",
-  "about.cta_communities": "查看社群",
   "about.communities_title": "QQ 社群",
   "about.communities_subtitle": "按年级、学科与兴趣，加入适合自己的群组。",
   "communities.title": "QQ社群 —— 理科迷",

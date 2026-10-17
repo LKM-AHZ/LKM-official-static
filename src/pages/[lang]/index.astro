@@ -432,6 +432,27 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
       </div>
     </div>
   </section>
+
+  {/* ===== 加入理科迷 ===== */}
+  <section class="section-padding">
+    <div class="container-x">
+      <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
+        <h2 class="text-section font-semibold mb-3 font-heading">
+          {t(lang, "home.join_title")}
+        </h2>
+        <p class="text-body text-text-muted">{t(lang, "home.join_body")}</p>
+        <div class="max-w-xs sm:max-w-md m-auto mt-6 flex justify-center">
+          <a
+            href={langUrl(lang, "/about#communities")}
+            class="btn btn-primary w-full sm:w-auto"
+          >
+            {t(lang, "home.join_cta")}
+            <Icon name="arrowRight" class="w-5 h-5 inline-block" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 </OfficialLayout>
 
 <script>

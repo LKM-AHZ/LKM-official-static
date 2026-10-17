@@ -34,17 +34,8 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      // 跳转桩不进 sitemap：根路径 / 是 Astro 生成的跳转页（自带 noindex），
-      // /*/services/ 与 /*/communities/ 也是 noindex 的旧链路跳转页，让搜索引擎
-      // 抓取它们没有意义
-      filter: (page) => {
-        const { pathname } = new URL(page);
-        return (
-          pathname !== "/" &&
-          !pathname.endsWith("/services/") &&
-          !pathname.endsWith("/communities/")
-        );
-      },
+      // 根路径 / 是 Astro 生成的跳转页（自带 noindex），不需要进 sitemap
+      filter: (page) => new URL(page).pathname !== "/",
       // 激活 @astrojs/sitemap 内置 i18n alternate(hreflang) 生成:
       // 为每个 URL 输出指向同页另一语言的 <xhtml:link rel="alternate" hreflang>,
       // zh 条目指向 en(hreflang="en"), en 条目指向 zh(hreflang="zh")。

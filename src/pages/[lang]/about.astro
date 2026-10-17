@@ -378,30 +378,4 @@ const sidebarItems = [
   <div class="container-x pb-8">
     <p class="text-center text-sm italic text-text-muted">{communityNote}</p>
   </div>
-
-  {/* ===== 行动号召 ===== */}
-  <section class="section-padding">
-    <div class="container-x">
-      <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
-        <div class="mb-0">
-          <h2 class="text-section font-semibold mb-3 font-heading">
-            {t(lang, "about.cta_welcome")}{t(lang, "about.cta_welcome_accent")}
-          </h2>
-          <p class="text-body text-text-muted">
-            {t(lang, "about.cta_body")}
-          </p>
-        </div>
-        {
-          /* 单个 CTA：父容器已是 flex，去掉多余包裹层与 w-full/sm:mb-0/pointer-events-auto
-            这几个从别处带过来的死类 */
-        }
-        <div class="max-w-xs sm:max-w-md m-auto mt-6 flex justify-center">
-          <a href="#communities" class="btn btn-primary w-full sm:w-auto">
-            {t(lang, "about.cta_communities")}
-            <Icon name="arrowRight" class="w-5 h-5 inline-block" />
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
 </OfficialSidebarLayout>
