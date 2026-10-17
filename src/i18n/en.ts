@@ -21,7 +21,6 @@ export const en = {
   "common.footer.timeline": "Timeline",
   "common.footer.qq_groups": "QQ Groups",
   "common.footer.support_us": "Support Us",
-  "common.footer.contact": "Contact",
   "common.footer.faq": "FAQ",
   "common.footer.privacy": "Privacy Policy",
   "common.footer.terms": "Terms of Use",
@@ -49,8 +48,6 @@ export const en = {
     "Browse Phientist's QQ communities: general group, grade and subject groups, interest clubs and recurring events.",
   "seo.about":
     "About Phientist: a science & technology enthusiast community founded in 2014, breaking down professional barriers so science is within everyone's reach.",
-  "seo.contact":
-    "Contact Phientist: join the community, propose collaborations, report issues, or reach us directly.",
   "seo.pricing":
     "Support Phientist: a non-profit science & technology community — many ways to take part.",
   "seo.resources":
@@ -220,25 +217,12 @@ export const en = {
   "pricing.cta_title": "Ready to make a difference for Phientist?",
   "pricing.cta_body":
     "Join our community and, together with like-minded friends, help tech reach further.",
-  "pricing.cta_contact": "Contact Us",
-  "contact.title": "Contact Us",
-  "contact.hero_title": "We'd love to hear from you!",
-  "contact.section_message": "Leave us a message",
-  "contact.section_message_sub":
-    "If you'd like to join Phientist, offer suggestions, or propose a collaboration, please reach us via the form below. You can also check the FAQ — the answer may already be there.",
-  "contact.label_name": "Your name",
-  "contact.label_email": "Email",
-  "contact.label_message": "Message",
-  "contact.consent_text":
-    "By submitting this form, you agree to let us collect your personal information to reply to you.",
-  "contact.submit": "Send Message",
-  "contact.reply_note": "We usually reply to messages within 24 hours.",
-  "contact.section_contact": "Contact Us",
+  "pricing.cta_communities": "Join Community",
   "privacy.title": "Privacy Policy",
   // 与 zh.ts 的 privacy.updated 是同一件事，务必成对更新
-  "privacy.updated": "Last updated: September 19, 2026",
+  "privacy.updated": "Last updated: October 17, 2026",
   "terms.title": "Terms of Service",
-  "terms.updated": "Last updated: September 19, 2026",
+  "terms.updated": "Last updated: October 17, 2026",
   "notfound.title": "Page not found",
   "notfound.message": "The page you are looking for does not exist.",
   "notfound.back": "Back to home",

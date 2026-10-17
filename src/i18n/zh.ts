@@ -19,7 +19,6 @@ export const zh = {
   "common.footer.timeline": "发展历程",
   "common.footer.qq_groups": "QQ社群",
   "common.footer.support_us": "支持我们",
-  "common.footer.contact": "联系我们",
   "common.footer.faq": "常见问题",
   "common.footer.privacy": "隐私政策",
   "common.footer.terms": "使用条款",
@@ -46,7 +45,6 @@ export const zh = {
     "理科迷 QQ 社群总览：爱好者总群、年级与学科分群、兴趣社团与常驻活动。",
   "seo.about":
     "了解理科迷：创立于 2014 年的科技爱好者社区，我们打破专业门槛，让科学回归每一个人。",
-  "seo.contact": "联系理科迷：加入社区、合作建议、问题反馈与官方联系方式。",
   "seo.pricing": "支持理科迷：非营利科技爱好者社区，欢迎以多种方式参与共建。",
   "seo.resources": "理科迷整理的延伸资源入口：学术机构、科研工具与文献站点。",
   "seo.projects": "理科迷项目大厅：社区孵化与共创项目一览。",
@@ -203,26 +201,13 @@ export const zh = {
   "pricing.cta_title": "准备好为理科迷贡献一份力量了？",
   "pricing.cta_body":
     "加入我们的社区，与志同道合的伙伴一起，让科技传播走得更远。",
-  "pricing.cta_contact": "联系我们",
-  "contact.title": "联系我们",
-  "contact.hero_title": "期待听到你的声音！",
-  "contact.section_message": "给我们留言",
-  "contact.section_message_sub":
-    "如果你想加入理科迷、提出建议或合作意向，欢迎通过下方表单联系我们。也可以先看看常见问题，也许已经有了你想要的答案。",
-  "contact.label_name": "你的名字",
-  "contact.label_email": "电子邮箱",
-  "contact.label_message": "留言内容",
-  "contact.consent_text":
-    "提交此表单即表示你同意我们收集你的个人信息用于联系回复。",
-  "contact.submit": "发送留言",
-  "contact.reply_note": "我们通常会在 24 小时内回复你的留言。",
-  "contact.section_contact": "联系我们",
+  "pricing.cta_communities": "加入社群",
   "privacy.title": "隐私政策",
   // 法务页的「最后更新」：改 privacy/terms 正文时必须同时改 zh 与 en 两份（含日期格式差异），
   // 页面不会自动跟随文件修改时间
-  "privacy.updated": "最后更新：2026年9月19日",
+  "privacy.updated": "最后更新：2026年10月17日",
   "terms.title": "服务条款",
-  "terms.updated": "最后更新：2026年9月19日",
+  "terms.updated": "最后更新：2026年10月17日",
   "notfound.title": "页面未找到",
   "notfound.message": "你访问的页面不存在。",
   "notfound.back": "返回首页",
