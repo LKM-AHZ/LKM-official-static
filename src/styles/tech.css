@@ -8,7 +8,10 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    background: var(--html-bg);
+    /* 根元素背景会被传播到 canvas：渐变因此固定在视口，不会像 body 背景那样
+       随页面高度被拉伸（团队页很长，之前会在同一屏位置显得更浅）。 */
+    background-color: var(--html-bg);
+    background-image: var(--body-bg);
     /* 原生滚动条替代 OverlayScrollbars */
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-bg) transparent;
@@ -48,15 +51,19 @@
     margin: 0;
     min-height: 100vh;
     color: var(--base-content);
-    /* 不再用 background-attachment: fixed：iOS Safari 本就不支持（会退化成滚动），
-       桌面端也会为整屏背景付出滚动重绘代价；钉住视口的层次由 ::before（网格）、
-       ::after（侧辉光）与 .bg-overlay（暗角/噪点）这些 fixed 层承担。 */
-    background: var(--body-bg);
-    /* --body-bg 是渐变层（background-image），无法插值，主题切换时整块切换；
-       能平滑过渡的只有文字色。原先这里还挂着 background-color 的 500ms 过渡，
-       但 background 简写已把它压成 transparent，永远不会触发，故只留 color */
+    /* 底色渐变已移到 html（固定在 canvas 上）；body 保持透明，只承载 fixed 的
+       网格/极光/暗角与 canvas 粒子层。 */
+    background: transparent;
     transition: color 400ms ease;
     overflow-x: hidden;
+  }
+
+  /* 有页内侧栏时，把背景的视觉中心从视口中心挪到主内容区中心：
+     否则固定侧栏会盖住极光/网格最亮的部分，左栏和右侧内容看起来像两张背景。
+     --sidebar-w 由 CommunitySidebar.module.css 在 :root 上声明；:has 不支持的
+     浏览器会回落到默认的 50%，不影响可用性。 */
+  body.tech-theme:has([data-page-sidebar]) {
+    --bg-focus-x: calc(50% + var(--sidebar-w, 240px) / 2);
   }
 
   /* 蓝图网格层：16px 点阵 + 64px 细线。点阵给近处一点质感，细线负责空间感；
@@ -77,12 +84,12 @@
       64px 64px,
       64px 64px;
     mask-image: radial-gradient(
-      ellipse 88% 72% at 50% 38%,
+      ellipse 88% 72% at var(--bg-focus-x, 50%) 38%,
       black 18%,
       transparent 100%
     );
     -webkit-mask-image: radial-gradient(
-      ellipse 88% 72% at 50% 38%,
+      ellipse 88% 72% at var(--bg-focus-x, 50%) 38%,
       black 18%,
       transparent 100%
     );
@@ -110,12 +117,12 @@
         transparent 70%
       ),
       radial-gradient(
-        ellipse 64% 36% at 50% -12%,
+        ellipse 64% 36% at var(--bg-focus-x, 50%) -12%,
         var(--aurora-c),
         transparent 72%
       ),
       radial-gradient(
-        ellipse 86% 48% at 50% 108%,
+        ellipse 86% 48% at var(--bg-focus-x, 50%) 108%,
         var(--aurora-bottom),
         transparent 72%
       );
@@ -142,7 +149,7 @@
         transparent 72%
       ),
       radial-gradient(
-        ellipse 116% 90% at 50% 42%,
+        ellipse 116% 90% at var(--bg-focus-x, 50%) 42%,
         transparent 54%,
         var(--vignette) 100%
       );

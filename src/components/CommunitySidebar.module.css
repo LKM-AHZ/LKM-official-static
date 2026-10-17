@@ -13,7 +13,7 @@
 }
 
 /* 容器定位：不铺自己的底色/圆角/阴影，直接透出 body 的固定背景层
-   （渐变 + 网格 + 辉光），与页面共用同一背景，只靠右缘一条竖线区分。 */
+   （渐变 + 网格 + 辉光），与页面共用同一背景，只靠右缘一条渐隐竖线区分。 */
 .shell {
   position: fixed;
   top: var(--nav-h);
@@ -23,13 +23,29 @@
   height: calc(100dvh - var(--nav-h));
   width: var(--sidebar-w);
   background: transparent;
-  border-right: 1px solid var(--nav-edge);
   z-index: 10;
   padding-left: 8px;
   overflow: hidden;
-  transition:
-    width 0.3s,
-    border-color 0.4s;
+  transition: width 0.3s;
+}
+
+/* 原先整条 border-right 在浅色页面上像一条硬分界线，把同一张背景切成两半；
+   改成上下渐隐的 1px 竖线，侧栏与主内容仍可区分，但不再有「两块背景」的错觉。 */
+.shell::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--nav-edge) 10%,
+    var(--nav-edge) 78%,
+    transparent
+  );
+  pointer-events: none;
 }
 
 :global(html.sidebar-collapsed) .shell {
