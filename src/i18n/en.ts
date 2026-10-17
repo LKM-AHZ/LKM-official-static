@@ -22,6 +22,7 @@ export const en = {
   "common.footer.timeline": "Timeline",
   "common.footer.qq_groups": "QQ Groups",
   "common.footer.support_us": "Support Us",
+  "common.footer.contact": "Contact",
   "common.footer.faq": "FAQ",
   "common.footer.privacy": "Privacy Policy",
   "common.footer.terms": "Terms of Use",
@@ -55,8 +56,6 @@ export const en = {
     "Support Phientist: a non-profit science & technology community — many ways to take part.",
   "seo.resources":
     "Curated external resources from Phientist: academic institutes, research tools and literature sites.",
-  "seo.projects":
-    "Phientist Project Hub: incubated and co-created community projects.",
   "seo.privacy":
     "Phientist static website privacy policy: local theme preferences, hosting logs, and external contact channels.",
   "seo.terms":
@@ -74,6 +73,17 @@ export const en = {
   "home.join_body":
     "Whether you want to learn, create, or join our team, Phientist welcomes you.",
   "home.join_cta": "Explore Community",
+  "home.future_title": "Our Future Outlook",
+  "home.future_body":
+    "We plan to launch animated shorts, narrated stories, and themed merchandise. Our goal is to become a more influential independent content platform where every explorer can find their own kind of fun.",
+  "home.future_cta": "Join our community",
+  "home.contact_title": "Contact Us",
+  "home.contact_card_title": "Join our big family",
+  "home.contact_website_label": "Official website",
+  "home.contact_note":
+    "The site is updated continuously; you can also reach us through the community or email.",
+  "home.contact_qq": "QQ Community",
+  "home.contact_email": "Email",
   "home.section_resources": "Extended Resource Sites",
   "home.resources_sub":
     "A curated collection of academic institutions, research tools, and literature sites (still in progress)",
@@ -219,13 +229,6 @@ export const en = {
   "services.section_platform": "Knowledge Platform",
   "services.section_platform_sub":
     "Phientist is building a knowledge-management platform for its members, supporting learning and collaboration.",
-  "projects.title": "Project Hub",
-  "projects.pinned": "Pinned",
-  "projects.incubated": "Incubated",
-  "projects.progress": "Progress",
-  "projects.role_missing": "Wanted:",
-  "projects.status_recruiting": "Recruiting",
-  "projects.status_showcase": "Showcase",
   "pricing.title": "Support Us",
   "pricing.hero_title": "Helping tech reach further",
   "pricing.hero_paragraph":

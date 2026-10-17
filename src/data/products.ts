@@ -303,8 +303,6 @@ export const products: ProductItem[] = [
         "Content editing and proofreading",
       ],
     },
-    href: "/projects",
-    linkLabel: { zh: "项目大厅", en: "Project board" },
   },
   {
     id: "quantum-simulator",
@@ -325,8 +323,6 @@ export const products: ProductItem[] = [
         "Teaching examples and docs",
       ],
     },
-    href: "/projects",
-    linkLabel: { zh: "项目大厅", en: "Project board" },
   },
   {
     id: "astro-visualization",
@@ -347,8 +343,6 @@ export const products: ProductItem[] = [
         "Explanatory copy and publishing",
       ],
     },
-    href: "/projects",
-    linkLabel: { zh: "项目大厅", en: "Project board" },
   },
   {
     id: "tech-committee",

@@ -20,6 +20,7 @@ export const zh = {
   "common.footer.timeline": "发展历程",
   "common.footer.qq_groups": "QQ社群",
   "common.footer.support_us": "支持我们",
+  "common.footer.contact": "联系我们",
   "common.footer.faq": "常见问题",
   "common.footer.privacy": "隐私政策",
   "common.footer.terms": "使用条款",
@@ -49,7 +50,6 @@ export const zh = {
     "了解理科迷：创立于 2014 年的科技爱好者社区，我们打破专业门槛，让科学回归每一个人。",
   "seo.pricing": "支持理科迷：非营利科技爱好者社区，欢迎以多种方式参与共建。",
   "seo.resources": "理科迷整理的延伸资源入口：学术机构、科研工具与文献站点。",
-  "seo.projects": "理科迷项目大厅：社区孵化与共创项目一览。",
   "seo.privacy":
     "理科迷静态官网隐私政策：了解本地主题偏好、托管日志与外部联系渠道的信息处理方式。",
   "seo.terms": "理科迷静态官网服务条款：使用本站内容与外部链接前请阅读。",
@@ -65,6 +65,16 @@ export const zh = {
   "home.join_body":
     "无论你是想学习交流、参与创作，还是加入我们的团队，理科迷都欢迎你。",
   "home.join_cta": "查看社群",
+  "home.future_title": "我们的未来展望",
+  "home.future_body":
+    "计划推出动画短片、配音故事，并探索主题周边。希望成为更有影响力的非官方内容平台，让每位参与者都能找到属于自己的乐趣。",
+  "home.future_cta": "加入我们的社区",
+  "home.contact_title": "联系我们",
+  "home.contact_card_title": "加入我们的大家庭",
+  "home.contact_website_label": "官方网站",
+  "home.contact_note": "官网持续更新中；也欢迎通过社群或邮件找到我们。",
+  "home.contact_qq": "QQ 社群",
+  "home.contact_email": "邮箱",
   "home.section_resources": "延伸资源网站",
   "home.resources_sub": "学术机构、科研工具、文献站点汇总（目前正在完善中）",
   "home.resources_btn": "前往资源页",
@@ -203,13 +213,6 @@ export const zh = {
   "services.section_platform": "知识平台",
   "services.section_platform_sub":
     "理科迷正在建设面向社区成员的知识管理平台，助力学习与协作。",
-  "projects.title": "项目大厅",
-  "projects.pinned": "置顶",
-  "projects.incubated": "七月孵化",
-  "projects.progress": "进度",
-  "projects.role_missing": "缺",
-  "projects.status_recruiting": "招募中",
-  "projects.status_showcase": "成果展示",
   "pricing.title": "赞助与支持",
   "pricing.hero_title": "让科技传播走得更远",
   "pricing.hero_paragraph":
