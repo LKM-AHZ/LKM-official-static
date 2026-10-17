@@ -7,6 +7,10 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 # 全部源码与配置(src 内含 components/content/data/layouts/pages/styles)
 COPY src/ ./src/
+# public/ 由 Astro 原样复制进 dist（头像、文章封面、logo、robots.txt 都在这里）。
+# 漏掉这一行会让镜像里的站点只剩 HTML/CSS，所有本地图片 404——这类缺失在
+# CI 的 pnpm build 里看不出来，因为 CI 是整仓 checkout，public/ 一直都在。
+COPY public/ ./public/
 COPY astro.config.ts tsconfig.json ./
 RUN corepack enable && pnpm install --frozen-lockfile && pnpm run build
 

@@ -131,6 +131,10 @@ git pull
 cd deploy && docker compose up -d --build static     # 只重建静态站；证书卷不受影响
 ```
 
+> 头像、文章封面、logo 等都在 `public/`，由构建阶段复制进镜像；更新后必须带 `--build`，
+> 只 `restart` 不会更新这些文件。可用 `docker compose exec static ls /usr/share/nginx/html/images/covers`
+> 确认封面已进镜像。页面图片大面积 404 时先查这里。
+
 ## 九、注意事项
 
 - **不要用 `docker compose down -v`**：`-v` 会删除 `certbot_conf` / `certbot_www` 两个卷，

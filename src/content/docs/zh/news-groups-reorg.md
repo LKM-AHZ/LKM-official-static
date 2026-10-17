@@ -3,7 +3,7 @@ title: 官方群组重组完成
 description: 设立初中与高中两个分群，为不同学段成员提供更精准的交流空间。
 publishDate: 2025-12-20
 category: news
-image: https://picsum.photos/seed/lkm-groups-reorg/1200/650
+image: /images/covers/lkm-groups-reorg.webp
 tags: [群组, 公告]
 lang: zh
 ---

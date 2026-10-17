@@ -3,7 +3,7 @@ title: 七月团队·活动策划部 成立
 description: 启动首次暑假活动策划，翻开社区活动运营新的一页。
 publishDate: 2025-04-02
 category: news
-image: https://picsum.photos/seed/lkm-team-activity/1200/650
+image: /images/covers/lkm-team-activity.webp
 tags: [团队, 活动]
 lang: zh
 ---

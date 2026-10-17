@@ -3,7 +3,7 @@ title: 第二次暑假活动开始筹备
 description: 活动策划部已启动新一轮活动策划，敬请期待。
 publishDate: 2026-06-15
 category: news
-image: https://picsum.photos/seed/lkm-summer-event/1200/650
+image: /images/covers/lkm-summer-event.webp
 tags: [活动, 暑期]
 lang: zh
 ---

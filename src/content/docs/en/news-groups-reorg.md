@@ -3,7 +3,7 @@ title: Official Groups Reorganized
 description: New separate groups for middle and high school members.
 publishDate: 2025-12-20
 category: news
-image: https://picsum.photos/seed/lkm-groups-reorg/1200/650
+image: /images/covers/lkm-groups-reorg.webp
 tags: [groups, announcement]
 lang: en
 ---

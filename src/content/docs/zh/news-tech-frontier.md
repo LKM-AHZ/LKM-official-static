@@ -3,7 +3,7 @@ title: 栏目「科技前沿」上线
 description: 聚焦前沿科学与技术，分享值得关注的科技资讯与思考。
 publishDate: 2025-01-08
 category: news
-image: https://picsum.photos/seed/lkm-tech-frontier/1200/650
+image: /images/covers/lkm-tech-frontier.webp
 tags: [栏目, 科普]
 lang: zh
 ---

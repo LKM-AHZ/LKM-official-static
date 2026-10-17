@@ -3,7 +3,7 @@ title: Preparing the Second Summer Event
 description: The event-planning office has kicked off a fresh round of planning.
 publishDate: 2026-06-15
 category: news
-image: https://picsum.photos/seed/lkm-summer-event/1200/650
+image: /images/covers/lkm-summer-event.webp
 tags: [event, summer]
 lang: en
 ---

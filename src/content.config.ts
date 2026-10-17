@@ -13,8 +13,16 @@ const docs = defineCollection({
     // 或拼错的分类变成构建期报错，而不是文章被悄悄漏掉
     category: z.enum(["news"]).optional(),
     tags: z.array(z.string()).optional(),
-    // 文章配图（外部图源 URL；用于列表封面色卡与详情页 hero。）
-    image: z.string().url().optional(),
+    // 文章配图：站内绝对路径（/images/covers/<slug>.webp）或外部 http(s) URL。
+    // 站内图随构建产物一起部署，加载不受第三方图床的 302/限流/网络影响；
+    // 外部 URL 仅作兼容，新增内容应优先使用站内封面。
+    image: z
+      .string()
+      .refine(
+        (value) => value.startsWith("/") || /^https?:\/\//i.test(value),
+        "image 必须是以 / 开头的站内路径或 http(s) URL",
+      )
+      .optional(),
     // 可选：仅作兜底标识。实际语言由 collection entry 的路径前缀 (<lang>/) 推导，故不再
     // 补默认值 "zh"（否则 en 目录下漏写 lang 的条目会被当成中文），并用枚举让 lang: EN
     // 这类写法直接构建失败。

@@ -3,7 +3,7 @@ title: One Year After the Rebuild
 description: From data loss to a fresh start — a look back at the past year.
 publishDate: 2025-08-04
 category: news
-image: https://picsum.photos/seed/lkm-anniversary/1200/650
+image: /images/covers/lkm-anniversary.webp
 tags: [anniversary, community]
 lang: en
 ---

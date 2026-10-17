@@ -3,6 +3,7 @@
 // 组件层不关心数据来自哪里，后续接入真实影像只需替换这里的数据来源。
 import { formatDate } from "../components/news/format";
 import { docHref } from "../i18n/paths";
+import { coverThumb } from "../lib/images";
 
 export interface GalleryItem {
   /** 列表缩略图 */
@@ -45,7 +46,8 @@ export function buildGalleryItems(
       .map((doc) => {
         const src = doc.data.image as string;
         return {
-          src,
+          // 网格只拉 800w 缩略图，灯箱再按需加载 1200w 原图
+          src: coverThumb(src),
           full: src,
           title: doc.data.title,
           caption: formatDate(doc.data.publishDate, lang),

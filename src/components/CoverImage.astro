@@ -1,0 +1,60 @@
+---
+/**
+ * 带降级路径的封面图。
+ *
+ * 加载策略：
+ * - `thumb` 提供同源 800w 缩略图时输出 `srcset`，由浏览器按 `sizes` 选择；
+ *   列表页在 1x/2x 下都不会去拉 1200w 主图。
+ * - 缩略图 404/损坏时先回退到主图；主图也失败才隐藏 img，露出父容器的
+ *   标题渐变占位，避免页面上出现破图图标。
+ * - 尺寸属性始终显式给出，配合 CSS 的固定高度避免 CLS。
+ */
+interface Props {
+  src: string;
+  alt: string;
+  /** 同源 800w 缩略图；缺省或与 src 相同时只加载 src */
+  thumb?: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: "eager" | "lazy";
+  fetchpriority?: "high" | "low" | "auto";
+  /** srcset 生效时的布局宽度提示 */
+  sizes?: string;
+}
+
+const {
+  src,
+  alt,
+  thumb,
+  width = 1200,
+  height = 650,
+  class: className,
+  loading = "lazy",
+  fetchpriority,
+  sizes = "100vw",
+} = Astro.props;
+
+const thumbSrc = thumb && thumb !== src ? thumb : undefined;
+const srcset = thumbSrc ? `${thumbSrc} 800w, ${src} 1200w` : undefined;
+
+// 第一次失败回退到主图，第二次失败隐藏自身：父容器已铺好标题渐变，
+// 隐藏后该区域仍是完整色块而不是浏览器默认的破图图标。
+const onError =
+  "if(this.dataset.fallbackSrc){this.removeAttribute('srcset');this.src=this.dataset.fallbackSrc;this.removeAttribute('data-fallback-src')}else{this.style.display='none'}";
+---
+
+<img
+  src={thumbSrc ?? src}
+  srcset={srcset}
+  sizes={srcset ? sizes : undefined}
+  alt={alt}
+  width={width}
+  height={height}
+  loading={loading}
+  fetchpriority={fetchpriority}
+  decoding="async"
+  class={className}
+  data-fallback-src={thumbSrc ? src : undefined}
+  onerror={onError}
+/>

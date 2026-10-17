@@ -3,7 +3,7 @@ title: A New Phientist Website Goes Live
 description: A more robust rebuild of the official site, for a better online experience.
 publishDate: 2026-08-01
 category: news
-image: https://picsum.photos/seed/lkm-site-launch/1200/650
+image: /images/covers/lkm-site-launch.webp
 tags: [site, announcement]
 lang: en
 ---

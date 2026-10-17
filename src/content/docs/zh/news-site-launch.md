@@ -3,7 +3,7 @@ title: 理科迷全新官网正式上线
 description: 以更稳健的架构重建官网，为你带来更好的在线体验。
 publishDate: 2026-08-01
 category: news
-image: https://picsum.photos/seed/lkm-site-launch/1200/650
+image: /images/covers/lkm-site-launch.webp
 tags: [官网, 公告]
 lang: zh
 ---

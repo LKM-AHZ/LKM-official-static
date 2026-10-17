@@ -10,6 +10,8 @@ import {
   readingMinutes,
 } from "../../../components/news/format";
 import Icon from "../../../components/Icon.astro";
+import CoverImage from "../../../components/CoverImage.astro";
+import { coverThumb } from "../../../lib/images";
 
 // docs 多语言存放于 src/content/docs/<lang>/<slug>.md（ID 如 `zh/news-site-launch`）。
 export async function getStaticPaths() {
@@ -96,23 +98,23 @@ const nextHref = docLink(next);
   >
     <div class="min-w-0">
       <article class="article-prose">
-        {/* 文章顶部配图（无 image 时才用标题色相渐变兜底） */}
+        {/* 文章顶部配图。渐变始终铺底：无 image 时它本身就是占位封面，
+            有 image 时则在图片加载中/失败后接管，不会露出空白 */}
         <div
           class="relative mb-8 aspect-[16/7] w-full overflow-hidden rounded-2xl border border-[var(--card-edge)]"
-          style={doc.data.image
-            ? undefined
-            : { background: coverGradient(doc.data.title) }}
+          style={{ background: coverGradient(doc.data.title) }}
         >
           {
             doc.data.image && (
-              <img
+              <CoverImage
                 src={doc.data.image}
+                thumb={coverThumb(doc.data.image)}
                 alt=""
-                width="1200"
-                height="525"
+                width={1200}
+                height={650}
                 loading="eager"
                 fetchpriority="high"
-                decoding="async"
+                sizes="(min-width: 1024px) 856px, calc(100vw - 2rem)"
                 class="absolute inset-0 h-full w-full object-cover"
               />
             )
