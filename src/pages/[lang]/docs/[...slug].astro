@@ -230,7 +230,7 @@ const nextHref = docLink(next);
       aria-label={en ? "Table of contents" : "阅读目录"}
     >
       <div
-        class="article-toc sticky top-[calc(var(--nav-h)+1rem)] max-h-[calc(100vh-var(--nav-h)-2rem)] overflow-y-auto rounded-2xl p-5"
+        class="article-toc sticky top-[calc(var(--nav-h)+1rem)] max-h-[calc(100vh-var(--nav-h)-2rem)] overflow-y-auto"
       >
         <div class="toc-heading">
           <span class="toc-heading-icon" aria-hidden="true"
@@ -243,20 +243,21 @@ const nextHref = docLink(next);
           class="toc-list"
           aria-label={en ? "Article sections" : "文章章节"}
         >
-          {
-            tocHeadings.map((h) => (
-              <a
-                href={`#${h.slug}`}
-                class:list={[
-                  "toc-link",
-                  h.depth === 3 && "toc-depth-3",
-                  h.depth === 4 && "toc-depth-4",
-                ]}
-              >
-                {h.text}
-              </a>
-            ))
-          }
+          <ul>
+            {
+              tocHeadings.map((h) => (
+                <li>
+                  <a
+                    href={`#${h.slug}`}
+                    class:list={["toc-link", `toc-depth-${h.depth}`]}
+                  >
+                    <span class="toc-mark" aria-hidden="true" />
+                    <span class="toc-text">{h.text}</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
         </nav>
       </div>
     </aside>
@@ -265,7 +266,7 @@ const nextHref = docLink(next);
 
 <script>
   // 目录链接已在构建期渲染，这里只做滚动高亮（原生锚点负责跳转）
-  document.addEventListener("DOMContentLoaded", () => {
+  const initToc = () => {
     const list = document.querySelector(
       "[data-toc-list]",
     ) as HTMLElement | null;
@@ -311,7 +312,15 @@ const nextHref = docLink(next);
       { passive: true },
     );
     pick();
-  });
+  };
+
+  // 模块脚本通常先于 DOMContentLoaded 执行；但开发态/慢网络下 DCL 可能已经
+  // 结束，只挂监听会永远不初始化。按 readyState 二选一，两条路径只跑一次。
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initToc, { once: true });
+  } else {
+    initToc();
+  }
 </script>
 
 <style>
@@ -343,93 +352,158 @@ const nextHref = docLink(next);
 </style>
 
 <style>
+  /* 与页内侧边栏同一套导航语言：不铺卡片底，只用一条上下渐隐的竖线
+     把目录和正文分开；条目是圆角行，active 用淡底 + 左缘渐变竖线微光。 */
   .article-toc {
     position: sticky;
     isolation: isolate;
-    background: var(--card-bg-grad);
-    border: 1px solid var(--card-edge);
-    box-shadow: var(--card-shadow);
-    backdrop-filter: blur(8px) saturate(118%);
+    padding: 0.15rem 0.35rem 0.35rem 1rem;
     scrollbar-width: thin;
-  }
-  .article-toc::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 12%;
-    width: 60%;
-    height: 1px;
-    background: var(--card-topline);
+    scrollbar-color: color-mix(in oklch, var(--text-muted) 26%, transparent)
+      transparent;
+    background: linear-gradient(
+        180deg,
+        transparent,
+        var(--nav-edge) 9%,
+        var(--nav-edge) 84%,
+        transparent
+      )
+      left top / 1px 100% no-repeat;
   }
   .toc-heading {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 0.65rem;
-    margin-bottom: 1rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--line-divider);
+    gap: 0.6rem;
+    padding: 0.2rem 0.35rem 0.75rem;
+    margin-bottom: 0.35rem;
+  }
+  /* 标题下沿只留一道向右淡出的细线，避免卡片式硬分隔 */
+  .toc-heading::after {
+    content: "";
+    position: absolute;
+    right: 0.35rem;
+    bottom: 0;
+    left: 0.35rem;
+    height: 1px;
+    background: linear-gradient(90deg, var(--line-divider), transparent);
   }
   .toc-heading-icon {
     display: grid;
     flex: none;
     place-items: center;
-    width: 1.75rem;
-    height: 1.75rem;
+    width: 1.65rem;
+    height: 1.65rem;
     border: 1px solid var(--icon-bubble-edge);
-    border-radius: 0.55rem;
+    border-radius: 0.5rem;
     color: var(--primary);
     background: var(--icon-bubble-bg);
+    box-shadow: inset 0 0 12px var(--icon-bubble-glow);
   }
   .toc-heading p {
     margin: 0;
     color: var(--deep-text);
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     font-weight: 700;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
   }
-  .toc-list {
-    border-left: 1px solid var(--line-color);
+  .toc-list ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
   .article-toc .toc-link {
     position: relative;
-    display: block;
-    margin-left: -1px;
-    padding: 0.55rem 0.65rem 0.55rem 0.9rem;
-    border-radius: 0 0.6rem 0.6rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.45rem 0.6rem;
+    border-radius: 0.75rem;
     color: var(--text-muted);
     font-size: 0.875rem;
-    line-height: 1.45;
+    line-height: 1.5;
     overflow-wrap: anywhere;
     text-decoration: none;
     transition:
       color var(--duration-fast) var(--ease),
       background var(--duration-fast) var(--ease);
   }
+  /* 层级标记：小圆点随标题深度缩小，悬停/当前章节点亮，充当侧栏图标的位置 */
+  .toc-mark {
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 0.75rem;
+    min-height: 1.3125rem;
+  }
+  .toc-mark::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 9999px;
+    background: color-mix(in oklch, var(--text-muted) 48%, transparent);
+    transition:
+      background var(--duration-fast) var(--ease),
+      box-shadow var(--duration-fast) var(--ease),
+      scale var(--duration-fast) var(--ease);
+  }
+  .article-toc .toc-depth-2 .toc-mark::before {
+    width: 5px;
+    height: 5px;
+  }
+  .article-toc .toc-depth-4 .toc-mark::before {
+    width: 3px;
+    height: 3px;
+    opacity: 0.72;
+  }
   .article-toc .toc-depth-3 {
-    padding-left: 1.65rem;
+    padding-left: 1.35rem;
   }
   .article-toc .toc-depth-4 {
-    padding-left: 2.4rem;
+    padding-left: 2.1rem;
   }
   .article-toc .toc-link:hover,
   .article-toc .toc-link:focus-visible {
     color: var(--primary);
     background: var(--social-bg);
   }
+  .article-toc .toc-link:hover .toc-mark::before,
+  .article-toc .toc-link:focus-visible .toc-mark::before {
+    background: var(--primary);
+  }
+  .article-toc .toc-link:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+  }
   .article-toc .toc-link.toc-active {
     color: var(--primary);
     font-weight: 600;
     background: var(--social-hover-bg);
   }
+  .article-toc .toc-link.toc-active .toc-mark::before {
+    background: var(--primary);
+    box-shadow: 0 0 8px var(--accent-line-glow);
+    scale: 1.2;
+  }
+  /* 当前章节的左缘高亮线与侧栏 active 完全一致：只占行高的 58%，居中 */
   .article-toc .toc-link.toc-active::before {
     content: "";
     position: absolute;
-    top: 0.45rem;
-    bottom: 0.45rem;
+    top: 50%;
     left: 0;
     width: 2px;
-    border-radius: 999px;
-    background: linear-gradient(var(--accent-line-from), var(--accent-line-to));
+    height: 58%;
+    border-radius: 9999px;
+    background: linear-gradient(
+      180deg,
+      var(--accent-line-from),
+      var(--accent-line-to)
+    );
     box-shadow: 0 0 8px var(--accent-line-glow);
+    translate: 0 -50%;
   }
 </style>
