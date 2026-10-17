@@ -7,7 +7,7 @@ export const en = {
   "common.nav_about": "About",
   "common.nav_services": "Services",
   "common.nav_team": "Team",
-  "common.nav_articles": "News",
+  "common.nav_articles": "Articles",
   "common.nav_resources": "Resources",
   "common.nav_communities": "Community",
   // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚）
@@ -42,7 +42,7 @@ export const en = {
   "seo.home":
     "Phientist — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
   "seo.news":
-    "Official announcements, tech news and popular-science content from Phientist.",
+    "Official announcements, tech news, guides, and documentation from Phientist.",
   "seo.team":
     "Meet the Phientist management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
   "seo.communities":
@@ -175,10 +175,13 @@ export const en = {
   "communities.sidebar_events": "Recurring Events",
   "communities.sidebar_legacy": "Legacy Groups",
   "news.title": "News & Updates",
+  "news.page_title": "Articles",
+  "news.page_subtitle":
+    "News, guides, and documentation, organized by date and topic",
   "news.subtitle": "Announcements, tech news and science content",
   "news.search_placeholder":
     "Search titles, summaries or tags in articles and guides",
-  "news.search_empty": "No matching content — try another keyword.",
+  "news.search_empty": "Nothing in this selection.",
   "news.search_count": "{n} result(s) found",
   "news.tags_all": "All",
   "news.tags_aria": "Filter by tag",

@@ -39,7 +39,7 @@ export const zh = {
   "common.site.description": "理科迷 (PHIENTIST) 独立官网",
   "seo.home":
     "理科迷 (PHIENTIST) —— 创立于 2014 年的科技爱好者社区，让科学回归每一个人。",
-  "seo.news": "理科迷官方公告、科技新闻与科普内容。",
+  "seo.news": "理科迷官方公告、科技新闻、指南与文档。",
   "seo.team":
     "认识理科迷管理团队：总务部、群务部、活动策划部、新闻办、顾问团、专业委员会与技术委员会。",
   "seo.communities":
@@ -163,9 +163,11 @@ export const zh = {
   "communities.sidebar_events": "常驻活动",
   "communities.sidebar_legacy": "原始老群",
   "news.title": "新闻资讯",
+  "news.page_title": "文章",
+  "news.page_subtitle": "新闻、指南与文档，按时间与主题整理",
   "news.subtitle": "官方公告、科技新闻与科普内容",
   "news.search_placeholder": "搜索文章、指南的标题、摘要或标签",
-  "news.search_empty": "没有匹配的内容，换个关键词试试。",
+  "news.search_empty": "当前筛选下暂无内容。",
   "news.search_count": "找到 {n} 篇内容",
   "news.tags_all": "全部",
   "news.tags_aria": "按标签筛选",

@@ -1,0 +1,156 @@
+---
+import type { CollectionEntry } from "astro:content";
+import NewsCard from "./NewsCard.astro";
+import { readingMinutes } from "./format";
+import { buildSearchText } from "./search";
+import { postSlug } from "./posts";
+import { langUrl } from "../../i18n/paths";
+
+/**
+ * 文章模块：新闻与指南/文档共用同一套头部、卡片网格、空状态与分页条。
+ * 搜索/标签工具条不放在这里，由页面统一渲染在两个模块之外。
+ */
+interface Props {
+  /** 锚点/标题 id 前缀，如 news、guides */
+  id: string;
+  lang: "zh" | "en";
+  title: string;
+  subtitle: string;
+  items: CollectionEntry<"docs">[];
+  kind: "news" | "guide";
+  /** 模块计数单位：新闻或文档 */
+  unit: "news" | "docs";
+  /** 每页文章数，默认 6 */
+  pageSize?: number;
+  /** 当前筛选下没有内容时的提示 */
+  emptyText: string;
+}
+
+const {
+  id,
+  lang,
+  title,
+  subtitle,
+  items,
+  kind,
+  unit,
+  pageSize = 6,
+  emptyText,
+} = Astro.props;
+
+const countTemplate =
+  unit === "news"
+    ? lang === "en"
+      ? "{n} news"
+      : "{n} 篇新闻"
+    : lang === "en"
+      ? "{n} docs"
+      : "{n} 篇文档";
+const countText = countTemplate.replace("{n}", String(items.length));
+const prevLabel = lang === "en" ? "← Previous" : "← 上一页";
+const nextLabel = lang === "en" ? "Next →" : "下一页 →";
+const pagerLabel = lang === "en" ? `${title} pagination` : `${title}分页`;
+---
+
+<section
+  data-module
+  data-page-size={pageSize}
+  aria-labelledby={`${id}-title`}
+  class="mt-14 border-t border-[var(--card-edge)] pt-12"
+>
+  <header class="mb-8 flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <h2 id={`${id}-title`} class="text-2xl font-bold text-deep-text">
+        {title}
+      </h2>
+      <p class="mt-3 text-note text-text-muted">{subtitle}</p>
+    </div>
+    <span
+      data-module-count
+      data-count-template={countTemplate}
+      class="text-sm text-text-muted"
+    >
+      {countText}
+    </span>
+  </header>
+
+  <div data-module-list class="grid gap-5 sm:grid-cols-2">
+    {
+      items.map((doc) => (
+        <NewsCard
+          kind={kind}
+          headingLevel={3}
+          lang={lang}
+          href={langUrl(lang, `/docs/${postSlug(doc)}`)}
+          title={doc.data.title}
+          desc={doc.data.description}
+          date={doc.data.publishDate}
+          minutes={readingMinutes(doc.body ?? "")}
+          tags={doc.data.tags ?? []}
+          image={doc.data.image}
+          searchText={buildSearchText([
+            doc.data.title,
+            doc.data.description,
+            ...(doc.data.tags ?? []),
+          ])}
+        />
+      ))
+    }
+  </div>
+
+  <p
+    data-module-empty
+    hidden
+    class="rounded-2xl border border-[var(--card-edge)] bg-[var(--social-bg)] px-6 py-10 text-center text-sm text-text-muted"
+  >
+    {emptyText}
+  </p>
+
+  <nav data-module-pager aria-label={pagerLabel} class="mt-8">
+    <div class="flex items-center justify-center gap-3">
+      <button
+        type="button"
+        data-page-prev
+        disabled
+        class="inline-flex h-9 items-center rounded-full border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 text-sm text-text-muted transition"
+      >
+        {prevLabel}
+      </button>
+      <span
+        data-page-info
+        aria-live="polite"
+        class="min-w-20 text-center text-sm tabular-nums text-text-muted"
+      >
+        1 / 1
+      </span>
+      <button
+        type="button"
+        data-page-next
+        disabled
+        class="inline-flex h-9 items-center rounded-full border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 text-sm text-text-muted transition"
+      >
+        {nextLabel}
+      </button>
+    </div>
+  </nav>
+</section>
+
+<style>
+  [data-page-prev]:disabled,
+  [data-page-next]:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  [data-page-prev]:not(:disabled):hover,
+  [data-page-next]:not(:disabled):hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+
+  [data-page-prev]:focus-visible,
+  [data-page-next]:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+</style>

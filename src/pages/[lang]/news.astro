@@ -2,11 +2,8 @@
 import OfficialLayout from "../../layouts/OfficialLayout.astro";
 import { getCollection } from "astro:content";
 import { t } from "../../i18n/index";
-import { langUrl } from "../../i18n/paths";
-import NewsCard from "../../components/news/NewsCard.astro";
-import { readingMinutes } from "../../components/news/format";
-import { getNewsPosts, postSlug } from "../../components/news/posts";
-import { buildSearchText } from "../../components/news/search";
+import ArticleModule from "../../components/news/ArticleModule.astro";
+import { getNewsPosts } from "../../components/news/posts";
 import { collectTags } from "../../components/news/tags";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
@@ -15,205 +12,116 @@ const isEn = lang === "en";
 import { getStaticPathsForLang } from "../../i18n/paths";
 export const getStaticPaths = getStaticPathsForLang;
 
-// ===== 文章（资讯）索引：列出来自 /zh(zh)|/en 下 category === "news" 的文章 =====
+// ===== 文章页：新闻与指南/文档两个模块，共用卡片、分页与整页搜索/标签 =====
 const allPosts = await getCollection("docs");
-
 const posts = getNewsPosts(allPosts, lang);
 
-// 指南/文档与新闻分开成区：它们不进入新闻计数，但需要在文章页有固定入口，
-// 否则新增的教程只能从详情页的上一篇/下一篇被发现。标签与搜索同时覆盖两区。
 const guides = allPosts
   .filter(
     (doc) => doc.id.startsWith(`${lang}/`) && doc.data.category !== "news",
   )
   .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
 
-// 标签去重并按热度排序，构建期渲染成筛选栏（客户端只切换选中态与显隐）
+// 标签栏放在两个模块之外，同时统计新闻与文档
 const tagCounts = collectTags([...posts, ...guides]);
 
-const enEmpty = isEn && posts.length === 0;
+// 两个模块每页都显示 6 篇；当前内容不足 7 篇时仍显示 1 / 1 的分页条
+const PAGE_SIZE = 6;
 ---
 
 <OfficialLayout
-  title={t(lang, "news.title")}
+  title={t(lang, "news.page_title")}
   description={t(lang, "seo.news")}
   currentPath="/news"
 >
   <section class="section-padding">
     <div class="container-x">
-      <header class="mb-14 text-center">
+      <header class="mb-10 text-center">
         <h1
           class="title-underline font-heading text-section font-bold text-deep-text"
         >
-          {t(lang, "news.title")}
+          {t(lang, "news.page_title")}
         </h1>
         <p class="mx-auto mt-8 max-w-2xl text-lead text-text-muted">
-          {
-            posts.length > 0
-              ? `${posts.length} ${isEn ? "news articles" : "篇新闻"} · ${t(lang, "news.subtitle")}`
-              : t(lang, "news.subtitle")
-          }
+          {t(lang, "news.page_subtitle")}
         </p>
       </header>
 
-      {
-        enEmpty && (
-          <div class="card-hover rounded-2xl px-6 py-12 text-center text-text-muted">
-            {isEn
-              ? "English translations are being prepared — check back soon."
-              : "暂无文章。"}
-          </div>
-        )
-      }
+      {/* 搜索与标签是整页工具条，位于两个模块之外，同时过滤新闻与文档 */}
+      <div class="mx-auto w-full max-w-3xl">
+        <input
+          type="search"
+          data-news-search
+          aria-label={t(lang, "common.aria.search")}
+          placeholder={t(lang, "news.search_placeholder")}
+          class="w-full rounded-[var(--radius-field)] border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 py-2.5 text-sm text-base-content transition outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_25%,transparent)]"
+        />
 
-      {
-        posts.length > 0 && (
-          <div class="mx-auto mb-10 w-full max-w-md">
-            <input
-              type="search"
-              data-news-search
-              aria-label={t(lang, "common.aria.search")}
-              placeholder={t(lang, "news.search_placeholder")}
-              class="w-full rounded-[var(--radius-field)] border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 py-2.5 text-sm text-base-content transition outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_25%,transparent)]"
-            />
-          </div>
-        )
-      }
-
-      {
-        /* 标签筛选栏：全部 + 每个标签（附文章数）。默认「全部」选中，
-          点标签后与搜索框按 AND 共同过滤；选中态走 aria-pressed */
-      }
-      {
-        tagCounts.length > 0 && (
-          <div
-            data-news-tagbar
-            role="group"
-            aria-label={t(lang, "news.tags_aria")}
-            class="mx-auto mb-8 flex max-w-3xl flex-wrap items-center justify-center gap-2"
-          >
-            <button
-              type="button"
-              data-tag-filter=""
-              aria-pressed="true"
-              class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
+        {
+          tagCounts.length > 0 && (
+            <div
+              data-news-tagbar
+              role="group"
+              aria-label={t(lang, "news.tags_aria")}
+              class="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2"
             >
-              {t(lang, "news.tags_all")}
-            </button>
-            {tagCounts.map(({ tag, count }) => (
               <button
                 type="button"
-                data-tag-filter={tag}
-                aria-pressed="false"
+                data-tag-filter=""
+                aria-pressed="true"
                 class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
               >
-                {tag}
-                <span class="text-[11px] opacity-70">{count}</span>
+                {t(lang, "news.tags_all")}
               </button>
-            ))}
-          </div>
-        )
-      }
-
-      {
-        /* 命中数：与列表的显隐一起由脚本维护，模板经 data 属性下发（客户端脚本取不到 t()） */
-      }
-      <p
-        data-news-count
-        data-count-template={t(lang, "news.search_count")}
-        hidden
-        aria-live="polite"
-        class="mb-6 text-center text-sm text-text-muted"
-      >
-      </p>
-
-      {
-        posts.length > 0 && (
-          <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-news-list>
-            {posts.map((doc) => {
-              const slug = postSlug(doc);
-              return (
-                <NewsCard
-                  lang={isEn ? "en" : "zh"}
-                  href={langUrl(lang, `/docs/${slug}`)}
-                  title={doc.data.title}
-                  desc={doc.data.description}
-                  date={doc.data.publishDate}
-                  minutes={readingMinutes(doc.body ?? "")}
-                  tags={doc.data.tags ?? []}
-                  image={doc.data.image}
-                  searchText={buildSearchText([
-                    doc.data.title,
-                    doc.data.description,
-                    ...(doc.data.tags ?? []),
-                  ])}
-                />
-              );
-            })}
-          </div>
-        )
-      }
-
-      <p
-        data-news-empty
-        hidden
-        class="card-hover rounded-2xl px-6 py-12 text-center text-text-muted"
-      >
-        {t(lang, "news.search_empty")}
-      </p>
-
-      {
-        guides.length > 0 && (
-          <section
-            data-guides-section
-            aria-labelledby="guides-title"
-            class="mt-20 border-t border-[var(--card-edge)] pt-14"
-          >
-            <header class="mb-8 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <h2 id="guides-title" class="text-2xl font-bold text-deep-text">
-                  {t(lang, "news.guides_title")}
-                </h2>
-                <p class="mt-3 text-note text-text-muted">
-                  {t(lang, "news.guides_subtitle")}
-                </p>
-              </div>
-              <span
-                data-guides-count
-                data-count-template={isEn ? "{n} docs" : "{n} 篇文档"}
-                class="text-sm text-text-muted"
-              >
-                {guides.length} {isEn ? "docs" : "篇文档"}
-              </span>
-            </header>
-
-            <div data-guides-list class="grid gap-5 sm:grid-cols-2">
-              {guides.map((doc) => {
-                const slug = postSlug(doc);
-                return (
-                  <NewsCard
-                    kind="guide"
-                    headingLevel={3}
-                    lang={isEn ? "en" : "zh"}
-                    href={langUrl(lang, `/docs/${slug}`)}
-                    title={doc.data.title}
-                    desc={doc.data.description}
-                    date={doc.data.publishDate}
-                    minutes={readingMinutes(doc.body ?? "")}
-                    tags={doc.data.tags ?? []}
-                    image={doc.data.image}
-                    searchText={buildSearchText([
-                      doc.data.title,
-                      doc.data.description,
-                      ...(doc.data.tags ?? []),
-                    ])}
-                  />
-                );
-              })}
+              {tagCounts.map(({ tag, count }) => (
+                <button
+                  type="button"
+                  data-tag-filter={tag}
+                  aria-pressed="false"
+                  class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
+                >
+                  {tag}
+                  <span class="text-[11px] opacity-70">{count}</span>
+                </button>
+              ))}
             </div>
-          </section>
-        )
-      }
+          )
+        }
+
+        {/* 命中总数：整页范围，由客户端脚本维护；模块自己的计数在模块头部 */}
+        <p
+          data-news-count
+          data-count-template={t(lang, "news.search_count")}
+          hidden
+          aria-live="polite"
+          class="mt-6 text-center text-sm text-text-muted"
+        >
+        </p>
+      </div>
+
+      <ArticleModule
+        id="news"
+        lang={isEn ? "en" : "zh"}
+        title={t(lang, "news.title")}
+        subtitle={t(lang, "news.subtitle")}
+        items={posts}
+        kind="news"
+        unit="news"
+        pageSize={PAGE_SIZE}
+        emptyText={t(lang, "news.search_empty")}
+      />
+
+      <ArticleModule
+        id="guides"
+        lang={isEn ? "en" : "zh"}
+        title={t(lang, "news.guides_title")}
+        subtitle={t(lang, "news.guides_subtitle")}
+        items={guides}
+        kind="guide"
+        unit="docs"
+        pageSize={PAGE_SIZE}
+        emptyText={t(lang, "news.search_empty")}
+      />
     </div>
   </section>
 </OfficialLayout>
@@ -223,26 +131,42 @@ const enEmpty = isEn && posts.length === 0;
   import { matchesTag, pickTagFromSearch } from "../../components/news/tags";
 
   const input = document.querySelector<HTMLInputElement>("[data-news-search]");
-  const list = document.querySelector<HTMLElement>("[data-news-list]");
-  const guidesList = document.querySelector<HTMLElement>("[data-guides-list]");
+  const toolbarCount = document.querySelector<HTMLElement>("[data-news-count]");
 
-  if (input && list) {
-    const cards = Array.from(
-      list.querySelectorAll<HTMLElement>('[data-card-kind="news"]'),
-    );
-    const guideCards = guidesList
-      ? Array.from(
-          guidesList.querySelectorAll<HTMLElement>('[data-card-kind="guide"]'),
-        )
-      : [];
-    const empty = document.querySelector<HTMLElement>("[data-news-empty]");
-    const count = document.querySelector<HTMLElement>("[data-news-count]");
-    const guidesSection = document.querySelector<HTMLElement>(
-      "[data-guides-section]",
-    );
-    const guidesCount = document.querySelector<HTMLElement>(
-      "[data-guides-count]",
-    );
+  interface ModuleState {
+    cards: HTMLElement[];
+    count: HTMLElement | null;
+    empty: HTMLElement | null;
+    pager: HTMLElement | null;
+    prev: HTMLButtonElement | null;
+    next: HTMLButtonElement | null;
+    info: HTMLElement | null;
+    pageSize: number;
+    page: number;
+    totalPages: number;
+  }
+
+  const modules: ModuleState[] = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-module]"),
+  ).map((root) => {
+    const list = root.querySelector<HTMLElement>("[data-module-list]");
+    return {
+      cards: list
+        ? Array.from(list.querySelectorAll<HTMLElement>("[data-card-kind]"))
+        : [],
+      count: root.querySelector<HTMLElement>("[data-module-count]"),
+      empty: root.querySelector<HTMLElement>("[data-module-empty]"),
+      pager: root.querySelector<HTMLElement>("[data-module-pager]"),
+      prev: root.querySelector<HTMLButtonElement>("[data-page-prev]"),
+      next: root.querySelector<HTMLButtonElement>("[data-page-next]"),
+      info: root.querySelector<HTMLElement>("[data-page-info]"),
+      pageSize: Number(root.dataset.pageSize ?? 6) || 6,
+      page: 1,
+      totalPages: 1,
+    };
+  });
+
+  if (input && modules.length > 0) {
     const tagButtons = Array.from(
       document.querySelectorAll<HTMLButtonElement>("[data-tag-filter]"),
     );
@@ -273,81 +197,97 @@ const enEmpty = isEn && posts.length === 0;
       history.replaceState(null, "", url);
     };
 
-    const apply = (): void => {
+    // resetPages: 搜索/标签变化时两个模块都回到第 1 页；点翻页按钮时保持当前页
+    const apply = (resetPages = false): void => {
       const query = input.value;
-      const hasQuery = query.trim() !== "";
-      let shownNews = 0;
-      for (const card of cards) {
-        const tags: string[] = card.dataset.tags
-          ? (JSON.parse(card.dataset.tags) as string[])
-          : [];
-        const hit =
-          matchesQuery(card.dataset.searchText ?? "", query) &&
-          matchesTag(tags, activeTag);
-        card.hidden = !hit;
-        if (hit) shownNews += 1;
-      }
+      const filtering = query.trim() !== "" || activeTag !== "";
+      let totalShown = 0;
 
-      // 文档区与新闻共用同一套搜索词与标签过滤
-      let shownGuides = 0;
-      for (const card of guideCards) {
-        const tags: string[] = card.dataset.tags
-          ? (JSON.parse(card.dataset.tags) as string[])
-          : [];
-        const hit =
-          matchesQuery(card.dataset.searchText ?? "", query) &&
-          matchesTag(tags, activeTag);
-        card.hidden = !hit;
-        if (hit) shownGuides += 1;
-      }
-
-      const filtering = hasQuery || activeTag !== "";
-      const shown = shownNews + shownGuides;
-
-      // 搜索与标签都是整页范围，计数按两区可见内容算；空状态只在整页无结果时出现
-      if (empty) empty.hidden = !filtering || shown > 0;
-      if (guidesSection) {
-        guidesSection.hidden = filtering && shownGuides === 0;
-      }
-      if (guidesCount) {
-        const guidesShown = filtering ? shownGuides : guideCards.length;
-        guidesCount.textContent = (
-          guidesCount.dataset.countTemplate ?? "{n}"
-        ).replace("{n}", String(guidesShown));
-      }
-      if (count) {
-        count.hidden = !filtering || shown === 0;
-        if (filtering) {
-          count.textContent = (count.dataset.countTemplate ?? "{n}").replace(
-            "{n}",
-            String(shown),
+      for (const module of modules) {
+        const matches = module.cards.filter((card) => {
+          const tags: string[] = card.dataset.tags
+            ? (JSON.parse(card.dataset.tags) as string[])
+            : [];
+          return (
+            matchesQuery(card.dataset.searchText ?? "", query) &&
+            matchesTag(tags, activeTag)
           );
+        });
+
+        if (resetPages) module.page = 1;
+        module.totalPages = Math.max(
+          1,
+          Math.ceil(matches.length / module.pageSize),
+        );
+        if (module.page > module.totalPages) module.page = module.totalPages;
+
+        const start = (module.page - 1) * module.pageSize;
+        const pageCards = new Set(
+          matches.slice(start, start + module.pageSize),
+        );
+        for (const card of module.cards) card.hidden = !pageCards.has(card);
+
+        if (module.count) {
+          module.count.textContent = (
+            module.count.dataset.countTemplate ?? "{n}"
+          ).replace("{n}", String(matches.length));
+        }
+        if (module.empty) module.empty.hidden = matches.length > 0;
+        if (module.pager) module.pager.hidden = matches.length === 0;
+        if (module.info) {
+          module.info.textContent = `${module.page} / ${module.totalPages}`;
+        }
+        if (module.prev) module.prev.disabled = module.page <= 1;
+        if (module.next)
+          module.next.disabled = module.page >= module.totalPages;
+
+        totalShown += matches.length;
+      }
+
+      if (toolbarCount) {
+        toolbarCount.hidden = !filtering;
+        if (filtering) {
+          toolbarCount.textContent = (
+            toolbarCount.dataset.countTemplate ?? "{n}"
+          ).replace("{n}", String(totalShown));
         }
       }
     };
+
+    for (const module of modules) {
+      module.prev?.addEventListener("click", () => {
+        if (module.page > 1) {
+          module.page -= 1;
+          apply();
+        }
+      });
+      module.next?.addEventListener("click", () => {
+        if (module.page < module.totalPages) {
+          module.page += 1;
+          apply();
+        }
+      });
+    }
 
     for (const btn of tagButtons) {
       btn.addEventListener("click", () => {
         activeTag = btn.dataset.tagFilter ?? "";
         syncButtons();
         updateUrl();
-        apply();
+        apply(true);
       });
     }
-    input.addEventListener("input", apply);
+    input.addEventListener("input", () => apply(true));
 
     syncButtons();
-    apply();
+    apply(true);
   }
 </script>
 
 <style is:global>
-  /* 卡片根元素带 flex 类，与 UA 样式表的 [hidden]{display:none} 同为 (0,1,0)
-     特异性却属作者样式，会盖掉后者，使过滤后的卡片只是「不该显示」而非隐藏。
-     这里显式提权。用 is:global 是因为卡片由 NewsCard 子组件渲染，
-     不带本页的 scope 属性，scoped 样式选不中它。 */
-  [data-news-list] > [hidden],
-  [data-guides-list] > [hidden] {
+  /* 卡片根元素带 flex 类，作者样式的 display 会盖过 UA 的 [hidden]{display:none}；
+     这里显式提权，分页与搜索隐藏卡片时才真正生效。 */
+  [data-module-list] > [hidden] {
     display: none;
   }
 </style>
