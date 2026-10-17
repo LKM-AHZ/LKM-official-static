@@ -18,7 +18,10 @@ function markdownFiles(dir: string): string[] {
 function localImageRefs(): string[] {
   return markdownFiles(path.join(ROOT, "src/content/docs")).flatMap((file) => {
     const text = fs.readFileSync(file, "utf8");
-    return (text.match(/^image:\s*(\S+)\s*$/gm) ?? [])
+    // 只扫描文件开头的 frontmatter。教程正文会用代码块演示 `image:` 写法，
+    // 若对全文做正则，会把示例路径误当成真实封面去检查文件是否存在。
+    const frontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+    return (frontmatter?.[1].match(/^image:\s*(\S+)\s*$/gm) ?? [])
       .map((line) => line.replace(/^image:\s*/, "").trim())
       .filter((src) => src.startsWith("/"));
   });
