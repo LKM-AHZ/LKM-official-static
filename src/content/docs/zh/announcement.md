@@ -3,7 +3,7 @@ title: 静态官网内容维护说明
 description: 双语内容、发布日期、事实修订与发布流程的维护约定
 publishDate: 2026-08-27
 image: /images/covers/announcement.webp
-tags: [公告, 维护]
+tags: [官方公告]
 ---
 
 PHIENTIST 独立静态官网已经从结构验证阶段进入持续维护。公告、新闻和介绍文章以 Markdown

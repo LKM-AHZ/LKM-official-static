@@ -397,6 +397,30 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
     </div>
   </section>
 
+  {/* ===== 未来展望 ===== */}
+  <section class="section-padding">
+    <div class="container-x">
+      <div class="mx-auto max-w-4xl text-center">
+        <h2
+          class="title-underline font-heading text-section font-bold text-deep-text"
+        >
+          {t(lang, "home.future_title")}
+        </h2>
+        <p
+          class="mx-auto mt-8 max-w-3xl text-lead leading-relaxed text-text-muted"
+        >
+          {t(lang, "home.future_body")}
+        </p>
+        <div class="mt-10 flex justify-center">
+          <a href={langUrl(lang, "/about#communities")} class="btn btn-primary">
+            {t(lang, "home.future_cta")}
+            <Icon name="arrowRight" class="h-5 w-5" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   {/* ===== 联系我们 ===== */}
   <section id="contact" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
@@ -467,30 +491,6 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
           <p class="mt-3 text-xs leading-relaxed text-text-muted">
             {t(lang, "home.contact_note")}
           </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  {/* ===== 未来展望 ===== */}
-  <section class="section-padding">
-    <div class="container-x">
-      <div class="mx-auto max-w-4xl text-center">
-        <h2
-          class="title-underline font-heading text-section font-bold text-deep-text"
-        >
-          {t(lang, "home.future_title")}
-        </h2>
-        <p
-          class="mx-auto mt-8 max-w-3xl text-lead leading-relaxed text-text-muted"
-        >
-          {t(lang, "home.future_body")}
-        </p>
-        <div class="mt-10 flex justify-center">
-          <a href={langUrl(lang, "/about#communities")} class="btn btn-primary">
-            {t(lang, "home.future_cta")}
-            <Icon name="arrowRight" class="h-5 w-5" />
-          </a>
         </div>
       </div>
     </div>

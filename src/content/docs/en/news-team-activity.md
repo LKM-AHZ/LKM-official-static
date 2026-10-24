@@ -4,7 +4,7 @@ description: Moving events from improvisation to a steady rhythm, with long-term
 publishDate: 2025-04-02
 category: news
 image: /images/covers/lkm-team-activity.webp
-tags: [team, event]
+tags: [Events]
 lang: en
 ---
 

@@ -4,7 +4,7 @@ description: A more robust rebuild that tidies content, entry points, and the re
 publishDate: 2026-08-01
 category: news
 image: /images/covers/lkm-site-launch.webp
-tags: [site, announcement]
+tags: [Official Announcements]
 lang: en
 ---
 

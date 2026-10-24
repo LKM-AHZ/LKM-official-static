@@ -4,11 +4,11 @@ import type { Zh } from "./zh";
 export const en = {
   "common.brand": "Phientist",
   "common.nav_home": "Home",
-  "common.nav_about": "About",
+  "common.nav_about": "About Us",
   "common.nav_services": "Services",
   "common.nav_team": "Teams",
-  "common.nav_products": "Products",
-  "common.nav_articles": "Articles",
+  "common.nav_products": "Projects",
+  "common.nav_articles": "News",
   "common.nav_resources": "Resources",
   "common.nav_communities": "Community",
   // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚）

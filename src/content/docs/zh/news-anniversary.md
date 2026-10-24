@@ -4,7 +4,7 @@ description: 从删库归零到重新站稳，社区与大家一起走过的这�
 publishDate: 2025-08-04
 category: news
 image: /images/covers/lkm-anniversary.webp
-tags: [纪念, 社区]
+tags: [官方公告]
 lang: zh
 ---
 

@@ -6,12 +6,16 @@
  * - 滚动视差：滚轮/滑动产生带深度差的下沉、上升冲量
  * - 三团呼吸辉光 + 鼠标轻微视差，辉光随滚动进度对冲迁移
  * - day / night 两套调色板，跟随 <html data-theme>
- * - 尊重 prefers-reduced-motion（只绘制一帧静态图）、DPR ≤ 2、页面隐藏时暂停
+ * - 双层画布：辉光按半分辨率绘制，粒子/连线保留 DPR
+ * - 尊重 prefers-reduced-motion（只绘制一帧静态图）、DPR ≤ 2（大视口 1.5）、页面隐藏时暂停
  *
  * 移植自「理科迷官网-源代码」的 TechBackground.vue，去 Vue 外壳改为原生 canvas。
  */
 ---
 
+<!-- 两层画布：低频的呼吸辉光用低分辨率层，高频的粒子/连线用全分辨率层。
+     两张画布由浏览器各自合成，避免为了几团柔和的光把整屏像素都按 DPR 栅格化。 -->
+<canvas id="tech-glow-canvas" aria-hidden="true"></canvas>
 <canvas id="tech-canvas" aria-hidden="true"></canvas>
 <!-- 与 canvas 同为 z-index 1 且排在它之后：暗角/噪点也盖住粒子，四角收得更干净 -->
 <div class="bg-overlay" aria-hidden="true"></div>
@@ -20,14 +24,20 @@
   import { onThemeChange } from "../lib/theme";
   import type { ThemeName } from "../lib/theme";
 
-  const canvas = document.getElementById(
+  const glowCanvas = document.getElementById(
+    "tech-glow-canvas",
+  ) as HTMLCanvasElement | null;
+  const nodeCanvas = document.getElementById(
     "tech-canvas",
   ) as HTMLCanvasElement | null;
-  const ctx = canvas?.getContext("2d") ?? null;
+  const glowCtx = glowCanvas?.getContext("2d") ?? null;
+  const nodeCtx = nodeCanvas?.getContext("2d") ?? null;
 
-  if (canvas && ctx) {
-    const c = canvas;
-    const g = ctx;
+  if (glowCanvas && nodeCanvas && glowCtx && nodeCtx) {
+    const glowEl = glowCanvas;
+    const nodeEl = nodeCanvas;
+    const glowG = glowCtx;
+    const g = nodeCtx;
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -81,16 +91,37 @@
     let driftTarget = 0;
     let lastScrollY = window.scrollY;
     let lastProgress = -1;
+    // 粒子层实际使用的倍率；clearRect 用它换算回 CSS 尺寸，避免非整数 DPR 下
+    // 四舍五入后留下一条未清的边缘。
+    let nodeDpr = 1;
+
+    // —— 两层画布的分辨率策略 ——
+    // 辉光只是大尺度径向渐变，没有高频细节；按 CSS 尺寸的一半栅格化后由浏览器
+    // 双线性放大，像素量降到 1/4，视觉上看不出差别。
+    const GLOW_SCALE = 0.5;
+    // 粒子层保留 DPR，但大视口封顶：4K + DPR2 的全屏透明画布仅合成就要
+    // 数 GB/s 的带宽，而背景上的 1px 连线并不值得这个代价。
+    const MAX_DPR = 2;
+    const LARGE_DPR = 1.5;
+    const LARGE_VIEWPORT = 2_000_000;
 
     function resize(): void {
       w = window.innerWidth;
       h = window.innerHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      c.width = w * dpr;
-      c.height = h * dpr;
-      c.style.width = `${w}px`;
-      c.style.height = `${h}px`;
+      const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        w * h > LARGE_VIEWPORT ? LARGE_DPR : MAX_DPR,
+      );
+      nodeEl.width = Math.round(w * dpr);
+      nodeEl.height = Math.round(h * dpr);
+      nodeDpr = dpr;
       g.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      glowEl.width = Math.max(1, Math.round(w * GLOW_SCALE));
+      glowEl.height = Math.max(1, Math.round(h * GLOW_SCALE));
+      // 之后绘制仍使用 CSS 像素坐标，缩放交给 transform
+      glowG.setTransform(GLOW_SCALE, 0, 0, GLOW_SCALE, 0, 0);
+
       // 密度与速度都往下调：背景只该在余光里，连着线的星座网最抢注意力
       const count = Math.max(26, Math.min(56, Math.floor((w * h) / 40000)));
       nodes = Array.from({ length: count }, () => ({
@@ -116,16 +147,39 @@
     // 在节点上限下会持续给 GC 施压
     const view: { x: number; y: number }[] = [];
 
+    // 节点透明度在 [0.2, 0.54) 内随机；按 6 档量化后合并绘制，单档误差 ≤0.03，
+    // 肉眼分辨不出，但每帧少几十次 fill 与状态切换。
+    const NODE_ALPHA_MIN = 0.2;
+    const NODE_ALPHA_RANGE = 0.34;
+    const NODE_BUCKETS = 6;
+    const nodeBuckets: number[][] = Array.from(
+      { length: NODE_BUCKETS },
+      () => [],
+    );
+    // 连线按距离分 5 档，每档只 stroke 一次
+    const LINE_BUCKETS = 5;
+    const lineBuckets: number[][] = Array.from(
+      { length: LINE_BUCKETS },
+      () => [],
+    );
+
     /**
      * 画一团径向辉光。只填自己的包围盒而非整屏：半径之外全是透明，
      * 结果与 fillRect(0, 0, w, h) 等价，但每帧省下多次全屏填充。
+     * 传入的 ctx 是低分辨率辉光层，坐标仍用 CSS 像素。
      */
-    function drawGlow(x: number, y: number, r: number, color: string): void {
-      const grad = g.createRadialGradient(x, y, 0, x, y, r);
+    function drawGlow(
+      ctx: CanvasRenderingContext2D,
+      x: number,
+      y: number,
+      r: number,
+      color: string,
+    ): void {
+      const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
       grad.addColorStop(0, color);
       grad.addColorStop(1, "rgba(0,0,0,0)");
-      g.fillStyle = grad;
-      g.fillRect(x - r, y - r, r * 2, r * 2);
+      ctx.fillStyle = grad;
+      ctx.fillRect(x - r, y - r, r * 2, r * 2);
     }
 
     function draw(): void {
@@ -141,7 +195,13 @@
       const nodeColor = `rgb(${colors.node[0]},${colors.node[1]},${colors.node[2]})`;
       const lineColor = `rgb(${colors.line[0]},${colors.line[1]},${colors.line[2]})`;
 
-      g.clearRect(0, 0, w, h);
+      // 辉光画在低分辨率层；粒子层单独 clear，互不干扰
+      glowG.clearRect(
+        0,
+        0,
+        glowEl.width / GLOW_SCALE,
+        glowEl.height / GLOW_SCALE,
+      );
 
       // 呼吸辉光：三团光随滚动进度对冲迁移（flow 0→1 时 A 下沉、B 上升、C 常驻），
       // 长页面滚动时便有了"穿过不同光区"的层次，而不是定格在同一张背景图上
@@ -149,6 +209,7 @@
       const glowShift = parallax * 0.12;
 
       drawGlow(
+        glowG,
         w * 0.22 + Math.sin(t * 0.7) * w * 0.04 + pointer.x * 12,
         wrap(
           h * (0.12 + flow * 0.6) +
@@ -163,6 +224,7 @@
       );
 
       drawGlow(
+        glowG,
         w * 0.78 + Math.cos(t * 0.6) * w * 0.03 - pointer.x * 10,
         wrap(
           h * (0.78 - flow * 0.54) +
@@ -177,6 +239,7 @@
       );
 
       drawGlow(
+        glowG,
         w * 0.5 + Math.sin(t * 0.32) * w * 0.06,
         wrap(
           h * 0.46 + Math.cos(t * 0.28) * h * 0.05 - glowShift * 0.4,
@@ -187,8 +250,12 @@
         colors.glowC,
       );
 
+      // 辉光层画完后再清粒子层：两张画布互不影响
+      g.clearRect(0, 0, nodeEl.width / nodeDpr, nodeEl.height / nodeDpr);
+
       // 节点（深度越深，随滚动沉浮越明显）
       view.length = 0;
+      for (let b = 0; b < NODE_BUCKETS; b++) nodeBuckets[b].length = 0;
       for (let i = 0; i < nodes.length; i++) {
         const n = nodes[i];
         n.x += n.vx;
@@ -201,32 +268,69 @@
         const slot = view[i] ?? (view[i] = { x: 0, y: 0 });
         slot.x = n.x;
         slot.y = sy;
+
+        let bucket = Math.floor(
+          ((n.a - NODE_ALPHA_MIN) / NODE_ALPHA_RANGE) * NODE_BUCKETS,
+        );
+        if (bucket < 0) bucket = 0;
+        else if (bucket >= NODE_BUCKETS) bucket = NODE_BUCKETS - 1;
+        nodeBuckets[bucket].push(i);
+      }
+
+      // 同一透明度档的节点合成一条路径：几十次 fill 降到 6 次，
+      // 位置和半径逐个保留，只有 alpha 取档位中值。
+      g.fillStyle = nodeColor;
+      for (let b = 0; b < NODE_BUCKETS; b++) {
+        const bucket = nodeBuckets[b];
+        if (bucket.length === 0) continue;
         g.beginPath();
-        g.arc(n.x, sy, n.r, 0, Math.PI * 2);
-        g.fillStyle = nodeColor;
-        g.globalAlpha = n.a;
+        for (let k = 0; k < bucket.length; k++) {
+          const n = nodes[bucket[k]];
+          const p = view[bucket[k]];
+          g.moveTo(p.x + n.r, p.y);
+          g.arc(p.x, p.y, n.r, 0, Math.PI * 2);
+        }
+        g.globalAlpha =
+          NODE_ALPHA_MIN + (b + 0.5) * (NODE_ALPHA_RANGE / NODE_BUCKETS);
         g.fill();
       }
 
-      // 连线（接缝处自然断开）
+      // 连线（接缝处自然断开）：先按平方距离筛，再分档合并路径
       const max = 104;
+      const max2 = max * max;
       g.strokeStyle = lineColor;
       g.lineWidth = 1;
+      for (let b = 0; b < LINE_BUCKETS; b++) lineBuckets[b].length = 0;
       for (let i = 0; i < view.length; i++) {
         for (let j = i + 1; j < view.length; j++) {
-          const a = view[i];
-          const b = view[j];
-          const dx = a.x - b.x;
-          const dy = a.y - b.y;
-          const d = Math.hypot(dx, dy);
-          if (d < max) {
-            g.globalAlpha = (1 - d / max) * colors.lineAlpha;
-            g.beginPath();
-            g.moveTo(a.x, a.y);
-            g.lineTo(b.x, b.y);
-            g.stroke();
+          const p1 = view[i];
+          const p2 = view[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < max2) {
+            // 只有真正要画的连线才开方
+            let bucket = Math.floor((1 - Math.sqrt(d2) / max) * LINE_BUCKETS);
+            if (bucket < 0) bucket = 0;
+            else if (bucket >= LINE_BUCKETS) bucket = LINE_BUCKETS - 1;
+            lineBuckets[bucket].push(i, j);
           }
         }
+      }
+
+      // 每档只 stroke 一次，避免逐线切换 globalAlpha
+      for (let b = 0; b < LINE_BUCKETS; b++) {
+        const bucket = lineBuckets[b];
+        if (bucket.length === 0) continue;
+        g.beginPath();
+        for (let k = 0; k < bucket.length; k += 2) {
+          const p1 = view[bucket[k]];
+          const p2 = view[bucket[k + 1]];
+          g.moveTo(p1.x, p1.y);
+          g.lineTo(p2.x, p2.y);
+        }
+        g.globalAlpha = ((b + 0.5) / LINE_BUCKETS) * colors.lineAlpha;
+        g.stroke();
       }
       g.globalAlpha = 1;
     }

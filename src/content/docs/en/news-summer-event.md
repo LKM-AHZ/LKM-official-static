@@ -4,7 +4,7 @@ description: The Event Planning Office starts a new summer round — settle the 
 publishDate: 2026-06-15
 category: news
 image: /images/covers/lkm-summer-event.webp
-tags: [event, summer]
+tags: [Events]
 lang: en
 ---
 

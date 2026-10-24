@@ -4,7 +4,7 @@ description: New separate groups for middle and high school members, closer to w
 publishDate: 2025-12-20
 category: news
 image: /images/covers/lkm-groups-reorg.webp
-tags: [groups, announcement]
+tags: [Official Announcements]
 lang: en
 ---
 

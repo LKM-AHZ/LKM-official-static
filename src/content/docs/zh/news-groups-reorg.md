@@ -4,7 +4,7 @@ description: 设立初中与高中两个分群，让不同学段的交流更贴�
 publishDate: 2025-12-20
 category: news
 image: /images/covers/lkm-groups-reorg.webp
-tags: [群组, 公告]
+tags: [官方公告]
 lang: zh
 ---
 

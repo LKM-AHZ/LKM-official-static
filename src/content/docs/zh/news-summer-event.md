@@ -4,7 +4,7 @@ description: 活动策划部启动新一轮暑期活动筹备，先定骨架，�
 publishDate: 2026-06-15
 category: news
 image: /images/covers/lkm-summer-event.webp
-tags: [活动, 暑期]
+tags: [活动]
 lang: zh
 ---
 

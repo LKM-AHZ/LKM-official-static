@@ -4,7 +4,7 @@ description: 让活动从即兴走向有节奏，活动策划部开始承担长�
 publishDate: 2025-04-02
 category: news
 image: /images/covers/lkm-team-activity.webp
-tags: [团队, 活动]
+tags: [活动]
 lang: zh
 ---
 

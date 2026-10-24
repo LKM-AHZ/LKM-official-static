@@ -4,7 +4,7 @@ description: From data loss to a steady footing — a look back at the past year
 publishDate: 2025-08-04
 category: news
 image: /images/covers/lkm-anniversary.webp
-tags: [anniversary, community]
+tags: [Official Announcements]
 lang: en
 ---
 

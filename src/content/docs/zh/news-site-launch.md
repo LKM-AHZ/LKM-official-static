@@ -4,7 +4,7 @@ description: 以更稳健的架构重建官网，把内容、入口与阅读体�
 publishDate: 2026-08-01
 category: news
 image: /images/covers/lkm-site-launch.webp
-tags: [官网, 公告]
+tags: [官方公告]
 lang: zh
 ---
 

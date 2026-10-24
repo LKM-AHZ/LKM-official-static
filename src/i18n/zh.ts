@@ -2,11 +2,11 @@
 export const zh = {
   "common.brand": "理科迷",
   "common.nav_home": "首页",
-  "common.nav_about": "关于",
+  "common.nav_about": "关于我们",
   "common.nav_services": "服务",
   "common.nav_team": "七月团队",
-  "common.nav_products": "产品",
-  "common.nav_articles": "文章",
+  "common.nav_products": "项目",
+  "common.nav_articles": "资讯",
   "common.nav_resources": "资源",
   "common.nav_communities": "社群",
   // {year} 由渲染处用构建年份替换（见 OfficialLayout 页脚），避免每年手改两本字典

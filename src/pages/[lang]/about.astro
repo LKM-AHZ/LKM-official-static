@@ -340,24 +340,6 @@ const sidebarItems = [
     </div>
   </section>
 
-  {/* ===== 支持我们 ===== */}
-  <section id="support" class="section-padding scroll-mt-[var(--nav-h)]">
-    <div class="container-x">
-      <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
-        <h2 class="text-section font-semibold mb-3 font-heading">
-          {t(lang, "about.support_title")}
-        </h2>
-        <p class="text-body text-text-muted">{t(lang, "about.support_body")}</p>
-        <div class="mt-6 flex justify-center">
-          <a href={langUrl(lang, "/pricing")} class="btn btn-primary">
-            {t(lang, "about.support_cta")}
-            <Icon name="arrowRight" class="h-5 w-5" />
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
   {/* ===== QQ 社群（原 /communities 页面内容并入） ===== */}
   <section id="communities" class="scroll-mt-[var(--nav-h)]">
     <div class="container-x">
@@ -396,4 +378,22 @@ const sidebarItems = [
   <div class="container-x pb-8">
     <p class="text-center text-sm italic text-text-muted">{communityNote}</p>
   </div>
+
+  {/* ===== 支持我们（页面收尾，置于 QQ 社群之后） ===== */}
+  <section id="support" class="section-padding scroll-mt-[var(--nav-h)]">
+    <div class="container-x">
+      <div class="card-hover mx-auto max-w-3xl rounded-2xl p-8 text-center">
+        <h2 class="text-section font-semibold mb-3 font-heading">
+          {t(lang, "about.support_title")}
+        </h2>
+        <p class="text-body text-text-muted">{t(lang, "about.support_body")}</p>
+        <div class="mt-6 flex justify-center">
+          <a href={langUrl(lang, "/pricing")} class="btn btn-primary">
+            {t(lang, "about.support_cta")}
+            <Icon name="arrowRight" class="h-5 w-5" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
 </OfficialSidebarLayout>

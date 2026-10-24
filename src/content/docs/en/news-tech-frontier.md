@@ -4,7 +4,7 @@ description: Curating science and technology worth a longer look, with context, 
 publishDate: 2025-01-08
 category: news
 image: /images/covers/lkm-tech-frontier.webp
-tags: [column, science]
+tags: [Official Announcements]
 lang: en
 ---
 

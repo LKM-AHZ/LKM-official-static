@@ -167,7 +167,10 @@
     transition: opacity 400ms ease;
   }
 
-  #tech-canvas {
+  /* 两层画布：辉光层分辨率仅 CSS 尺寸的一半，由浏览器平滑放大；
+     粒子/连线层保持 DPR（大视口在脚本里封顶 1.5）。 */
+  #tech-canvas,
+  #tech-glow-canvas {
     position: fixed;
     inset: 0;
     width: 100%;

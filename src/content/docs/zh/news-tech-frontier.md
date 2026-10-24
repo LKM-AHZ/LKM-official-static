@@ -4,7 +4,7 @@ description: 聚焦值得多看一阵的科学与技术，把背景、进展和�
 publishDate: 2025-01-08
 category: news
 image: /images/covers/lkm-tech-frontier.webp
-tags: [栏目, 科普]
+tags: [官方公告]
 lang: zh
 ---
 

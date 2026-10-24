@@ -3,7 +3,7 @@ title: Editing Guide
 description: The full path from creating a Markdown file and filling in metadata to local preview, bilingual review, and release
 publishDate: 2026-10-17
 image: /images/covers/editing-guide.webp
-tags: [tutorial, maintenance, markdown]
+tags: [Guides]
 ---
 
 This guide is for members contributing to the website for the first time. It is not a complete
@@ -51,21 +51,21 @@ title: Article title
 description: One-sentence summary for lists, search, and share cards
 publishDate: 2026-10-17
 category: news
-tags: [tutorial, maintenance, markdown]
+tags: [Guides]
 image: /images/covers/example.webp
 lang: en
 ---
 ```
 
-| Field         | Required | Notes                                                                     |
-| ------------- | -------- | ------------------------------------------------------------------------- |
-| `title`       | Yes      | The article title. Do not add an h1 in the body.                          |
-| `description` | No       | Recommended; 40–80 characters is a good target. Used in lists and search. |
-| `publishDate` | Yes      | First publication date in `YYYY-MM-DD`. Do not change it for revisions.   |
-| `category`    | No       | Currently only `news` is accepted. Only news appears in `/news`.          |
-| `tags`        | No       | Array of strings for filtering and related reading; reuse existing tags.  |
-| `image`       | No       | Cover path beginning with `/` or `http(s)://`. Prefer a local asset.      |
-| `lang`        | No       | Optional fallback marker. The real language comes from the directory.     |
+| Field         | Required | Notes                                                                                                                              |
+| ------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `title`       | Yes      | The article title. Do not add an h1 in the body.                                                                                   |
+| `description` | No       | Recommended; 40–80 characters is a good target. Used in lists and search.                                                          |
+| `publishDate` | Yes      | First publication date in `YYYY-MM-DD`. Do not change it for revisions.                                                            |
+| `category`    | No       | Currently only `news` is accepted. Only news appears in `/news`.                                                                   |
+| `tags`        | No       | One of the fixed categories (Official Announcements, Events, Donation Disclosures, Partnerships, Guides), used for list filtering. |
+| `image`       | No       | Cover path beginning with `/` or `http(s)://`. Prefer a local asset.                                                               |
+| `lang`        | No       | Optional fallback marker. The real language comes from the directory.                                                              |
 
 ### Dates and Categories
 
@@ -77,8 +77,9 @@ lang: en
 
 ### Tags
 
-Tags are light categories, not a keyword dump. Reuse existing tags such as `announcement`,
-`maintenance`, `community`, and `tutorial`. Two to four tags per article is enough.
+Tags are light categories, not a keyword dump. The site keeps exactly five fixed categories:
+`Official Announcements`, `Events`, `Donation Disclosures`, `Partnerships`, and `Guides`. Pick
+the single closest tag for each article; do not invent new ones.
 
 ### Cover Images
 
