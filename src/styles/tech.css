@@ -167,10 +167,9 @@
     transition: opacity 400ms ease;
   }
 
-  /* 两层画布：辉光层分辨率仅 CSS 尺寸的一半，由浏览器平滑放大；
-     粒子/连线层保持 DPR（大视口在脚本里封顶 1.5）。 */
-  #tech-canvas,
-  #tech-glow-canvas {
+  /* WebGL2 动态层：只画辉光/粒子/连线，透明背景让下面的 CSS 静态层透出。
+     静态的网格/极光/暗角仍由伪元素承担，WebGL2 不可用时它们就是完整兜底。 */
+  #tech-canvas {
     position: fixed;
     inset: 0;
     width: 100%;
@@ -314,7 +313,8 @@
     padding-top: env(safe-area-inset-top, 0px);
     background: var(--nav-bg);
     box-shadow: var(--nav-shadow);
-    backdrop-filter: blur(18px);
+    /* 18px → 10px：模糊采样面积近似按半径平方增长，动态背景下这一步比看起来值钱 */
+    backdrop-filter: blur(10px);
     /* 裁掉下缘圆角外的下拉面板背景 */
     overflow: hidden;
     transition:

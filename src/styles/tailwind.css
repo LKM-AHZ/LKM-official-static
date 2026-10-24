@@ -181,7 +181,8 @@
   border-radius: 16px;
   border: 1px solid var(--card-edge);
   box-shadow: var(--card-shadow);
-  backdrop-filter: blur(8px) saturate(118%);
+  /* 不叠 backdrop-filter：卡片下方是持续动画的背景，合成器每帧都要重算 8px 模糊；
+     卡片本身已有 66–92% 不透明度，去掉后视觉差异很小。 */
   transition:
     transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.4s ease,
@@ -235,7 +236,7 @@
   background: var(--card-bg-grad);
   border: 1px solid var(--card-edge);
   box-shadow: var(--card-shadow);
-  backdrop-filter: blur(8px) saturate(118%);
+  /* 同上：静态半透明底 + 边框已足够，避免动态背景上的逐帧重模糊 */
   transition:
     transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
     box-shadow 0.4s ease,
