@@ -50,14 +50,21 @@ const typingTexts = [title, subtitle].filter(Boolean);
     >
       PHIENTIST · SCIENCE COMMUNITY
     </p>
-    <h1 class="text-shadow mb-6 text-display font-bold text-deep-text">
+    <h1
+      class="hero-title text-shadow mb-6 text-display font-bold text-deep-text"
+    >
       {
-        /* 用 title 作为 SSR 兜底正文：禁用/未执行 JS 时 h1 不再空白（利于 SEO 与读屏），
-          打字机启动后会用 data-typing-texts 覆写该节点。 */
+        /* 隐藏的 sizer 把 title / subtitle 都按同一宽度排版，H1 高度取最长文案；
+           打字机切到更长的副标题时不会把下方 CTA 顶下去。 */
       }
-      <span data-typing-content>{title}</span><span class="typing-cursor"
-        >|</span
-      >
+      <span class="hero-title-sizer" aria-hidden="true">
+        {typingTexts.map((text) => <span data-sizer-text={text} />)}
+      </span>
+      <span class="hero-title-live">
+        <span data-typing-content>{title}</span><span class="typing-cursor"
+          >|</span
+        >
+      </span>
     </h1>
     <p
       class="animate-fadeInUp mx-auto mb-4 max-w-2xl text-lead text-text-muted"
@@ -95,6 +102,43 @@ const typingTexts = [title, subtitle].filter(Boolean);
   </div>
 </header>
 
+<style>
+  /* 打字机只改文字、不改 H1 高度：sizer 把全部候选文案叠在同一格里，
+     H1 高度取最长文案；切换到更长的副标题时不会把下方内容顶下去。
+     contain: layout 把文字重排限制在 H1 内部，避免波及 hero 其余节点。 */
+  .hero-title {
+    display: grid;
+    justify-items: center;
+    contain: layout;
+  }
+
+  .hero-title-sizer,
+  .hero-title-live {
+    grid-area: 1 / 1;
+    width: 100%;
+  }
+
+  /* sizer 按最长文案撑高；当前文案在预留高度里垂直居中，短标题不会贴顶 */
+  .hero-title-live {
+    align-self: center;
+  }
+
+  .hero-title-sizer {
+    display: grid;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .hero-title-sizer > span {
+    grid-area: 1 / 1;
+    width: 100%;
+  }
+
+  .hero-title-sizer > span::before {
+    content: attr(data-sizer-text);
+  }
+</style>
+
 <script>
   const hero = document.querySelector<HTMLElement>("[data-hero]");
   const inner = document.querySelector<HTMLElement>("[data-hero-inner]");
@@ -106,39 +150,83 @@ const typingTexts = [title, subtitle].filter(Boolean);
       "(prefers-reduced-motion: reduce)",
     ).matches;
     const texts: string[] = JSON.parse(hero.dataset.typingTexts ?? "[]");
+    let timer = 0;
+    let visible = true;
+    let paused = false;
 
     if (reduced || texts.length === 0) {
       el.textContent = texts[0] ?? "";
     } else {
-      // 打字机轮播：90ms 打 / 45ms 删 / 2s 停顿
+      // SSR 文案先完整显示；700ms 后从“删除”开始，避免首帧 H1 被清空。
+      // 这样 LCP 不会因为打字机先清空、再逐字重打而延后。
       let index = 0;
-      let char = 0;
-      let deleting = false;
+      let char = texts[0].length;
+      let deleting = true;
+      el.textContent = texts[0];
+
+      function schedule(delay: number): void {
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          timer = 0;
+          if (!visible || document.hidden) {
+            paused = true;
+            return;
+          }
+          tick();
+        }, delay);
+      }
 
       function tick(): void {
         const text = texts[index];
-        if (!deleting) {
-          char += 1;
-          el.textContent = text.slice(0, char);
-          if (char === text.length) {
-            deleting = true;
-            setTimeout(tick, 2000);
-            return;
-          }
-          setTimeout(tick, 90);
-        } else {
+        if (deleting) {
           char -= 1;
           el.textContent = text.slice(0, char);
-          if (char === 0) {
+          if (char <= 0) {
             deleting = false;
             index = (index + 1) % texts.length;
-            setTimeout(tick, 600);
+            schedule(600);
             return;
           }
-          setTimeout(tick, 45);
+          schedule(45);
+        } else {
+          char += 1;
+          el.textContent = text.slice(0, char);
+          if (char >= text.length) {
+            deleting = true;
+            schedule(2000);
+            return;
+          }
+          schedule(90);
         }
       }
-      setTimeout(tick, 700);
+
+      // Hero 滚出视口或标签页进后台时停掉定时器：文字不再重排，
+      // 也避免长页面上一直为一个看不见的标题做 layout。
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(
+          (entries) => {
+            visible = entries.some((entry) => entry.isIntersecting);
+            if (visible && paused) {
+              paused = false;
+              schedule(600);
+            }
+          },
+          { threshold: 0 },
+        ).observe(hero);
+      }
+
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          window.clearTimeout(timer);
+          timer = 0;
+          paused = true;
+        } else if (visible) {
+          paused = false;
+          schedule(600);
+        }
+      });
+
+      schedule(700);
     }
 
     // 首屏随滚动渐隐（背景的滚动响应统一由 TechBackground 写 --scroll-progress）

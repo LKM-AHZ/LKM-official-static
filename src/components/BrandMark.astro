@@ -1,6 +1,7 @@
 ---
 /**
- * 品牌标识：直接引用 public/lkm-logo.svg。
+ * 品牌标识：顶栏/页脚引用 public/lkm-logo.webp（256px，38px 显示也够 DPR5）；
+ * 原始 SVG 仍保留给 favicon 与 JSON-LD logo 使用。
  * 图自带固定配色（近白圆底 #F6F6F6 + 紫环 #BC93D9 + 浅蓝画 #93D1ED），
  * 白天原样即可；夜晚靠 filter 近似换色，见下方 <style> 的说明。
  */
@@ -12,7 +13,7 @@ interface Props {
 const { size = 38, class: className } = Astro.props;
 ---
 
-<img src="/lkm-logo.svg" width={size} height={size} alt="" class={className} />
+<img src="/lkm-logo.webp" width={size} height={size} alt="" class={className} />
 
 <style>
   /*

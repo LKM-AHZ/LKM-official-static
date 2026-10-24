@@ -11,10 +11,11 @@ export default defineConfig({
   // 纯静态输出：构建产物只含静态 HTML/CSS/JS
   output: "static",
   site: "https://lkm-ahz.icu",
-  // 站内链接视口内预取，加快导航
+  // 站内链接悬停/聚焦时预取。原先的 viewport 策略会在首屏批量预取所有可见链接，
+  // 与 LCP 抢带宽，还会把 /zh 与 /zh/ 当成两个 URL 重复请求一次。
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: "viewport",
+    defaultStrategy: "hover",
   },
   compressHTML: true,
   build: {

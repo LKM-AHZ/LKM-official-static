@@ -3,7 +3,7 @@
 # 该脚本只替换「已定义的」环境变量名，故 $host / $request_uri 等 nginx 变量不受影响。
 #
 # 只做独立部署必需的事：ACME、http→https、TLS、静态文件服务。
-# 刻意不额外定制缓存头/压缩策略——保持与原（根仓 APISIX + static 容器）部署观感一致。
+# 文本资源开启 gzip：构建产物本身未压缩，HTML/CSS/JS/SVG 传输量约降 60–70%。
 
 server {
     listen 80;
@@ -37,6 +37,20 @@ server {
 
     root /usr/share/nginx/html;
     index index.html;
+
+    # 默认 nginx 不压缩文本；这些静态资源都是高压缩比内容。
+    # text/html 默认就在 gzip_types 里，无需重复声明；woff2 已压缩，不再二次压缩。
+    gzip on;
+    gzip_comp_level 5;
+    gzip_min_length 1024;
+    gzip_types
+        text/plain
+        text/css
+        application/javascript
+        application/json
+        application/xml
+        image/svg+xml;
+    gzip_vary on;
 
     # 多页静态站：不做 SPA fallback，未知路径如实 404。
     location / {
