@@ -1,14 +1,16 @@
 ---
 // 根路径 / 重定向到默认语言首页 /zh/。
 // output:static 下不可用 Astro.redirect()，故用 meta refresh + 兜底链接实现静态 301。
-const DEFAULT_HOME = "/zh/";
+import { publicUrl } from "../lib/assets";
+
+const DEFAULT_HOME = publicUrl("/zh/");
 ---
 
 <!doctype html>
 <html lang="zh-CN">
   <head>
     <meta charset="utf-8" />
-    <meta http-equiv="refresh" content="0; url=/zh/" />
+    <meta http-equiv="refresh" content={`0; url=${DEFAULT_HOME}`} />
     <meta name="robots" content="noindex, follow" />
     <link rel="canonical" href={DEFAULT_HOME} />
     <title>理科迷 · PHIENTIST</title>

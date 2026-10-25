@@ -5,6 +5,8 @@
  * 图自带固定配色（近白圆底 #F6F6F6 + 紫环 #BC93D9 + 浅蓝画 #93D1ED），
  * 白天原样即可；夜晚靠 filter 近似换色，见下方 <style> 的说明。
  */
+import { publicUrl } from "../lib/assets";
+
 interface Props {
   size?: number;
   class?: string;
@@ -13,7 +15,13 @@ interface Props {
 const { size = 38, class: className } = Astro.props;
 ---
 
-<img src="/lkm-logo.webp" width={size} height={size} alt="" class={className} />
+<img
+  src={publicUrl("/lkm-logo.webp")}
+  width={size}
+  height={size}
+  alt=""
+  class={className}
+/>
 
 <style>
   /*

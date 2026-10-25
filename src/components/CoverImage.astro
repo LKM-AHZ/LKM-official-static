@@ -9,6 +9,8 @@
  *   标题渐变占位，避免页面上出现破图图标。
  * - 尺寸属性始终显式给出，配合 CSS 的固定高度避免 CLS。
  */
+import { publicUrl } from "../lib/assets";
+
 interface Props {
   src: string;
   alt: string;
@@ -35,8 +37,10 @@ const {
   sizes = "100vw",
 } = Astro.props;
 
-const thumbSrc = thumb && thumb !== src ? thumb : undefined;
-const srcset = thumbSrc ? `${thumbSrc} 800w, ${src} 1200w` : undefined;
+// public/ 下的图片必须带部署前缀，否则子路径部署（GitHub Pages 项目页）会 404
+const mainSrc = publicUrl(src);
+const thumbSrc = thumb && thumb !== src ? publicUrl(thumb) : undefined;
+const srcset = thumbSrc ? `${thumbSrc} 800w, ${mainSrc} 1200w` : undefined;
 
 // 第一次失败回退到主图，第二次失败隐藏自身：父容器已铺好标题渐变，
 // 隐藏后该区域仍是完整色块而不是浏览器默认的破图图标。
@@ -55,6 +59,6 @@ const onError =
   fetchpriority={fetchpriority}
   decoding="async"
   class={className}
-  data-fallback-src={thumbSrc ? src : undefined}
+  data-fallback-src={thumbSrc ? mainSrc : undefined}
   onerror={onError}
 />

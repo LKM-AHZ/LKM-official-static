@@ -1,0 +1,59 @@
+name: Deploy to GitHub Pages
+
+# 只在 main 上发布；workflow_dispatch 用于手动重发（例如换了 base/域名后重建）。
+# 本工作流只做「构建 + 发布」：类型/ESLint/Prettier/Vitest 由 static-build.yml 在同一个
+# 提交上并行执行，这里不重复跑；构建本身失败就不会有产物，发布随之失败。
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# 发布需要写 Pages（OIDC 令牌由 id-token 提供），仓库内容本身保持只读
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同一时间只跑一个发布；不取消进行中的那个，避免把站点发成半成品
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.21.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # 项目页固定挂在 https://<owner>.github.io/<repo>/ 下，所以构建期必须同时给出
+      # 站点域名（canonical / sitemap）与子路径前缀（站内链接 / 静态资源）。
+      # 用 GITHUB_REPOSITORY* 变量而不是 event payload：push 与 workflow_dispatch
+      # 两种触发器下都一定存在，仓库改名后也会自动跟随。
+      # 以后绑自定义域名 → 删掉 LKM_BASE_PATH、把域名换成正式域名（见 DEPLOYMENT.md 第九节）。
+      - name: 解析 Pages 站点域名与子路径前缀
+        run: |
+          echo "LKM_SITE_DOMAIN=${GITHUB_REPOSITORY_OWNER}.github.io" >> "$GITHUB_ENV"
+          echo "LKM_BASE_PATH=/${GITHUB_REPOSITORY#*/}" >> "$GITHUB_ENV"
+      - run: pnpm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

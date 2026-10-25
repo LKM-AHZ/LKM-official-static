@@ -1,6 +1,7 @@
 # 官网独立部署指南
 
-本仓库是 LKM 纯静态官网（Astro 7 静态构建），**独立部署在一台自己的服务器上**。仓库不写死
+本仓库是 LKM 纯静态官网（Astro 7 静态构建），**独立部署在一台自己的服务器上**；另有
+[GitHub Pages 自动发布](#九github-pages自动发布可选) 作为预览/备用入口（第九节）。仓库不写死
 默认域名；构建期 SEO 与运行期 nginx/证书配置统一使用 `deploy/.env` 中的
 `LKM_SITE_DOMAIN`。部署编排自包含在 [`deploy/`](./deploy/) 目录，不依赖主站
 （`LKM-Website`）或任何其它仓库。
@@ -140,7 +141,47 @@ cd deploy && docker compose up -d --build static     # 只重建静态站；证�
 > 只 `restart` 不会更新这些文件。可用 `docker compose exec static ls /usr/share/nginx/html/images/covers`
 > 确认封面已进镜像。页面图片大面积 404 时先查这里。
 
-## 九、注意事项
+## 九、GitHub Pages（自动发布，可选）
+
+除了自己的服务器，推送到 `main` 还会由 `.github/workflows/pages.yml` 构建并发布到 GitHub Pages，
+地址是 **<https://lkm-ahz.github.io/LKM-official-static/>**。它适合做预览/备用入口，不替代上面的
+自建部署：Pages 只托管静态文件，不提供证书签发、反代或自定义响应头的控制权。
+
+前提只有一条：仓库 **Settings → Pages → Build and deployment → Source** 选 **GitHub Actions**
+（本项目已启用，`build_type` 为 `workflow`）。之后每次推 `main`、或在 Actions 里手动
+`Run workflow`（`workflow_dispatch`）都会重发。
+
+工作流里两个构建期变量决定了站点形态，要改就改这两行：
+
+| 变量              | 值                  | 作用                                    |
+| ----------------- | ------------------- | --------------------------------------- |
+| `LKM_SITE_DOMAIN` | `<owner>.github.io` | canonical、sitemap、robots 里的绝对域名 |
+| `LKM_BASE_PATH`   | `/<仓库名>`         | 站内链接与静态资源的子路径前缀          |
+
+**项目页必须带子路径前缀。** Astro 产出的资源与 canonical 由框架自动加前缀；`langUrl()` /
+`publicUrl()` 负责组件里的链接；Markdown 正文里作者手写的 `/zh/...` 由
+`src/integrations/base-links.ts` 在构建后统一补前缀（跳过 `<pre>` 里的代码示例）。域根部署
+（`LKM_BASE_PATH` 为空）时该集成为 no-op，nginx 产物与之前逐字节一致。
+
+**以后要绑自定义域名**（如 `lkm.example.com`）：把工作流的 `LKM_BASE_PATH` 删掉、
+`LKM_SITE_DOMAIN` 改成正式域名，再把 CNAME 文件放进 `public/`（构建时会复制到产物根），
+Pages 站点就从子路径变成域根，链接无需再改。若同时保留自建部署，注意两边 canonical 会指向
+不同域名——正式对外的那一个要有明确取舍。
+
+**本地复现 Pages 构建**：
+
+```sh
+LKM_SITE_DOMAIN=lkm-ahz.github.io LKM_BASE_PATH=/LKM-official-static pnpm build
+
+# 产物是「子路径站」：必须挂在 /LKM-official-static/ 下访问，直接 `-d dist` 起服务会 404
+mkdir -p /tmp/pages-preview && ln -sfn "$PWD/dist" /tmp/pages-preview/LKM-official-static
+python3 -m http.server 8080 -d /tmp/pages-preview   # http://127.0.0.1:8080/LKM-official-static/zh/
+```
+
+抽查：`/zh/`、`/en/team/`、一篇 `/zh/docs/<slug>/`（正文内链是否带前缀）、`robots.txt` 的
+Sitemap 行、`sitemap-0.xml` 里的 `<loc>`、`404.html`（Pages 对未知路径返回它）。
+
+## 十、注意事项
 
 - **不要用 `docker compose down -v`**：`-v` 会删除 `certbot_conf` / `certbot_www` 两个卷，
   证书随之丢失，需要重新签发并可能触发 Let's Encrypt 限流。日常停服用不带 `-v` 的 `docker compose down`。

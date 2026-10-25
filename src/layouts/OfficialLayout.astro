@@ -9,6 +9,7 @@ import Seo from "../components/Seo.astro";
 import { t } from "../i18n/index";
 import type { TranslationKey } from "../i18n/index";
 import { langUrl } from "../i18n/paths";
+import { publicUrl } from "../lib/assets";
 import { THEME_STORAGE_KEY } from "../lib/theme";
 
 /**
@@ -94,7 +95,7 @@ const footerCols: {
          @font-face 的请求重复下载。中文字体走系统栈，不需要预载。 */}
     <link
       rel="preload"
-      href="/fonts/inter-latin-var.woff2"
+      href={publicUrl("/fonts/inter-latin-var.woff2")}
       as="font"
       type="font/woff2"
       crossorigin

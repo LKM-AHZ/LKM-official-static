@@ -1,7 +1,7 @@
 ---
 import { SUPPORTED_LANGS, t } from "../i18n/index";
 import type { Lang } from "../i18n/index";
-import { langUrl, stripLangPrefix } from "../i18n/paths";
+import { langUrl, stripBase, stripLangPrefix } from "../i18n/paths";
 
 // 当前语言：Astro.currentLocale（在 [lang] 路由下由内置 i18n 提供）。
 // 用 SUPPORTED_LANGS 过滤而非 as 断言：将来多语言/异常取值时不会静默拿到未支持的值。
@@ -9,12 +9,18 @@ const current: Lang =
   SUPPORTED_LANGS.find((l) => l === Astro.currentLocale) ?? SUPPORTED_LANGS[0];
 const label: Record<Lang, string> = { zh: "中", en: "EN" };
 
+// 当前页是否是「带语言前缀的页面」：404 这类中立页剥掉语言前缀不会有变化。
+// 它没有对应的另一种语言版本，此时切语言只能回首页，不能拼出 /zh/404/ 这种死链。
+const pathname = Astro.url.pathname;
+const neutralPath = stripLangPrefix(pathname);
+const localized = neutralPath !== stripBase(pathname);
+
 /**
  * 目标语言同页 URL：剥掉当前语言前缀后复用全站 langUrl 规则补前缀。
  * （zh 首页原先返回 "/" 会多走一次「根路径 301 → /zh/」，且与 en 分支不对称。）
  */
 function localizedHref(target: Lang): string {
-  return langUrl(target, stripLangPrefix(Astro.url.pathname));
+  return langUrl(target, localized ? neutralPath : "/");
 }
 ---
 

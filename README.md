@@ -79,3 +79,13 @@ docker compose up -d --build
 ```
 
 `deploy/.env` 是部署时的域名唯一来源；compose 会把它同时注入 Astro 构建和 nginx 配置。
+
+推送到 `main` 时还会由 [`.github/workflows/pages.yml`](./.github/workflows/pages.yml) 额外发布一份
+到 GitHub Pages（项目页地址 `https://lkm-ahz.github.io/LKM-official-static/`），用于不碰服务器的
+预览与备份。项目页挂在子路径下，工作流会自动传入 `LKM_BASE_PATH`；本地复现该构建：
+
+```sh
+LKM_SITE_DOMAIN=<owner>.github.io LKM_BASE_PATH=/LKM-official-static pnpm build
+```
+
+两种部署共用同一份 `dist/`，域名与子路径前缀只在构建期以环境变量区分。

@@ -1,5 +1,6 @@
 ---
 import avatarMap from "../data/avatar-map.json";
+import { publicUrl } from "../lib/assets";
 
 /**
  * 团队成员卡。
@@ -34,7 +35,9 @@ const HeadingTag = level === 4 ? "h4" : "h3";
 const avatarName = avatarKey
   ? avatarMap[avatarKey as keyof typeof avatarMap]
   : undefined;
-const avatarSrc = avatarName ? `/images/avatars/${avatarName}` : undefined;
+const avatarSrc = avatarName
+  ? publicUrl(`/images/avatars/${avatarName}`)
+  : undefined;
 
 // avatar-map.json 由 scripts/sync-team-avatars.mts 生成，与 team-data.ts 容易漂移；
 // 只在开发期提示，避免线上构建因为一个头像文件缺失就中断

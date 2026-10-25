@@ -6,7 +6,8 @@
 import { getAbsoluteLocaleUrl } from "astro:i18n";
 import { SITE_NAME } from "../data/config";
 import { DEFAULT_LANG, SUPPORTED_LANGS, t } from "../i18n/index";
-import { stripLangPrefix } from "../i18n/paths";
+import { stripBase, stripLangPrefix } from "../i18n/paths";
+import { publicUrl } from "../lib/assets";
 import { THEME_COLORS } from "../lib/theme";
 
 interface Props {
@@ -47,7 +48,8 @@ const site = Astro.site;
 const canonical = site
   ? new URL(Astro.url.pathname + Astro.url.search, site).href
   : undefined;
-const ogImage = site ? new URL(image, site).href : image;
+// 分享图是站内路径时要带部署前缀（GitHub Pages 项目页挂在子路径下）
+const ogImage = site ? new URL(publicUrl(image), site).href : publicUrl(image);
 // 尺寸只对品牌图成立：文章页用的是远程分享图（内容里是 1200x650），
 // 若一律声明 1200x630，抓取方按错误比例裁剪预览图
 const ogImageIsDefault = image === OG_DEFAULT_IMAGE;
@@ -56,8 +58,10 @@ const ogImageIsDefault = image === OG_DEFAULT_IMAGE;
 // Astro 对 /404 这类非 [lang] 路由会回落到默认语言（zh），于是 404 会生成
 // /zh/404/、/en/404/ 这些并不存在的 hreflang alternate，并自称 og:locale=zh_CN。
 // 用「剥掉前缀后路径是否变化」来判定，语言中立的页面就不再声明语言相关元信息。
+// 注意 Astro.url.pathname 已含部署前缀，比较前要先摘掉，否则「摘了前缀必然变化」
+// 会让 /404 这类中立页也被判成语言页。
 const pathname = Astro.url.pathname;
-const localized = stripLangPrefix(pathname) !== pathname;
+const localized = stripLangPrefix(pathname) !== stripBase(pathname);
 const locale = Astro.currentLocale as "zh" | "en" | undefined;
 const ogLocale =
   !localized || locale === undefined
@@ -88,7 +92,9 @@ const xDefault =
     ? getAbsoluteLocaleUrl(DEFAULT_LANG, pathWithoutLocale)
     : undefined;
 
-const organizationId = site ? new URL("/#organization", site).href : undefined;
+const organizationId = site
+  ? new URL(publicUrl("/#organization"), site).href
+  : undefined;
 const organizationJsonLd =
   site && organizationId
     ? {
@@ -98,8 +104,8 @@ const organizationJsonLd =
         name: SITE_NAME,
         alternateName: "PHIENTIST",
         // 组织 URL 用站点根，而不是写死中文首页：英文/中立页面不该把 /zh/ 报成机构地址
-        url: new URL("/", site).href,
-        logo: new URL("/lkm-logo.svg", site).href,
+        url: new URL(publicUrl("/"), site).href,
+        logo: new URL(publicUrl("/lkm-logo.svg"), site).href,
         foundingDate: "2014",
       }
     : null;
@@ -108,7 +114,7 @@ const websiteJsonLd =
     ? {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        "@id": new URL("/#website", site).href,
+        "@id": new URL(publicUrl("/#website"), site).href,
         name: localizedSiteName,
         url: canonical,
         inLanguage: locale === "en" ? "en" : "zh-CN",
@@ -131,7 +137,7 @@ const articleJsonLd =
 ---
 
 {canonical && <link rel="canonical" href={canonical} />}
-<link rel="icon" href="/lkm-logo.svg" type="image/svg+xml" />
+<link rel="icon" href={publicUrl("/lkm-logo.svg")} type="image/svg+xml" />
 
 <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
 <!-- 初始值对应默认的白天主题；ThemeToggle 的脚本会在切主题时改写 -->
