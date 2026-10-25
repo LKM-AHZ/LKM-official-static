@@ -66,6 +66,13 @@
     --bg-focus-x: calc(50% + var(--sidebar-w, 240px) / 2);
   }
 
+  /* 移动端侧栏是画外抽屉（不占版面），视觉中心要回到视口中线 */
+  @media (max-width: 767px) {
+    body.tech-theme:has([data-page-sidebar]) {
+      --bg-focus-x: 50%;
+    }
+  }
+
   /* 蓝图网格层：16px 点阵 + 64px 细线。点阵给近处一点质感，细线负责空间感；
      向内容列聚拢，四周渐隐以免整屏均匀铺满。 */
   body.tech-theme::before {

@@ -43,7 +43,32 @@ const {
     {/* 无侧栏项时整块侧栏（含主内容偏移）都不渲染：空 <nav> 既是无意义的
         地标，也会白占 240px 版面（en 阶段一分类为空即此情形）。 */}
     {sidebarItems.length > 0 && (
+      <>
+        {/* 移动端：侧栏是画外抽屉（默认移出画外），这枚按钮在左下角把它拉出来。
+            桌面端由 CSS 隐藏，侧栏照旧常驻左侧。 */}
+        <button
+          type="button"
+          class={styles.mobileToggle}
+          data-sidebar-toggle
+          aria-controls="page-sidebar"
+          aria-expanded="false"
+          aria-label={t(lang, "common.aria.page_toc")}
+        >
+          <Icon name="menu" class={styles.iconMenu} />
+          <Icon name="close" class={styles.iconClose} />
+        </button>
+        {/* 遮罩只是点击关闭的辅助手段：键盘用 Esc 关闭，按钮也可再次点击 */}
+        <div
+          class={styles.backdrop}
+          data-sidebar-backdrop
+          aria-hidden="true"
+        ></div>
+      </>
+    )}
+
+    {sidebarItems.length > 0 && (
       <nav
+        id="page-sidebar"
         class={styles.shell}
         data-page-sidebar
         aria-label={t(lang, "common.aria.page_toc")}
@@ -82,6 +107,51 @@ const {
 </OfficialLayout>
 
 <script>
+  // ── 移动端侧栏抽屉 ──
+  // 手机上没有常驻侧栏的空间：默认移出画外（正文占满整宽），点左下角按钮滑入。
+  // 状态放在 html.sidebar-open 上，CSS 只管画法与位移，JS 只管状态与无障碍属性。
+  document.addEventListener("DOMContentLoaded", () => {
+    const drawer = document.querySelector<HTMLElement>("[data-page-sidebar]");
+    const toggle = document.querySelector<HTMLButtonElement>(
+      "[data-sidebar-toggle]",
+    );
+    const backdrop = document.querySelector<HTMLElement>(
+      "[data-sidebar-backdrop]",
+    );
+    if (!drawer || !toggle) return;
+
+    const mobile = window.matchMedia("(max-width: 767px)");
+
+    function setDrawer(open: boolean): void {
+      const isOpen = mobile.matches && open;
+      document.documentElement.classList.toggle("sidebar-open", isOpen);
+      toggle?.setAttribute("aria-expanded", String(isOpen));
+      if (backdrop) backdrop.hidden = !isOpen;
+      // 收起时抽屉仍在 DOM 里：用 inert 把它从 Tab 顺序与无障碍树摘掉，
+      // 否则键盘会跳进画外那些看不见的锚点上。桌面端侧栏常驻，不能 inert。
+      if (drawer) drawer.inert = mobile.matches && !isOpen;
+    }
+
+    toggle.addEventListener("click", () => {
+      setDrawer(!document.documentElement.classList.contains("sidebar-open"));
+    });
+    backdrop?.addEventListener("click", () => setDrawer(false));
+    // Esc 关抽屉并把焦点还给按钮（键盘用户的出口）
+    document.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape") return;
+      if (!document.documentElement.classList.contains("sidebar-open")) return;
+      setDrawer(false);
+      toggle.focus();
+    });
+    // 点了抽屉里的锚点就收起：否则跳过去的区块会被抽屉盖住
+    drawer.addEventListener("click", (event) => {
+      if ((event.target as Element | null)?.closest("a")) setDrawer(false);
+    });
+    // 跨断点（旋转屏幕/拖动窗口）时复位，避免桌面态残留 sidebar-open
+    mobile.addEventListener("change", () => setDrawer(false));
+    setDrawer(false);
+  });
+
   document.addEventListener("DOMContentLoaded", () => {
     const sidebar = document.querySelector("[data-page-sidebar]");
     if (!sidebar) return;

@@ -63,11 +63,18 @@
   padding-left: 0;
 }
 
+/* 移动端抽屉的遮罩与展开按钮：桌面端不参与布局（媒体查询里才 display） */
+.backdrop,
+.mobileToggle {
+  display: none;
+}
+
 :global(html.sidebar-collapsed) .mainShell {
   padding-left: var(--sidebar-w-collapsed);
 }
 
-/* 移动端：更窄 + 默认收起 */
+/* 移动端：侧栏改成画外抽屉——默认移出画外、正文占满，由左下角按钮展开。
+   常驻 200px 会把 375px 宽的手机正文压到 175px，即便「收起」到 50px 也仍占版面。 */
 @media (max-width: 767px) {
   :global(:root) {
     --sidebar-w: 200px;
@@ -75,9 +82,79 @@
   }
   .shell {
     padding-left: 4px;
+    transform: translateX(-100%);
+    /* 抽屉浮在正文之上，必须有实底，否则正文文字会从半透明侧栏里透出来 */
+    background: var(--card-bg);
+    box-shadow: 8px 0 32px rgb(0 0 0 / 0.18);
+    transition:
+      transform 0.3s ease,
+      width 0.3s;
   }
-  :global(html.sidebar-collapsed) .shell {
-    padding-left: 4px;
+  :global(html.sidebar-open) .shell {
+    transform: none;
+  }
+  /* 正文不再为侧栏让位（含 sidebar-collapsed 的桌面收起态） */
+  .mainShell,
+  :global(html.sidebar-collapsed) .mainShell {
+    padding-left: 0;
+  }
+  /* 抽屉展开时锁住背景滚动，避免手指滑动穿透 */
+  :global(html.sidebar-open) :global(body) {
+    overflow: hidden;
+  }
+  /* 动效敏感用户：抽屉改为瞬时开合（与站内 scroll-behavior 的降级一致） */
+  @media (prefers-reduced-motion: reduce) {
+    .shell {
+      transition: none;
+    }
+  }
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 9;
+    background: rgb(0 0 0 / 0.45);
+  }
+  :global(html.sidebar-open) .backdrop {
+    display: block;
+  }
+  .mobileToggle {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 9998;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    padding: 0;
+    border: 1px solid var(--backtop-edge);
+    border-radius: 9999px;
+    background: var(--backtop-bg);
+    color: var(--primary);
+    backdrop-filter: blur(12px);
+    cursor: pointer;
+    transition:
+      background 0.3s ease,
+      border-color 0.3s ease,
+      color 0.3s ease;
+  }
+  .mobileToggle:hover {
+    background: var(--social-hover-bg);
+  }
+  .mobileToggle svg {
+    width: 18px;
+    height: 18px;
+  }
+  /* 抽屉开着时换成品字关闭图标：两枚图标都在 DOM 里，只切换显隐 */
+  .iconClose {
+    display: none;
+  }
+  :global(html.sidebar-open) .iconMenu {
+    display: none;
+  }
+  :global(html.sidebar-open) .iconClose {
+    display: block;
   }
   .mainShellFull {
     padding-left: 0;
