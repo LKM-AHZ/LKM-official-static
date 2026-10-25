@@ -41,9 +41,13 @@ const {
   publishedTime,
 } = Astro.props;
 
-const site = Astro.site ?? new URL("https://lkm-ahz.icu");
-const canonical = Astro.url.href;
-const ogImage = new URL(image, site).href;
+// 域名来自构建期的 LKM_SITE_DOMAIN（见 astro.config.ts）。未配置时不伪造域名：
+// 省略 canonical / abstract JSON-LD，等部署时再输出完整 SEO 元信息。
+const site = Astro.site;
+const canonical = site
+  ? new URL(Astro.url.pathname + Astro.url.search, site).href
+  : undefined;
+const ogImage = site ? new URL(image, site).href : image;
 // 尺寸只对品牌图成立：文章页用的是远程分享图（内容里是 1200x650），
 // 若一律声明 1200x630，抓取方按错误比例裁剪预览图
 const ogImageIsDefault = image === OG_DEFAULT_IMAGE;
@@ -72,40 +76,47 @@ const localizedSiteName = t(locale ?? DEFAULT_LANG, "common.brand");
 // 去掉语言前缀得到语言中立路径，用于生成各语言 alternate
 // （前缀集合由 SUPPORTED_LANGS 派生，新增语言时这里的匹配不会落后于配置）
 const pathWithoutLocale = localized ? stripLangPrefix(pathname) : "/";
-const alternates = localized
-  ? SUPPORTED_LANGS.map((lang) => ({
-      lang,
-      href: getAbsoluteLocaleUrl(lang, pathWithoutLocale),
-    }))
-  : [];
-const xDefault = localized
-  ? getAbsoluteLocaleUrl(DEFAULT_LANG, pathWithoutLocale)
-  : undefined;
+const alternates =
+  localized && site
+    ? SUPPORTED_LANGS.map((lang) => ({
+        lang,
+        href: getAbsoluteLocaleUrl(lang, pathWithoutLocale),
+      }))
+    : [];
+const xDefault =
+  localized && site
+    ? getAbsoluteLocaleUrl(DEFAULT_LANG, pathWithoutLocale)
+    : undefined;
 
-const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": new URL("/#organization", site).href,
-  name: SITE_NAME,
-  alternateName: "PHIENTIST",
-  // 组织 URL 用站点根，而不是写死中文首页：英文/中立页面不该把 /zh/ 报成机构地址
-  url: new URL("/", site).href,
-  logo: new URL("/lkm-logo.svg", site).href,
-  foundingDate: "2014",
-};
-const websiteJsonLd = includeWebsiteJsonLd
-  ? {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "@id": new URL("/#website", site).href,
-      name: localizedSiteName,
-      url: canonical,
-      inLanguage: locale === "en" ? "en" : "zh-CN",
-      publisher: { "@id": organizationJsonLd["@id"] },
-    }
-  : null;
+const organizationId = site ? new URL("/#organization", site).href : undefined;
+const organizationJsonLd =
+  site && organizationId
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": organizationId,
+        name: SITE_NAME,
+        alternateName: "PHIENTIST",
+        // 组织 URL 用站点根，而不是写死中文首页：英文/中立页面不该把 /zh/ 报成机构地址
+        url: new URL("/", site).href,
+        logo: new URL("/lkm-logo.svg", site).href,
+        foundingDate: "2014",
+      }
+    : null;
+const websiteJsonLd =
+  includeWebsiteJsonLd && site && canonical && organizationId
+    ? {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": new URL("/#website", site).href,
+        name: localizedSiteName,
+        url: canonical,
+        inLanguage: locale === "en" ? "en" : "zh-CN",
+        publisher: { "@id": organizationId },
+      }
+    : null;
 const articleJsonLd =
-  type === "article"
+  type === "article" && site && organizationId
     ? {
         "@context": "https://schema.org",
         "@type": "Article",
@@ -114,12 +125,12 @@ const articleJsonLd =
         image: ogImage,
         inLanguage: locale === "en" ? "en" : "zh-CN",
         ...(publishedTime ? { datePublished: publishedTime } : {}),
-        publisher: { "@id": organizationJsonLd["@id"] },
+        publisher: { "@id": organizationId },
       }
     : null;
 ---
 
-<link rel="canonical" href={canonical} />
+{canonical && <link rel="canonical" href={canonical} />}
 <link rel="icon" href="/lkm-logo.svg" type="image/svg+xml" />
 
 <meta name="robots" content={noindex ? "noindex, follow" : "index, follow"} />
@@ -136,7 +147,7 @@ const articleJsonLd =
 <meta property="og:site_name" content={localizedSiteName} />
 <meta property="og:title" content={title} />
 {description && <meta property="og:description" content={description} />}
-<meta property="og:url" content={canonical} />
+{canonical && <meta property="og:url" content={canonical} />}
 <meta property="og:image" content={ogImage} />
 {ogImageIsDefault && (
   <>
@@ -165,11 +176,13 @@ const articleJsonLd =
 {description && <meta name="twitter:description" content={description} />}
 <meta name="twitter:image" content={ogImage} />
 
-<script
-  is:inline
-  type="application/ld+json"
-  set:html={JSON.stringify(organizationJsonLd)}
-/>
+{organizationJsonLd && (
+  <script
+    is:inline
+    type="application/ld+json"
+    set:html={JSON.stringify(organizationJsonLd)}
+  />
+)}
 {websiteJsonLd && (
   <script
     is:inline

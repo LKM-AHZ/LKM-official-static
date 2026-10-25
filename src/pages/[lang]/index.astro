@@ -10,6 +10,8 @@ import { t } from "../../i18n/index";
 import { langUrl } from "../../i18n/paths";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
+// 只有构建期配置了 LKM_SITE_DOMAIN 才展示官网入口；域名未确定时不写死任何地址。
+const siteUrl = Astro.site?.origin;
 
 import { getStaticPathsForLang } from "../../i18n/paths";
 export const getStaticPaths = getStaticPathsForLang;
@@ -445,29 +447,35 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
             >
               <Icon name="mail" class="h-5 w-5" />
             </a>
-            <a
-              href="https://lkm-ahz.icu/"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="social-icon"
-              aria-label={t(lang, "home.contact_website_label")}
-              title={t(lang, "home.contact_website_label")}
-            >
-              <Icon name="worldWww" class="h-5 w-5" />
-            </a>
+            {siteUrl && (
+              <a
+                href={siteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="social-icon"
+                aria-label={t(lang, "home.contact_website_label")}
+                title={t(lang, "home.contact_website_label")}
+              >
+                <Icon name="worldWww" class="h-5 w-5" />
+              </a>
+            )}
           </div>
 
-          <p class="mt-9 text-sm text-text-muted">
-            {t(lang, "home.contact_website_label")}
-          </p>
-          <a
-            href="https://lkm-ahz.icu/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="mt-2 inline-block text-sm font-medium text-primary transition hover:underline"
-          >
-            https://lkm-ahz.icu/
-          </a>
+          {siteUrl && (
+            <>
+              <p class="mt-9 text-sm text-text-muted">
+                {t(lang, "home.contact_website_label")}
+              </p>
+              <a
+                href={siteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-2 inline-block text-sm font-medium text-primary transition hover:underline"
+              >
+                {siteUrl}
+              </a>
+            </>
+          )}
           <p class="mt-3 text-xs leading-relaxed text-text-muted">
             {t(lang, "home.contact_note")}
           </p>

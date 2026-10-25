@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://lkm-ahz.icu/sitemap-index.xml

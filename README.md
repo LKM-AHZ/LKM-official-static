@@ -11,8 +11,13 @@ LKM 纯静态官网，基于 Astro 7 和 Tailwind CSS 4。该项目只负责可�
 
 ```sh
 pnpm install
+cp .env.example .env   # 可选：填写 LKM_SITE_DOMAIN 以生成完整 SEO 元信息
 pnpm dev
 ```
+
+`LKM_SITE_DOMAIN` 没有默认值，也未写死任何域名。未配置时本地开发、检查与构建仍可运行，
+但不会生成 canonical、sitemap，`robots.txt` 中也不会包含 Sitemap 行；配置后请只填写主机名，
+例如 `LKM_SITE_DOMAIN=example.com`（也可填写完整 URL）。
 
 默认开发地址为 `http://127.0.0.1:4321`。如果动态前端同时运行，请为其中一个进程指定其他端口：
 
@@ -59,7 +64,8 @@ pnpm test
 pnpm build
 ```
 
-构建成功后抽查首页、中文与英文内容路由、`robots.txt`、站点地图以及 404 页面。
+构建成功后抽查首页、中文与英文内容路由、`robots.txt`、站点地图以及 404 页面。若本地
+`.env` 中配置了 `LKM_SITE_DOMAIN`，还应确认 canonical 与 sitemap 使用该域名。
 
 ## 部署
 
@@ -68,6 +74,8 @@ pnpm build
 
 ```sh
 cd deploy
-cp .env.example .env   # 填 LKM_SITE_DOMAIN / LKM_ACME_EMAIL
+cp .env.example .env   # 必须填 LKM_SITE_DOMAIN；按需填 LKM_ACME_EMAIL
 docker compose up -d --build
 ```
+
+`deploy/.env` 是部署时的域名唯一来源；compose 会把它同时注入 Astro 构建和 nginx 配置。

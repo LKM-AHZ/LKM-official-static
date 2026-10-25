@@ -25,6 +25,9 @@ services:
       # 构建上下文是仓库根（static.Dockerfile 在根目录）
       context: ..
       dockerfile: static.Dockerfile
+      args:
+        # 构建期注入域名，供 Astro 生成 canonical / sitemap / robots.txt。
+        LKM_SITE_DOMAIN: ${LKM_SITE_DOMAIN:?LKM_SITE_DOMAIN 必填，见 .env.example}
     image: lkm-official-static:latest
     depends_on:
       certs-init:
