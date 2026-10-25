@@ -75,27 +75,25 @@ const pagerLabel = lang === "en" ? `${title} pagination` : `${title}分页`;
   </header>
 
   <div data-module-list class="grid gap-5 sm:grid-cols-2">
-    {
-      items.map((doc) => (
-        <NewsCard
-          kind={kind}
-          headingLevel={3}
-          lang={lang}
-          href={langUrl(lang, `/docs/${postSlug(doc)}`)}
-          title={doc.data.title}
-          desc={doc.data.description}
-          date={doc.data.publishDate}
-          minutes={readingMinutes(doc.body ?? "")}
-          tags={doc.data.tags ?? []}
-          image={doc.data.image}
-          searchText={buildSearchText([
-            doc.data.title,
-            doc.data.description,
-            ...(doc.data.tags ?? []),
-          ])}
-        />
-      ))
-    }
+    {items.map((doc) => (
+      <NewsCard
+        kind={kind}
+        headingLevel={3}
+        lang={lang}
+        href={langUrl(lang, `/docs/${postSlug(doc)}`)}
+        title={doc.data.title}
+        desc={doc.data.description}
+        date={doc.data.publishDate}
+        minutes={readingMinutes(doc.body ?? "")}
+        tags={doc.data.tags ?? []}
+        image={doc.data.image}
+        searchText={buildSearchText([
+          doc.data.title,
+          doc.data.description,
+          ...(doc.data.tags ?? []),
+        ])}
+      />
+    ))}
   </div>
 
   <p

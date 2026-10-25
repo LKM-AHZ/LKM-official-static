@@ -22,25 +22,23 @@ function localizedHref(target: Lang): string {
   class="flex items-center rounded-full border border-[var(--ghost-edge)] bg-[var(--ghost-bg)] p-0.5"
   aria-label={t(current, "common.aria.language")}
 >
-  {
-    SUPPORTED_LANGS.map((lang) => (
-      <a
-        href={localizedHref(lang)}
-        data-lang-switch
-        hreflang={lang}
-        lang={lang}
-        aria-current={lang === current ? "true" : undefined}
-        class:list={[
-          "rounded-full px-2.5 py-1.5 text-sm font-semibold no-underline transition-colors",
-          lang === current
-            ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
-            : "text-text-muted hover:text-[var(--primary)]",
-        ]}
-      >
-        {label[lang]}
-      </a>
-    ))
-  }
+  {SUPPORTED_LANGS.map((lang) => (
+    <a
+      href={localizedHref(lang)}
+      data-lang-switch
+      hreflang={lang}
+      lang={lang}
+      aria-current={lang === current ? "true" : undefined}
+      class:list={[
+        "rounded-full px-2.5 py-1.5 text-sm font-semibold no-underline transition-colors",
+        lang === current
+          ? "bg-[var(--social-hover-bg)] text-[var(--primary)]"
+          : "text-text-muted hover:text-[var(--primary)]",
+      ]}
+    >
+      {label[lang]}
+    </a>
+  ))}
 </nav>
 
 <script>

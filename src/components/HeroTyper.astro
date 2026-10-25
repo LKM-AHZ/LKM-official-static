@@ -50,20 +50,17 @@ const typingTexts = [title, subtitle].filter(Boolean);
     >
       PHIENTIST · SCIENCE COMMUNITY
     </p>
-    <h1
-      class="hero-title text-shadow mb-6 text-display font-bold text-deep-text"
-    >
-      {
-        /* 隐藏的 sizer 把 title / subtitle 都按同一宽度排版，H1 高度取最长文案；
-           打字机切到更长的副标题时不会把下方 CTA 顶下去。 */
-      }
+    <h1 class="hero-title text-shadow mb-6 text-display font-bold text-deep-text">
+      {/* 隐藏的 sizer 把 title / subtitle 都按同一宽度排版，H1 高度取最长文案；
+           打字机切到更长的副标题时不会把下方 CTA 顶下去。 */}
       <span class="hero-title-sizer" aria-hidden="true">
-        {typingTexts.map((text) => <span data-sizer-text={text} />)}
+        {typingTexts.map((text) => (
+          <span data-sizer-text={text} />
+        ))}
       </span>
       <span class="hero-title-live">
-        <span data-typing-content>{title}</span><span class="typing-cursor"
-          >|</span
-        >
+        <span data-typing-content>{title}</span>
+        <span class="typing-cursor">|</span>
       </span>
     </h1>
     <p
@@ -79,25 +76,21 @@ const typingTexts = [title, subtitle].filter(Boolean);
       SCIENCE · TECHNOLOGY · FUTURE
     </p>
     <div class="animate-fadeInUp" style="animation-delay:.4s">
-      {
-        ctaHref ? (
-          <a href={ctaHref} class="btn btn-primary btn-lg">
-            {ctaLabel ?? t(lang, "home.cta_communities")}
-            <Icon name="arrowRight" class="w-5 h-5" />
-          </a>
-        ) : (
-          <button type="button" class="btn btn-primary btn-lg" data-hero-next>
-            {t(lang, "home.hero_scroll")}
-            <Icon name="arrowDown" class="w-5 h-5" />
-          </button>
-        )
-      }
+      {ctaHref ? (
+        <a href={ctaHref} class="btn btn-primary btn-lg">
+          {ctaLabel ?? t(lang, "home.cta_communities")}
+          <Icon name="arrowRight" class="w-5 h-5" />
+        </a>
+      ) : (
+        <button type="button" class="btn btn-primary btn-lg" data-hero-next>
+          {t(lang, "home.hero_scroll")}
+          <Icon name="arrowDown" class="w-5 h-5" />
+        </button>
+      )}
     </div>
   </div>
 
-  <div
-    class="bounce-soft absolute bottom-10 left-1/2 z-10 text-2xl text-text-muted"
-  >
+  <div class="bounce-soft absolute bottom-10 left-1/2 z-10 text-2xl text-text-muted">
     <Icon name="chevronDown" class="w-6 h-6" />
   </div>
 </header>

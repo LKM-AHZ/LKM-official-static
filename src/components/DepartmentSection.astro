@@ -16,27 +16,21 @@ const { id, title, desc, noGrid = false } = Astro.props;
 <section id={id} class="section-padding scroll-mt-[var(--nav-h)]">
   <div class="container-x">
     <h2 class="mb-14 text-center">
-      <span
-        class="title-underline font-heading text-2xl font-bold text-deep-text"
-      >
+      <span class="title-underline font-heading text-2xl font-bold text-deep-text">
         {title}
       </span>
     </h2>
-    {
-      desc && (
-        <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-note text-text-muted">
-          {desc}
-        </p>
-      )
-    }
-    {
-      noGrid ? (
+    {desc && (
+      <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-note text-text-muted">
+        {desc}
+      </p>
+    )}
+    {noGrid ? (
+      <slot />
+    ) : (
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <slot />
-      ) : (
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <slot />
-        </div>
-      )
-    }
+      </div>
+    )}
   </div>
 </section>

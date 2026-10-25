@@ -25,21 +25,19 @@ const tabs: {
     class="mx-auto flex w-fit max-w-full flex-wrap items-center justify-center gap-1 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] p-1"
     aria-label={t(lang, "team.tabs_aria")}
   >
-    {
-      tabs.map((tab) => (
-        <a
-          href={langUrl(lang, tab.href)}
-          class:list={[
-            "rounded-full px-5 py-2 text-sm font-medium no-underline transition-colors",
-            current === tab.id
-              ? "bg-[var(--primary)] text-white shadow-sm"
-              : "text-text-muted hover:bg-[var(--social-hover-bg)] hover:text-deep-text",
-          ]}
-          aria-current={current === tab.id ? "page" : undefined}
-        >
-          {t(lang, tab.labelKey)}
-        </a>
-      ))
-    }
+    {tabs.map((tab) => (
+      <a
+        href={langUrl(lang, tab.href)}
+        class:list={[
+          "rounded-full px-5 py-2 text-sm font-medium no-underline transition-colors",
+          current === tab.id
+            ? "bg-[var(--primary)] text-white shadow-sm"
+            : "text-text-muted hover:bg-[var(--social-hover-bg)] hover:text-deep-text",
+        ]}
+        aria-current={current === tab.id ? "page" : undefined}
+      >
+        {t(lang, tab.labelKey)}
+      </a>
+    ))}
   </nav>
 </div>

@@ -219,31 +219,27 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
       </div>
 
       <div class="grid gap-5 sm:grid-cols-2 md:gap-6 lg:grid-cols-3">
-        {
-          teamMembers.map((m) => (
-            <a href={langUrl(lang, "/team")} class="profile-card no-underline">
-              <div class="profile-inner flex flex-row items-center gap-3 rounded-lg p-4 text-left sm:flex-col sm:p-5 sm:text-center">
-                <img
-                  src={m.avatar}
-                  alt=""
-                  width={96}
-                  height={96}
-                  class="h-10 w-10 shrink-0 rounded-full object-cover sm:mb-3 sm:h-16 sm:w-16"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div class="min-w-0 flex-1">
-                  <h3 class="text-lg font-bold text-deep-text">{m.name}</h3>
-                  <p class="mt-1 text-[0.8125rem] text-text-muted">{m.desc}</p>
-                </div>
+        {teamMembers.map((m) => (
+          <a href={langUrl(lang, "/team")} class="profile-card no-underline">
+            <div class="profile-inner flex flex-row items-center gap-3 rounded-lg p-4 text-left sm:flex-col sm:p-5 sm:text-center">
+              <img
+                src={m.avatar}
+                alt=""
+                width={96}
+                height={96}
+                class="h-10 w-10 shrink-0 rounded-full object-cover sm:mb-3 sm:h-16 sm:w-16"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="min-w-0 flex-1">
+                <h3 class="text-lg font-bold text-deep-text">{m.name}</h3>
+                <p class="mt-1 text-[0.8125rem] text-text-muted">{m.desc}</p>
               </div>
-            </a>
-          ))
-        }
+            </div>
+          </a>
+        ))}
         <a href={langUrl(lang, "/team")} class="profile-card no-underline">
-          <div
-            class="profile-inner flex min-h-full flex-col items-center justify-center gap-3 rounded-lg p-4 text-center sm:p-5"
-          >
+          <div class="profile-inner flex min-h-full flex-col items-center justify-center gap-3 rounded-lg p-4 text-center sm:p-5">
             <span class="text-lg font-bold text-deep-text">
               {t(lang, "home.team_more")}
             </span>
@@ -276,42 +272,40 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
           <div class="ct-cards-col" data-ct-cards-col>
             <div class="ct-cards-viewport">
               <div class="ct-cards-track" data-ct-cards-track>
-                {
-                  timelineItems.map((item) => (
-                    <div class="ct-card">
-                      <div class="ct-card-body">
-                        <div class="mb-2 font-mono text-[28px] font-bold text-[var(--primary)]">
-                          {item.year}
-                        </div>
-                        {/* 标题用 h3：18 条时间线条目此前全是 div，读屏无法按标题跳转；
+                {timelineItems.map((item) => (
+                  <div class="ct-card">
+                    <div class="ct-card-body">
+                      <div class="mb-2 font-mono text-[28px] font-bold text-[var(--primary)]">
+                        {item.year}
+                      </div>
+                      {/* 标题用 h3：18 条时间线条目此前全是 div，读屏无法按标题跳转；
                             年份保持普通文本（它是 "2014 ~ 2016" 这类自由文本，不是合法 datetime，
                             因此不适合用 <time>） */}
-                        <h3 class="mb-3 border-b border-[var(--primary)] pb-2 text-[clamp(1.375rem,2vw,1.875rem)] font-semibold text-deep-text">
-                          {item.title}
-                        </h3>
-                        <div class="text-note text-text-muted">
-                          {item.description}
-                        </div>
-                      </div>
-                      <div class="ct-arrows ct-arrows-mobile">
-                        <button
-                          class="ct-arrow"
-                          data-ct-arrow="prev"
-                          aria-label={t(lang, "home.timeline_prev")}
-                        >
-                          <Icon name="chevronUp" class="h-6 w-6" />
-                        </button>
-                        <button
-                          class="ct-arrow"
-                          data-ct-arrow="next"
-                          aria-label={t(lang, "home.timeline_next")}
-                        >
-                          <Icon name="chevronDown" class="h-6 w-6" />
-                        </button>
+                      <h3 class="mb-3 border-b border-[var(--primary)] pb-2 text-[clamp(1.375rem,2vw,1.875rem)] font-semibold text-deep-text">
+                        {item.title}
+                      </h3>
+                      <div class="text-note text-text-muted">
+                        {item.description}
                       </div>
                     </div>
-                  ))
-                }
+                    <div class="ct-arrows ct-arrows-mobile">
+                      <button
+                        class="ct-arrow"
+                        data-ct-arrow="prev"
+                        aria-label={t(lang, "home.timeline_prev")}
+                      >
+                        <Icon name="chevronUp" class="h-6 w-6" />
+                      </button>
+                      <button
+                        class="ct-arrow"
+                        data-ct-arrow="next"
+                        aria-label={t(lang, "home.timeline_next")}
+                      >
+                        <Icon name="chevronDown" class="h-6 w-6" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
             <div class="ct-arrows ct-arrows-desktop">
@@ -332,33 +326,29 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
             </div>
           </div>
 
-          {
-            /* 钟面为可视化索引，其交互（切换当前条目）已由下方上一/下一按钮提供键盘入口，故对辅助技术隐藏 */
-          }
+          {/* 钟面为可视化索引，其交互（切换当前条目）已由下方上一/下一按钮提供键盘入口，故对辅助技术隐藏 */}
           <div class="ct-clock-col" data-ct-clock-col aria-hidden="true">
             <div class="clock-face">
               <div class="clock-pointer" data-ct-pointer>
                 <div class="clock-pointer-line"></div>
               </div>
-              {
-                timelineItems.map((item, i) => {
-                  const step = 360 / timelineItems.length;
-                  const year = (item.year.match(/^\d{4}/) || [item.year])[0];
-                  return (
+              {timelineItems.map((item, i) => {
+                const step = 360 / timelineItems.length;
+                const year = (item.year.match(/^\d{4}/) || [item.year])[0];
+                return (
+                  <div
+                    class="clock-tick flex cursor-pointer items-center"
+                    style={`transform: rotate(${i * step}deg)`}
+                  >
                     <div
-                      class="clock-tick flex cursor-pointer items-center"
-                      style={`transform: rotate(${i * step}deg)`}
+                      class="clock-tick-mark flex items-center justify-center"
+                      data-ct-tick={i}
                     >
-                      <div
-                        class="clock-tick-mark flex items-center justify-center"
-                        data-ct-tick={i}
-                      >
-                        <span class="clock-tick-year leading-none">{year}</span>
-                      </div>
+                      <span class="clock-tick-year leading-none">{year}</span>
                     </div>
-                  );
-                })
-              }
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -379,20 +369,18 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
       </div>
 
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {
-          newsPosts.map((doc) => (
-            <NewsCard
-              lang={newsLang}
-              href={langUrl(lang, `/docs/${postSlug(doc)}`)}
-              title={doc.data.title}
-              desc={doc.data.description}
-              date={doc.data.publishDate}
-              minutes={readingMinutes(doc.body ?? "")}
-              tags={doc.data.tags ?? []}
-              image={doc.data.image}
-            />
-          ))
-        }
+        {newsPosts.map((doc) => (
+          <NewsCard
+            lang={newsLang}
+            href={langUrl(lang, `/docs/${postSlug(doc)}`)}
+            title={doc.data.title}
+            desc={doc.data.description}
+            date={doc.data.publishDate}
+            minutes={readingMinutes(doc.body ?? "")}
+            tags={doc.data.tags ?? []}
+            image={doc.data.image}
+          />
+        ))}
       </div>
     </div>
   </section>
@@ -401,14 +389,10 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   <section class="section-padding">
     <div class="container-x">
       <div class="mx-auto max-w-4xl text-center">
-        <h2
-          class="title-underline font-heading text-section font-bold text-deep-text"
-        >
+        <h2 class="title-underline font-heading text-section font-bold text-deep-text">
           {t(lang, "home.future_title")}
         </h2>
-        <p
-          class="mx-auto mt-8 max-w-3xl text-lead leading-relaxed text-text-muted"
-        >
+        <p class="mx-auto mt-8 max-w-3xl text-lead leading-relaxed text-text-muted">
           {t(lang, "home.future_body")}
         </p>
         <div class="mt-10 flex justify-center">
@@ -425,15 +409,11 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   <section id="contact" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mx-auto max-w-3xl text-center">
-        <h2
-          class="title-underline font-heading text-section font-bold text-deep-text"
-        >
+        <h2 class="title-underline font-heading text-section font-bold text-deep-text">
           {t(lang, "home.contact_title")}
         </h2>
 
-        <div
-          class="card-hover mx-auto mt-10 max-w-2xl rounded-2xl px-6 py-10 text-center"
-        >
+        <div class="card-hover mx-auto mt-10 max-w-2xl rounded-2xl px-6 py-10 text-center">
           <h3 class="text-2xl font-semibold text-deep-text">
             {t(lang, "home.contact_card_title")}
           </h3>
@@ -503,30 +483,24 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
         <h2 class="title-underline text-section font-bold text-deep-text">
           {t(lang, "home.section_faq")}
         </h2>
-        <p class="mt-8 text-text-muted">
-          {t(lang, "home.section_faq_sub")}
-        </p>
+        <p class="mt-8 text-text-muted">{t(lang, "home.section_faq_sub")}</p>
       </div>
 
-      <div
-        class="mx-auto grid max-w-4xl gap-8 gap-y-8 sm:grid-cols-2 md:gap-y-12"
-      >
-        {
-          faqItems.map((item) => (
-            <div>
-              <div class="flex max-w-none flex-row">
-                <Icon
-                  name="chevronRight"
-                  class="mr-2 mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--primary)]"
-                />
-                <h3 class="text-body leading-snug font-semibold text-deep-text">
-                  {item.title}
-                </h3>
-              </div>
-              <p class="mt-2 text-note text-text-muted">{item.description}</p>
+      <div class="mx-auto grid max-w-4xl gap-8 gap-y-8 sm:grid-cols-2 md:gap-y-12">
+        {faqItems.map((item) => (
+          <div>
+            <div class="flex max-w-none flex-row">
+              <Icon
+                name="chevronRight"
+                class="mr-2 mt-0.5 h-5 w-5 flex-shrink-0 text-[var(--primary)]"
+              />
+              <h3 class="text-body leading-snug font-semibold text-deep-text">
+                {item.title}
+              </h3>
             </div>
-          ))
-        }
+            <p class="mt-2 text-note text-text-muted">{item.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>

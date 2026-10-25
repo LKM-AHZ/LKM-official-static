@@ -40,32 +40,28 @@ const {
   currentPath={currentPath}
 >
   <div class="min-h-screen">
-    {
-      /* 无侧栏项时整块侧栏（含主内容偏移）都不渲染：空 <nav> 既是无意义的
-        地标，也会白占 240px 版面（en 阶段一分类为空即此情形）。 */
-    }
-    {
-      sidebarItems.length > 0 && (
-        <nav
-          class={styles.shell}
-          data-page-sidebar
-          aria-label={t(lang, "common.aria.page_toc")}
-        >
-          <ul class={styles.nav}>
-            {sidebarItems.map((item) => (
-              <li id={`side-${item.href.slice(1)}`}>
-                <a href={item.href}>
-                  <div class={styles.icon}>
-                    <Icon name={item.icon} />
-                  </div>
-                  <div class={styles.text}>{item.text}</div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )
-    }
+    {/* 无侧栏项时整块侧栏（含主内容偏移）都不渲染：空 <nav> 既是无意义的
+        地标，也会白占 240px 版面（en 阶段一分类为空即此情形）。 */}
+    {sidebarItems.length > 0 && (
+      <nav
+        class={styles.shell}
+        data-page-sidebar
+        aria-label={t(lang, "common.aria.page_toc")}
+      >
+        <ul class={styles.nav}>
+          {sidebarItems.map((item) => (
+            <li id={`side-${item.href.slice(1)}`}>
+              <a href={item.href}>
+                <div class={styles.icon}>
+                  <Icon name={item.icon} />
+                </div>
+                <div class={styles.text}>{item.text}</div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
 
     <div
       class:list={[

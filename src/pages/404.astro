@@ -19,12 +19,8 @@ const enHome = langUrl("en", "/");
 >
   <section class="flex min-h-[70vh] items-center justify-center py-24">
     <div class="card-hover rounded-3xl px-12 py-16 text-center">
-      {
-        /* 用 h1 而不是 div：本页此前整页没有任何标题，读屏与大纲导航都拿不到页面主体 */
-      }
-      <h1
-        class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-7xl font-bold text-transparent"
-      >
+      {/* 用 h1 而不是 div：本页此前整页没有任何标题，读屏与大纲导航都拿不到页面主体 */}
+      <h1 class="bg-gradient-to-r from-[var(--primary)] to-[var(--secondary)] bg-clip-text text-7xl font-bold text-transparent">
         404
       </h1>
       <p class="mt-4 text-lg text-text-muted">{t("zh", "notfound.message")}</p>

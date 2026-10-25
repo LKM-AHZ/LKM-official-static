@@ -90,10 +90,8 @@ const footerCols: {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="generator" content={Astro.generator} />
-    {
-      /* 正文字体只预载 Latin 子集；字体请求必须带 crossorigin，否则会和
-         @font-face 的请求重复下载。中文字体走系统栈，不需要预载。 */
-    }
+    {/* 正文字体只预载 Latin 子集；字体请求必须带 crossorigin，否则会和
+         @font-face 的请求重复下载。中文字体走系统栈，不需要预载。 */}
     <link
       rel="preload"
       href="/fonts/inter-latin-var.woff2"
@@ -101,10 +99,8 @@ const footerCols: {
       type="font/woff2"
       crossorigin
     />
-    {
-      /* 首屏前恢复主题，避免夜间用户先看到白天再闪一下。
-        存储键从 lib/theme 注入，别再手抄字面量，否则改名后这里会静默读不到偏好。 */
-    }
+    {/* 首屏前恢复主题，避免夜间用户先看到白天再闪一下。
+        存储键从 lib/theme 注入，别再手抄字面量，否则改名后这里会静默读不到偏好。 */}
     <script is:inline define:vars={{ themeStorageKey: THEME_STORAGE_KEY }}>
       (function () {
         let theme = "day";
@@ -146,11 +142,9 @@ const footerCols: {
               <BrandMark size={34} />
               <span class="text-xl font-bold text-deep-text">
                 {t(lang, "common.brand")}
-                {
-                  lang !== "en" && (
-                    <span class="ml-1 text-[var(--primary)]">PHIENTIST</span>
-                  )
-                }
+                {lang !== "en" && (
+                  <span class="ml-1 text-[var(--primary)]">PHIENTIST</span>
+                )}
               </span>
             </div>
             <p class="text-note leading-7 text-text-muted">
@@ -180,39 +174,33 @@ const footerCols: {
           </div>
 
           <div class="grid grid-cols-2 gap-8 sm:grid-cols-3">
-            {
-              footerCols.map((col) => (
-                <div>
-                  <h4 class="mb-4 font-bold text-deep-text">
-                    {t(lang, col.titleKey)}
-                  </h4>
-                  <ul class="space-y-2 text-note">
-                    {col.links.map((l) => (
-                      <li>
-                        <a
-                          href={langUrl(lang, l.href)}
-                          class="no-underline text-text-muted transition-colors hover:text-deep-text"
-                        >
-                          {t(lang, l.textKey)}
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))
-            }
+            {footerCols.map((col) => (
+              <div>
+                <h4 class="mb-4 font-bold text-deep-text">
+                  {t(lang, col.titleKey)}
+                </h4>
+                <ul class="space-y-2 text-note">
+                  {col.links.map((l) => (
+                    <li>
+                      <a
+                        href={langUrl(lang, l.href)}
+                        class="no-underline text-text-muted transition-colors hover:text-deep-text"
+                      >
+                        {t(lang, l.textKey)}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 
-        <div
-          class="mt-12 border-t border-[var(--card-edge)] pt-8 text-center text-sm text-text-muted"
-        >
-          {
-            t(lang, "common.footer.copyright").replace(
-              "{year}",
-              String(new Date().getFullYear()),
-            )
-          }
+        <div class="mt-12 border-t border-[var(--card-edge)] pt-8 text-center text-sm text-text-muted">
+          {t(lang, "common.footer.copyright").replace(
+            "{year}",
+            String(new Date().getFullYear()),
+          )}
         </div>
       </div>
     </footer>

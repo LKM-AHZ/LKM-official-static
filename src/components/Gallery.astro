@@ -21,120 +21,118 @@ const nextLabel = t(lang, "home.gallery_next");
 const closeLabel = t(lang, "common.aria.close");
 ---
 
-{
-  items.length > 0 && (
-    <>
-      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item, i) => (
-          <button
-            type="button"
-            class="card-hover group relative block w-full cursor-zoom-in overflow-hidden rounded-2xl p-0 text-left"
-            data-gallery-item
-            data-index={i}
-            aria-label={`${zoomLabel}: ${item.title}`}
-          >
-            <img
-              src={item.src}
-              alt={item.title}
-              width="800"
-              height="433"
-              loading="lazy"
-              decoding="async"
-              class="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <span class="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/75 to-transparent px-4 pt-8 pb-3 text-sm font-medium text-white">
-              <Icon name="magnify" class="h-4 w-4 shrink-0" />
-              <span class="truncate">{item.title}</span>
-            </span>
-          </button>
-        ))}
-      </div>
-
-      <dialog
-        class="lightbox fixed inset-0 z-[10000] m-auto w-[min(1100px,92vw)] rounded-2xl border border-[var(--card-edge)] bg-card-bg p-0 text-deep-text"
-        aria-labelledby="gallery-lightbox-title"
-        data-gallery-lightbox
-      >
-        <div class="relative">
+{items.length > 0 && (
+  <>
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {items.map((item, i) => (
+        <button
+          type="button"
+          class="card-hover group relative block w-full cursor-zoom-in overflow-hidden rounded-2xl p-0 text-left"
+          data-gallery-item
+          data-index={i}
+          aria-label={`${zoomLabel}: ${item.title}`}
+        >
           <img
-            src={items[0].full}
-            alt={items[0].title}
-            width="1200"
-            height="650"
+            src={item.src}
+            alt={item.title}
+            width="800"
+            height="433"
             loading="lazy"
             decoding="async"
-            class="max-h-[76vh] w-full rounded-t-2xl object-contain"
-            data-gallery-image
+            class="h-52 w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
+          <span class="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-black/75 to-transparent px-4 pt-8 pb-3 text-sm font-medium text-white">
+            <Icon name="magnify" class="h-4 w-4 shrink-0" />
+            <span class="truncate">{item.title}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+
+    <dialog
+      class="lightbox fixed inset-0 z-[10000] m-auto w-[min(1100px,92vw)] rounded-2xl border border-[var(--card-edge)] bg-card-bg p-0 text-deep-text"
+      aria-labelledby="gallery-lightbox-title"
+      data-gallery-lightbox
+    >
+      <div class="relative">
+        <img
+          src={items[0].full}
+          alt={items[0].title}
+          width="1200"
+          height="650"
+          loading="lazy"
+          decoding="async"
+          class="max-h-[76vh] w-full rounded-t-2xl object-contain"
+          data-gallery-image
+        />
+        <button
+          type="button"
+          class="social-icon absolute right-3 top-3 bg-[color-mix(in_srgb,var(--card-bg)_80%,transparent)]"
+          aria-label={closeLabel}
+          data-gallery-close
+        >
+          <Icon name="close" class="h-4 w-4" />
+        </button>
+      </div>
+      <div class="flex items-center justify-between gap-4 px-5 py-4">
+        <div class="min-w-0">
+          <div
+            id="gallery-lightbox-title"
+            class="truncate font-semibold"
+            data-gallery-title
+          >
+            {items[0].title}
+          </div>
+          <div class="text-sm text-text-muted" data-gallery-caption>
+            {items[0].caption}
+          </div>
+        </div>
+        <div class="flex shrink-0 items-center gap-2">
           <button
             type="button"
-            class="social-icon absolute right-3 top-3 bg-[color-mix(in_srgb,var(--card-bg)_80%,transparent)]"
-            aria-label={closeLabel}
-            data-gallery-close
+            class="social-icon"
+            aria-label={prevLabel}
+            data-gallery-prev
           >
-            <Icon name="close" class="h-4 w-4" />
+            <Icon name="chevronUp" class="h-4 w-4 -rotate-90" />
           </button>
+          <button
+            type="button"
+            class="social-icon"
+            aria-label={nextLabel}
+            data-gallery-next
+          >
+            <Icon name="chevronDown" class="h-4 w-4 -rotate-90" />
+          </button>
+          <a
+            href={langUrl(lang, items[0].href)}
+            class="btn btn-primary btn-sm"
+            data-gallery-link
+          >
+            {t(lang, "home.gallery_open")}
+          </a>
         </div>
-        <div class="flex items-center justify-between gap-4 px-5 py-4">
-          <div class="min-w-0">
-            <div
-              id="gallery-lightbox-title"
-              class="truncate font-semibold"
-              data-gallery-title
-            >
-              {items[0].title}
-            </div>
-            <div class="text-sm text-text-muted" data-gallery-caption>
-              {items[0].caption}
-            </div>
-          </div>
-          <div class="flex shrink-0 items-center gap-2">
-            <button
-              type="button"
-              class="social-icon"
-              aria-label={prevLabel}
-              data-gallery-prev
-            >
-              <Icon name="chevronUp" class="h-4 w-4 -rotate-90" />
-            </button>
-            <button
-              type="button"
-              class="social-icon"
-              aria-label={nextLabel}
-              data-gallery-next
-            >
-              <Icon name="chevronDown" class="h-4 w-4 -rotate-90" />
-            </button>
-            <a
-              href={langUrl(lang, items[0].href)}
-              class="btn btn-primary btn-sm"
-              data-gallery-link
-            >
-              {t(lang, "home.gallery_open")}
-            </a>
-          </div>
-        </div>
-      </dialog>
+      </div>
+    </dialog>
 
-      {/* JSON 内联进 script 标签时必须转义 "<"：数据里若出现 script 的结束标签
+    {/* JSON 内联进 script 标签时必须转义 "<"：数据里若出现 script 的结束标签
           会提前闭合标签并注入标记（存储型 XSS）。\u003c 经 JSON.parse 读回仍是
           同一个字符，数据本身不受影响。 */}
-      <script
-        is:inline
-        type="application/json"
-        data-gallery-data
-        set:html={JSON.stringify(
-          items.map((item) => ({
-            full: item.full,
-            title: item.title,
-            caption: item.caption,
-            href: langUrl(lang, item.href),
-          })),
-        ).replace(/</g, "\\u003c")}
-      />
-    </>
-  )
-}
+    <script
+      is:inline
+      type="application/json"
+      data-gallery-data
+      set:html={JSON.stringify(
+        items.map((item) => ({
+          full: item.full,
+          title: item.title,
+          caption: item.caption,
+          href: langUrl(lang, item.href),
+        })),
+      ).replace(/</g, "\\u003c")}
+    />
+  </>
+)}
 
 <script>
   const lightbox = document.querySelector<HTMLDialogElement>(

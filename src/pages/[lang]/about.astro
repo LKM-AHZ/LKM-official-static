@@ -195,9 +195,7 @@ const sidebarItems = [
     <div class="container-x">
       <div class="py-8 md:py-12">
         <div class="mx-auto max-w-5xl text-center">
-          <h1
-            class="mb-6 font-heading text-display font-semibold text-deep-text"
-          >
+          <h1 class="mb-6 font-heading text-display font-semibold text-deep-text">
             {t(lang, "about.hero_title")}
           </h1>
           <div class="mx-auto max-w-3xl">
@@ -214,33 +212,27 @@ const sidebarItems = [
   <section id="values" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline font-heading text-section font-semibold text-deep-text"
-        >
+        <h2 class="title-underline font-heading text-section font-semibold text-deep-text">
           {t(lang, "about.values_title")}
         </h2>
         <p class="mt-8 text-body text-text-muted">
           {t(lang, "about.values_subtitle")}
         </p>
       </div>
-      <div
-        class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {
-          valueItems.map((c) => (
-            <div class="card-hover flex flex-col rounded-2xl p-6">
-              <div class="flex justify-center">
-                <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
-              </div>
-              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
-                {itemTitle(c)}
-              </h3>
-              <p class="mt-2 text-note text-text-muted text-center">
-                {itemDesc(c)}
-              </p>
+      <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+        {valueItems.map((c) => (
+          <div class="card-hover flex flex-col rounded-2xl p-6">
+            <div class="flex justify-center">
+              <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
             </div>
-          ))
-        }
+            <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
+              {itemTitle(c)}
+            </h3>
+            <p class="mt-2 text-note text-text-muted text-center">
+              {itemDesc(c)}
+            </p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -249,31 +241,25 @@ const sidebarItems = [
   <section id="content" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline font-heading text-section font-semibold text-deep-text"
-        >
+        <h2 class="title-underline font-heading text-section font-semibold text-deep-text">
           {t(lang, "services.section_content")}
         </h2>
         <p class="mt-8 text-body text-text-muted">
           {t(lang, "services.section_content_sub")}
         </p>
       </div>
-      <div
-        class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3"
-      >
-        {
-          contentItems.map((c) => (
-            <div class="card-hover flex flex-col rounded-2xl p-6">
-              <div class="flex justify-center">
-                <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
-              </div>
-              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
-                {c.title}
-              </h3>
-              <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
+      <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
+        {contentItems.map((c) => (
+          <div class="card-hover flex flex-col rounded-2xl p-6">
+            <div class="flex justify-center">
+              <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
             </div>
-          ))
-        }
+            <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
+              {c.title}
+            </h3>
+            <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -282,9 +268,7 @@ const sidebarItems = [
   <section id="events" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline font-heading text-section font-semibold text-deep-text"
-        >
+        <h2 class="title-underline font-heading text-section font-semibold text-deep-text">
           {t(lang, "services.section_events")}
         </h2>
         <p class="mt-8 text-body text-text-muted">
@@ -292,19 +276,17 @@ const sidebarItems = [
         </p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2">
-        {
-          eventItems.map((c) => (
-            <div class="card-hover flex flex-col rounded-2xl p-6">
-              <div class="flex justify-center">
-                <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
-              </div>
-              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
-                {c.title}
-              </h3>
-              <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
+        {eventItems.map((c) => (
+          <div class="card-hover flex flex-col rounded-2xl p-6">
+            <div class="flex justify-center">
+              <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
             </div>
-          ))
-        }
+            <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
+              {c.title}
+            </h3>
+            <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -313,9 +295,7 @@ const sidebarItems = [
   <section id="platform" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="mb-14 text-center">
-        <h2
-          class="title-underline font-heading text-section font-semibold text-deep-text"
-        >
+        <h2 class="title-underline font-heading text-section font-semibold text-deep-text">
           {t(lang, "services.section_platform")}
         </h2>
         <p class="mt-8 text-body text-text-muted">
@@ -323,19 +303,17 @@ const sidebarItems = [
         </p>
       </div>
       <div class="grid mx-auto gap-5 md:gap-6 gap-x-8 sm:grid-cols-2">
-        {
-          platformItems.map((c) => (
-            <div class="card-hover flex flex-col rounded-2xl p-6">
-              <div class="flex justify-center">
-                <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
-              </div>
-              <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
-                {c.title}
-              </h3>
-              <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
+        {platformItems.map((c) => (
+          <div class="card-hover flex flex-col rounded-2xl p-6">
+            <div class="flex justify-center">
+              <Icon name={c.icon} class="mb-6 w-12 h-12 text-primary" />
             </div>
-          ))
-        }
+            <h3 class="text-body font-semibold text-deep-text leading-snug text-center">
+              {c.title}
+            </h3>
+            <p class="mt-2 text-note text-text-muted text-center">{c.desc}</p>
+          </div>
+        ))}
       </div>
     </div>
   </section>
@@ -344,9 +322,7 @@ const sidebarItems = [
   <section id="communities" class="scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="text-center">
-        <h2
-          class="title-underline font-heading text-section font-semibold text-deep-text"
-        >
+        <h2 class="title-underline font-heading text-section font-semibold text-deep-text">
           {t(lang, "about.communities_title")}
         </h2>
         <p class="mt-8 text-body text-text-muted">
@@ -356,24 +332,22 @@ const sidebarItems = [
     </div>
   </section>
 
-  {
-    communityCategories.map((cat) => (
-      <CommunitySection
-        id={`community-${cat.id}`}
-        title={cat.label}
-        intro={cat.intro || undefined}
-      >
-        {cat.groups.map((g) => (
-          <CommunityCard
-            name={g.name}
-            qqGroup={g.qqGroup}
-            desc={g.desc}
-            isQQChannel={g.isQQChannel}
-          />
-        ))}
-      </CommunitySection>
-    ))
-  }
+  {communityCategories.map((cat) => (
+    <CommunitySection
+      id={`community-${cat.id}`}
+      title={cat.label}
+      intro={cat.intro || undefined}
+    >
+      {cat.groups.map((g) => (
+        <CommunityCard
+          name={g.name}
+          qqGroup={g.qqGroup}
+          desc={g.desc}
+          isQQChannel={g.isQQChannel}
+        />
+      ))}
+    </CommunitySection>
+  ))}
 
   <div class="container-x pb-8">
     <p class="text-center text-sm italic text-text-muted">{communityNote}</p>

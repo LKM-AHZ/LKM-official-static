@@ -60,9 +60,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
 >
   <section class="pb-2 pt-8">
     <div class="container-x text-center">
-      <h1
-        class="title-underline font-heading text-section font-bold text-deep-text"
-      >
+      <h1 class="title-underline font-heading text-section font-bold text-deep-text">
         {t(lang, "team.tab_management")}
       </h1>
       <p class="mx-auto mt-8 max-w-3xl text-body text-text-muted">
@@ -77,9 +75,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
   <section id="founder" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <h2 class="mb-14 text-center">
-        <span
-          class="title-underline font-heading text-xl font-bold text-deep-text"
-        >
+        <span class="title-underline font-heading text-xl font-bold text-deep-text">
           {t(lang, "team.founder_title")}
         </span>
       </h2>
@@ -87,19 +83,17 @@ const sg: SubGroupMaps = team.subGroupMaps;
         {t(lang, "team.founder_subtitle")}
       </p>
       <div class="max-w-2xl mx-auto">
-        {
-          ml.founderMembers.map((m) => (
-            <MemberCard
-              name={m.name ?? ""}
-              avatarKey={m.avatarKey}
-              role={m.role}
-              desc={m.desc}
-              dream={m.dream}
-              quote={m.quote}
-              size="lg"
-            />
-          ))
-        }
+        {ml.founderMembers.map((m) => (
+          <MemberCard
+            name={m.name ?? ""}
+            avatarKey={m.avatarKey}
+            role={m.role}
+            desc={m.desc}
+            dream={m.dream}
+            quote={m.quote}
+            size="lg"
+          />
+        ))}
       </div>
     </div>
   </section>
@@ -110,18 +104,16 @@ const sg: SubGroupMaps = team.subGroupMaps;
     title={t(lang, "team.general_title")}
     desc={t(lang, "team.general_desc")}
   >
-    {
-      ml.generalMembers.map((m) => (
-        <MemberCard
-          name={m.name ?? ""}
-          avatarKey={m.avatarKey}
-          role={m.role}
-          desc={m.desc}
-          dream={m.dream}
-          quote={m.quote}
-        />
-      ))
-    }
+    {ml.generalMembers.map((m) => (
+      <MemberCard
+        name={m.name ?? ""}
+        avatarKey={m.avatarKey}
+        role={m.role}
+        desc={m.desc}
+        dream={m.dream}
+        quote={m.quote}
+      />
+    ))}
   </DepartmentSection>
 
   {/* 群务部 */}
@@ -131,28 +123,26 @@ const sg: SubGroupMaps = team.subGroupMaps;
     desc={t(lang, "team.affairs_desc")}
     noGrid
   >
-    {
-      Object.entries(sg.affairsSubGroups ?? {}).map(([, group]) => (
-        <div class="mb-12">
-          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
-            {group.label}
-          </h3>
-          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {group.members?.map((m) => (
-              <MemberCard
-                name={m.name ?? ""}
-                avatarKey={m.avatarKey}
-                role={m.role}
-                desc={m.desc}
-                dream={m.dream}
-                quote={m.quote}
-                level={4}
-              />
-            ))}
-          </div>
+    {Object.entries(sg.affairsSubGroups ?? {}).map(([, group]) => (
+      <div class="mb-12">
+        <h3 class="text-md font-bold mb-3 text-center text-deep-text">
+          {group.label}
+        </h3>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {group.members?.map((m) => (
+            <MemberCard
+              name={m.name ?? ""}
+              avatarKey={m.avatarKey}
+              role={m.role}
+              desc={m.desc}
+              dream={m.dream}
+              quote={m.quote}
+              level={4}
+            />
+          ))}
         </div>
-      ))
-    }
+      </div>
+    ))}
   </DepartmentSection>
 
   {/* 活动策划部 */}
@@ -161,18 +151,16 @@ const sg: SubGroupMaps = team.subGroupMaps;
     title={t(lang, "team.events_title")}
     desc={t(lang, "team.events_desc")}
   >
-    {
-      ml.eventsMembers.map((m) => (
-        <MemberCard
-          name={m.name ?? ""}
-          avatarKey={m.avatarKey}
-          role={m.role}
-          desc={m.desc}
-          dream={m.dream}
-          quote={m.quote}
-        />
-      ))
-    }
+    {ml.eventsMembers.map((m) => (
+      <MemberCard
+        name={m.name ?? ""}
+        avatarKey={m.avatarKey}
+        role={m.role}
+        desc={m.desc}
+        dream={m.dream}
+        quote={m.quote}
+      />
+    ))}
   </DepartmentSection>
 
   {/* 新闻办 */}
@@ -183,56 +171,7 @@ const sg: SubGroupMaps = team.subGroupMaps;
     noGrid
   >
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {
-        ml.newsMembers.map((m) => (
-          <MemberCard
-            name={m.name ?? ""}
-            avatarKey={m.avatarKey}
-            role={m.role}
-            desc={m.desc}
-            dream={m.dream}
-            quote={m.quote}
-          />
-        ))
-      }
-    </div>
-    {
-      Object.entries(sg.newsSubGroups ?? {}).map(([, group]) => (
-        <div class="mt-8">
-          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
-            {group.label}
-          </h3>
-          {group.desc && (
-            <p class="card-hover max-w-3xl mx-auto mb-6 px-6 py-3 rounded-2xl text-center text-[13px] text-text-muted leading-relaxed">
-              {group.desc}
-            </p>
-          )}
-          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {group.members?.map((m) => (
-              <MemberCard
-                name={m.name ?? ""}
-                avatarKey={m.avatarKey}
-                role={m.role}
-                desc={m.desc}
-                dream={m.dream}
-                quote={m.quote}
-                level={4}
-              />
-            ))}
-          </div>
-        </div>
-      ))
-    }
-  </DepartmentSection>
-
-  {/* 顾问团 */}
-  <DepartmentSection
-    id="advisors"
-    title={t(lang, "team.advisors_title")}
-    desc={t(lang, "team.advisors_desc")}
-  >
-    {
-      ml.advisorMembers.map((m) => (
+      {ml.newsMembers.map((m) => (
         <MemberCard
           name={m.name ?? ""}
           avatarKey={m.avatarKey}
@@ -241,8 +180,51 @@ const sg: SubGroupMaps = team.subGroupMaps;
           dream={m.dream}
           quote={m.quote}
         />
-      ))
-    }
+      ))}
+    </div>
+    {Object.entries(sg.newsSubGroups ?? {}).map(([, group]) => (
+      <div class="mt-8">
+        <h3 class="text-md font-bold mb-3 text-center text-deep-text">
+          {group.label}
+        </h3>
+        {group.desc && (
+          <p class="card-hover max-w-3xl mx-auto mb-6 px-6 py-3 rounded-2xl text-center text-[13px] text-text-muted leading-relaxed">
+            {group.desc}
+          </p>
+        )}
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {group.members?.map((m) => (
+            <MemberCard
+              name={m.name ?? ""}
+              avatarKey={m.avatarKey}
+              role={m.role}
+              desc={m.desc}
+              dream={m.dream}
+              quote={m.quote}
+              level={4}
+            />
+          ))}
+        </div>
+      </div>
+    ))}
+  </DepartmentSection>
+
+  {/* 顾问团 */}
+  <DepartmentSection
+    id="advisors"
+    title={t(lang, "team.advisors_title")}
+    desc={t(lang, "team.advisors_desc")}
+  >
+    {ml.advisorMembers.map((m) => (
+      <MemberCard
+        name={m.name ?? ""}
+        avatarKey={m.avatarKey}
+        role={m.role}
+        desc={m.desc}
+        dream={m.dream}
+        quote={m.quote}
+      />
+    ))}
   </DepartmentSection>
 
   {/* 专业委员会 */}
@@ -252,28 +234,26 @@ const sg: SubGroupMaps = team.subGroupMaps;
     desc={t(lang, "team.professional_desc")}
     noGrid
   >
-    {
-      Object.entries(sg.professionalSubGroups ?? {}).map(([, group]) => (
-        <div class="mb-12">
-          <h3 class="text-md font-bold mb-3 text-center text-deep-text">
-            {group.label}
-          </h3>
-          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {group.members?.map((m) => (
-              <MemberCard
-                name={m.name ?? ""}
-                avatarKey={m.avatarKey}
-                role={m.role}
-                desc={m.desc}
-                dream={m.dream}
-                quote={m.quote}
-                level={4}
-              />
-            ))}
-          </div>
+    {Object.entries(sg.professionalSubGroups ?? {}).map(([, group]) => (
+      <div class="mb-12">
+        <h3 class="text-md font-bold mb-3 text-center text-deep-text">
+          {group.label}
+        </h3>
+        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {group.members?.map((m) => (
+            <MemberCard
+              name={m.name ?? ""}
+              avatarKey={m.avatarKey}
+              role={m.role}
+              desc={m.desc}
+              dream={m.dream}
+              quote={m.quote}
+              level={4}
+            />
+          ))}
         </div>
-      ))
-    }
+      </div>
+    ))}
   </DepartmentSection>
 
   {/* 技术委员会 */}
@@ -282,48 +262,40 @@ const sg: SubGroupMaps = team.subGroupMaps;
     title={t(lang, "team.tech_title")}
     desc={t(lang, "team.tech_desc")}
   >
-    {
-      ml.techMembers.map((m) => (
-        <MemberCard
-          name={m.name ?? ""}
-          avatarKey={m.avatarKey}
-          role={m.role}
-          desc={m.desc}
-          dream={m.dream}
-          quote={m.quote}
-        />
-      ))
-    }
+    {ml.techMembers.map((m) => (
+      <MemberCard
+        name={m.name ?? ""}
+        avatarKey={m.avatarKey}
+        role={m.role}
+        desc={m.desc}
+        dream={m.dream}
+        quote={m.quote}
+      />
+    ))}
   </DepartmentSection>
 
   {/* 已离开成员 */}
   <section id="alumni" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <h2 class="mb-14 text-center">
-        <span
-          class="title-underline font-heading text-xl font-bold text-deep-text"
-        >
+        <span class="title-underline font-heading text-xl font-bold text-deep-text">
           {t(lang, "team.alumni_title")}
         </span>
       </h2>
-      <p
-        class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-note text-text-muted"
-      >
+      <p class="card-hover mx-auto mb-9 max-w-3xl rounded-2xl px-6 py-4 text-center text-note text-text-muted">
         {t(lang, "team.alumni_desc")}
       </p>
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {
-          ml.alumniMembers.map((m) => (
-            <MemberCard
-              name={m.name ?? ""}
-              avatarKey={m.avatarKey}
-              role={m.role}
-              desc={m.desc}
-              dream={m.dream}
-              quote={m.quote}
-            />
-          ))
-        }
+        {ml.alumniMembers.map((m) => (
+          <MemberCard
+            name={m.name ?? ""}
+            avatarKey={m.avatarKey}
+            role={m.role}
+            desc={m.desc}
+            dream={m.dream}
+            quote={m.quote}
+          />
+        ))}
       </div>
     </div>
   </section>

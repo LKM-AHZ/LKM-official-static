@@ -39,9 +39,7 @@ const sidebarItems = [
 >
   <section class="pb-2 pt-8">
     <div class="container-x text-center">
-      <h1
-        class="title-underline font-heading text-section font-bold text-deep-text"
-      >
+      <h1 class="title-underline font-heading text-section font-bold text-deep-text">
         {t(lang, "team.project_title")}
       </h1>
       <p class="mx-auto mt-8 max-w-3xl text-body text-text-muted">
@@ -55,39 +53,37 @@ const sidebarItems = [
   <section id="project" class="section-padding scroll-mt-[var(--nav-h)]">
     <div class="container-x">
       <div class="space-y-12">
-        {
-          projectGroups.map(([key, group]) => (
-            <section id={`project-${key}`} class="scroll-mt-[var(--nav-h)]">
-              <h2 class="mb-3 text-center text-xl font-bold text-deep-text">
-                {group.label}
-              </h2>
-              {group.desc && (
-                <p class="mx-auto mb-6 max-w-3xl text-center text-note text-text-muted">
-                  {group.desc}
-                </p>
-              )}
-              {group.members?.length ? (
-                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                  {group.members.map((m) => (
-                    <MemberCard
-                      name={m.name ?? ""}
-                      avatarKey={m.avatarKey}
-                      role={m.role}
-                      desc={m.desc}
-                      dream={m.dream}
-                      quote={m.quote}
-                      level={4}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p class="text-center text-sm text-text-muted">
-                  {t(lang, "team.subgroup_empty")}
-                </p>
-              )}
-            </section>
-          ))
-        }
+        {projectGroups.map(([key, group]) => (
+          <section id={`project-${key}`} class="scroll-mt-[var(--nav-h)]">
+            <h2 class="mb-3 text-center text-xl font-bold text-deep-text">
+              {group.label}
+            </h2>
+            {group.desc && (
+              <p class="mx-auto mb-6 max-w-3xl text-center text-note text-text-muted">
+                {group.desc}
+              </p>
+            )}
+            {group.members?.length ? (
+              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {group.members.map((m) => (
+                  <MemberCard
+                    name={m.name ?? ""}
+                    avatarKey={m.avatarKey}
+                    role={m.role}
+                    desc={m.desc}
+                    dream={m.dream}
+                    quote={m.quote}
+                    level={4}
+                  />
+                ))}
+              </div>
+            ) : (
+              <p class="text-center text-sm text-text-muted">
+                {t(lang, "team.subgroup_empty")}
+              </p>
+            )}
+          </section>
+        ))}
       </div>
     </div>
   </section>

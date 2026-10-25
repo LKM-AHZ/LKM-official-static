@@ -54,29 +54,25 @@ const avatarSize = isLg
 ---
 
 <div class="profile-card">
-  <div
-    class="profile-inner p-4 sm:p-5 flex flex-row items-center gap-3 sm:flex-col sm:items-center text-left sm:text-center"
-  >
+  <div class="profile-inner p-4 sm:p-5 flex flex-row items-center gap-3 sm:flex-col sm:items-center text-left sm:text-center">
     <div class="shrink-0 sm:mb-3">
-      {
-        avatarSrc ? (
-          <img
-            src={avatarSrc}
-            alt=""
-            width={192}
-            height={192}
-            class={`${avatarSize} rounded-full object-cover`}
-            loading="lazy"
-            decoding="async"
-          />
-        ) : (
-          <div
-            class={`${avatarSize} rounded-full bg-surface-3 text-text-muted flex items-center justify-center text-lg font-semibold`}
-          >
-            {fallbackChar}
-          </div>
-        )
-      }
+      {avatarSrc ? (
+        <img
+          src={avatarSrc}
+          alt=""
+          width={192}
+          height={192}
+          class={`${avatarSize} rounded-full object-cover`}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div
+          class={`${avatarSize} rounded-full bg-surface-3 text-text-muted flex items-center justify-center text-lg font-semibold`}
+        >
+          {fallbackChar}
+        </div>
+      )}
     </div>
     <div class="flex-1 min-w-0">
       <HeadingTag
@@ -87,19 +83,17 @@ const avatarSize = isLg
       >
         {name}
       </HeadingTag>
-      {
-        role && (
-          <span
-            class={
-              isLg
-                ? "text-primary font-semibold"
-                : "text-[0.8125rem] text-text-muted"
-            }
-          >
-            {role}
-          </span>
-        )
-      }
+      {role && (
+        <span
+          class={
+            isLg
+              ? "text-primary font-semibold"
+              : "text-[0.8125rem] text-text-muted"
+          }
+        >
+          {role}
+        </span>
+      )}
       {desc && <p class="text-sm text-text-muted mt-1">{desc}</p>}
       {dream && <p class="text-sm text-secondary mt-1 italic">{dream}</p>}
       {quote && <p class="text-sm text-primary mt-1">{quote}</p>}

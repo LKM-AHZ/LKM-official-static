@@ -37,9 +37,7 @@ const PAGE_SIZE = 6;
   <section class="section-padding">
     <div class="container-x">
       <header class="mb-10 text-center">
-        <h1
-          class="title-underline font-heading text-section font-bold text-deep-text"
-        >
+        <h1 class="title-underline font-heading text-section font-bold text-deep-text">
           {t(lang, "news.page_title")}
         </h1>
         <p class="mx-auto mt-8 max-w-2xl text-lead text-text-muted">
@@ -57,36 +55,34 @@ const PAGE_SIZE = 6;
           class="w-full rounded-[var(--radius-field)] border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 py-2.5 text-sm text-base-content transition outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_25%,transparent)]"
         />
 
-        {
-          tagCounts.length > 0 && (
-            <div
-              data-news-tagbar
-              role="group"
-              aria-label={t(lang, "news.tags_aria")}
-              class="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2"
+        {tagCounts.length > 0 && (
+          <div
+            data-news-tagbar
+            role="group"
+            aria-label={t(lang, "news.tags_aria")}
+            class="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2"
+          >
+            <button
+              type="button"
+              data-tag-filter=""
+              aria-pressed="true"
+              class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
             >
+              {t(lang, "news.tags_all")}
+            </button>
+            {tagCounts.map(({ tag, count }) => (
               <button
                 type="button"
-                data-tag-filter=""
-                aria-pressed="true"
+                data-tag-filter={tag}
+                aria-pressed="false"
                 class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
               >
-                {t(lang, "news.tags_all")}
+                {tag}
+                <span class="text-[11px] opacity-70">{count}</span>
               </button>
-              {tagCounts.map(({ tag, count }) => (
-                <button
-                  type="button"
-                  data-tag-filter={tag}
-                  aria-pressed="false"
-                  class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
-                >
-                  {tag}
-                  <span class="text-[11px] opacity-70">{count}</span>
-                </button>
-              ))}
-            </div>
-          )
-        }
+            ))}
+          </div>
+        )}
 
         {/* 命中总数：整页范围，由客户端脚本维护；模块自己的计数在模块头部 */}
         <p
@@ -95,8 +91,7 @@ const PAGE_SIZE = 6;
           hidden
           aria-live="polite"
           class="mt-6 text-center text-sm text-text-muted"
-        >
-        </p>
+        ></p>
       </div>
 
       <ArticleModule
