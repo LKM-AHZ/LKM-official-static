@@ -1,9 +1,15 @@
 ---
 // 根路径 / 重定向到默认语言首页 /zh/。
-// output:static 下不可用 Astro.redirect()，故用 meta refresh + 兜底链接实现静态 301。
+// output:static 下不可用 Astro.redirect()，故用 meta refresh + 兜底链接实现静态跳转。
+// 这一页是 / 的唯一来源：astro.config.ts 里 redirectToDefaultLocale 已关闭，
+// 否则 Astro 会生成一个 2 秒延迟的 302 桩把它遮蔽掉。
 import { publicUrl } from "../lib/assets";
 
 const DEFAULT_HOME = publicUrl("/zh/");
+// 配置了站点域名时给绝对 canonical（相对地址对搜索引擎的解析依赖访问 URL）
+const canonical = Astro.site
+  ? new URL(DEFAULT_HOME, Astro.site).href
+  : DEFAULT_HOME;
 ---
 
 <!doctype html>
@@ -12,7 +18,7 @@ const DEFAULT_HOME = publicUrl("/zh/");
     <meta charset="utf-8" />
     <meta http-equiv="refresh" content={`0; url=${DEFAULT_HOME}`} />
     <meta name="robots" content="noindex, follow" />
-    <link rel="canonical" href={DEFAULT_HOME} />
+    <link rel="canonical" href={canonical} />
     <title>理科迷 · PHIENTIST</title>
   </head>
   <body>

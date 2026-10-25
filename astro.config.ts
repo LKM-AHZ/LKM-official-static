@@ -46,6 +46,9 @@ try {
 }
 const site = readSiteUrl(process.env.LKM_SITE_DOMAIN);
 const base = readBasePath(process.env.LKM_BASE_PATH);
+// 站点根路径的 pathname（域根部署为 "/"，GitHub Pages 项目页为 "<base>/"）。
+// 根路径是跳转桩、自带 noindex，不该进 sitemap；用固定 "/" 比较会在子路径部署下漏掉它。
+const ROOT_PATH = base === "/" ? "/" : `${base}/`;
 
 // https://astro.build/config
 export default defineConfig({
@@ -71,9 +74,11 @@ export default defineConfig({
     locales: Object.keys(LOCALES),
     routing: {
       prefixDefaultLocale: true, // 让默认语言也生成 /zh/ 前缀，得到 /zh/ 与 /en/ 对称前缀
-      // 根路径 / 由 Astro 生成跳转页（纯静态输出没有服务器能发 301，产物是带 meta refresh
-      // 的 HTML），避免直访根域名落 404
-      redirectToDefaultLocale: true,
+      // 根路径 / 的跳转页**不交给 Astro 自动生成**：它按 302 语义写
+      // `content="2;url=..."`（Astro 为让搜索引擎当临时跳转而故意留 2 秒），且会遮蔽
+      // src/pages/index.astro。改由那一页自己输出 0 秒 meta refresh，落地即跳。
+      // 纯静态输出没有服务器能发 301，所以两方案都只能是 HTML 跳转，区别只在延迟。
+      redirectToDefaultLocale: false,
       fallbackType: "redirect",
     },
   },
@@ -83,8 +88,8 @@ export default defineConfig({
     ...(site
       ? [
           sitemap({
-            // 根路径 / 是 Astro 生成的跳转页（自带 noindex），不需要进 sitemap
-            filter: (page) => new URL(page).pathname !== "/",
+            // 根路径 / 是 0 秒跳转桩（自带 noindex），不需要进 sitemap
+            filter: (page) => new URL(page).pathname !== ROOT_PATH,
             // 激活 @astrojs/sitemap 内置 i18n alternate(hreflang) 生成:
             // 为每个 URL 输出指向同页另一语言的 <xhtml:link rel="alternate" hreflang>,
             // zh 条目指向 en(hreflang="en"), en 条目指向 zh(hreflang="zh")。
