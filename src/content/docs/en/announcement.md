@@ -3,7 +3,7 @@ title: Static Site Content Policy
 description: Rules for bilingual content, publication dates, factual corrections, and release checks
 publishDate: 2026-08-27
 image: /images/covers/announcement.webp
-tags: [Official Announcements]
+tags: [Official Website, Guides]
 ---
 
 The Phientist static website has moved beyond its initial structure test and is now maintained
@@ -13,11 +13,12 @@ revised, and released, for both maintainers and contributors.
 
 ## Content Types and Locations
 
-- **News** covers community changes, events, and project progress. It appears in the `/news`
-  list and the home page's recent updates.
-- **Guides and introductions** are long-lived pages such as Getting Started, the community
-  introduction, and this policy. They do not appear in the news list but remain in the
-  previous/next sequence of article pages.
+- **News** covers community changes, events, and project progress. It appears in the
+  News & Updates tab of `/news` and the home page's recent updates.
+- **Website and community** articles are long-lived pages such as Getting Started, the community
+  introduction, and this policy. They omit `category` and appear under Website & Community.
+- **Project and studio** articles set `category: project` or `category: studio` and appear in
+  their own tabs.
 - **Maintenance tutorials** explain how to work on the site itself, such as the
   [Editing Guide](/en/docs/editing-guide).
 

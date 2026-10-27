@@ -3,7 +3,7 @@ title: Editing Guide
 description: The full path from creating a Markdown file and filling in metadata to local preview, bilingual review, and release
 publishDate: 2026-10-17
 image: /images/covers/editing-guide.webp
-tags: [Guides]
+tags: [Official Website, Guides]
 ---
 
 This guide is for members contributing to the website for the first time. It is not a complete
@@ -51,35 +51,42 @@ title: Article title
 description: One-sentence summary for lists, search, and share cards
 publishDate: 2026-10-17
 category: news
-tags: [Guides]
+tags: [Official Announcements]
 image: /images/covers/example.webp
 lang: en
 ---
 ```
 
-| Field         | Required | Notes                                                                                                                              |
-| ------------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `title`       | Yes      | The article title. Do not add an h1 in the body.                                                                                   |
-| `description` | No       | Recommended; 40–80 characters is a good target. Used in lists and search.                                                          |
-| `publishDate` | Yes      | First publication date in `YYYY-MM-DD`. Do not change it for revisions.                                                            |
-| `category`    | No       | Currently only `news` is accepted. Only news appears in `/news`.                                                                   |
-| `tags`        | No       | One of the fixed categories (Official Announcements, Events, Donation Disclosures, Partnerships, Guides), used for list filtering. |
-| `image`       | No       | Cover path beginning with `/` or `http(s)://`. Prefer a local asset.                                                               |
-| `lang`        | No       | Optional fallback marker. The real language comes from the directory.                                                              |
+| Field         | Required | Notes                                                                         |
+| ------------- | -------- | ----------------------------------------------------------------------------- |
+| `title`       | Yes      | The article title. Do not add an h1 in the body.                              |
+| `description` | No       | Recommended; 40–80 characters is a good target. Used in lists and search.     |
+| `publishDate` | Yes      | First publication date in `YYYY-MM-DD`. Do not change it for revisions.       |
+| `category`    | No       | `news`, `project`, or `studio`; leave empty for Website & Community articles. |
+| `tags`        | No       | One or more tags from the fixed groups below; do not invent new tags.         |
+| `image`       | No       | Cover path beginning with `/` or `http(s)://`. Prefer a local asset.          |
+| `lang`        | No       | Optional fallback marker. The real language comes from the directory.         |
 
 ### Dates and Categories
 
 - `publishDate` is the first publication date, not the last edit.
-- Add `category: news` only for news. Guides, introductions, and maintenance notes should omit
-  it, or they will appear in the news list.
+- Add `category: news` for news, `project` for project posts, and `studio` for studio posts.
+  Website, community, guide, and maintenance articles omit `category`; otherwise they will
+  appear in the news or project/studio tab.
 - Typo fixes, link fixes, and layout edits do not need a new date. If the change is factual, add
   a revision note at the end.
 
 ### Tags
 
-Tags are light categories, not a keyword dump. The site keeps exactly five fixed categories:
-`Official Announcements`, `Events`, `Donation Disclosures`, `Partnerships`, and `Guides`. Pick
-the single closest tag for each article; do not invent new ones.
+Tags are light categories, not a keyword dump. They are grouped by tab, and an article may use
+one or more of the closest tags — but do not invent new ones:
+
+- **News & Updates**: Official Announcements, Events, Team Recruitment, Donation Disclosures,
+  Partnerships
+- **Website & Community**: Official Website, Community, Guides, Operations, Updates,
+  Team Recruitment
+- **Projects**: lkm-bot, Science Outreach Program, Public Benefit Program
+- **Studios**: Full-Chain Tech Services Studio, Star Orbit Tutoring Studio
 
 ### Cover Images
 
@@ -163,7 +170,8 @@ yet.
 ### 3. Fill in the frontmatter
 
 Start from the template above and confirm at least `title`, `description`, `publishDate`, and
-`tags`. News also needs `category: news` and a cover.
+`tags`. News needs `category: news`; project and studio posts use `project` and `studio`
+respectively.
 
 ### 4. Write the body and link it
 
@@ -251,7 +259,7 @@ languages. Suggestions:
 ## Pre-Publish Checklist
 
 - [ ] Chinese and English files share a name and sit in `zh/` and `en/`.
-- [ ] `title`, `description`, and `publishDate` are complete; news has `category: news`.
+- [ ] `title`, `description`, and `publishDate` are complete; the `category` matches the tab.
 - [ ] The body starts at `##` and heading levels do not skip.
 - [ ] Internal links use the correct language prefix and resolve.
 - [ ] No "TODO", "TBD", or placeholder text appears on a public page.
@@ -262,8 +270,9 @@ languages. Suggestions:
 ## Common Problems
 
 **The article is missing from `/news`.**  
-Check that `category` is `news` and the file is in the right language directory. Guides and
-introductions are not supposed to appear in the news list.
+Check that `category` is `news`, `project`, or `studio` as intended, and that the file is in the
+right language directory. Website, community, guide, and maintenance articles should omit
+`category`; they appear under Website & Community.
 
 **The table of contents is empty.**  
 It only collects level-two to level-four headings. If the body is all paragraphs, or headings

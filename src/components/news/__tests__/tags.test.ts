@@ -1,6 +1,11 @@
 // src/components/news/__tests__/tags.test.ts
 import { describe, expect, it } from "vitest";
-import { collectTags, matchesTag, pickTagFromSearch } from "../tags";
+import {
+  collectFixedTags,
+  collectTags,
+  matchesTag,
+  pickTagFromSearch,
+} from "../tags";
 
 const post = (tags?: string[]): { data: { tags?: string[] } } => ({
   data: { tags },
@@ -28,6 +33,33 @@ describe("collectTags", () => {
   it("无标签文章与空集合都得到空数组", () => {
     expect(collectTags([post(), post(undefined)])).toEqual([]);
     expect(collectTags([])).toEqual([]);
+  });
+});
+
+describe("collectFixedTags", () => {
+  it("按固定顺序返回全部标签，未使用的标签计数为 0", () => {
+    const out = collectFixedTags(
+      [post(["官网", "指南"]), post(["官网"])],
+      ["官网", "社区", "指南", "运维"],
+    );
+    expect(out).toEqual([
+      { tag: "官网", count: 2 },
+      { tag: "社区", count: 0 },
+      { tag: "指南", count: 1 },
+      { tag: "运维", count: 0 },
+    ]);
+  });
+
+  it("忽略不在固定分类里的标签", () => {
+    const out = collectFixedTags([post(["官网", "临时标签"])], ["官网"]);
+    expect(out).toEqual([{ tag: "官网", count: 1 }]);
+  });
+
+  it("空集合也返回固定标签的全部分类（计数为 0）", () => {
+    expect(collectFixedTags([], ["lkm-bot", "科普计划"])).toEqual([
+      { tag: "lkm-bot", count: 0 },
+      { tag: "科普计划", count: 0 },
+    ]);
   });
 });
 

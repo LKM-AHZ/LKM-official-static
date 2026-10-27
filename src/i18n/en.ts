@@ -35,7 +35,7 @@ export const en = {
   "common.aria.page_toc": "Table of contents",
   "common.aria.back_to_top": "Back to top",
   "common.aria.close": "Close",
-  "common.aria.search": "Search articles and guides",
+  "common.aria.search": "Search articles, projects, and studios",
   "common.theme_toggle": "Toggle theme",
   "common.theme_to_night": "Switch to night mode",
   "common.theme_to_day": "Switch to day mode",
@@ -43,7 +43,7 @@ export const en = {
   "seo.home":
     "Phientist — a science & technology enthusiast community founded in 2014. Bringing science back to everyone.",
   "seo.news":
-    "Official announcements, tech news, guides, and documentation from Phientist.",
+    "Official announcements, community updates, projects, and studios from Phientist.",
   "seo.products":
     "Phientist products, projects, and studios — what we build and what each one does.",
   "seo.team":
@@ -195,17 +195,22 @@ export const en = {
   "news.title": "News & Updates",
   "news.page_title": "Articles",
   "news.page_subtitle":
-    "News, guides, and documentation, organized by date and topic",
+    "News, website, community, projects, and studios, organized by category and topic",
+  "news.tabs_aria": "Switch article category",
   "news.subtitle": "Announcements, tech news and science content",
   "news.search_placeholder":
-    "Search titles, summaries or tags in articles and guides",
+    "Search titles, summaries, or tags in articles, projects, and studios",
   "news.search_empty": "Nothing in this selection.",
   "news.search_count": "{n} result(s) found",
   "news.tags_all": "All",
   "news.tags_aria": "Filter by tag",
-  "news.guides_title": "Guides & Docs",
+  "news.guides_title": "Website & Community",
   "news.guides_subtitle":
-    "Getting started, community introduction, and maintenance notes",
+    "Official website, community, guides, and maintenance",
+  "news.projects_title": "Projects",
+  "news.projects_subtitle": "Project progress, plans, and results",
+  "news.studios_title": "Studios",
+  "news.studios_subtitle": "Community studios and specialist collaboration",
   "products.title": "Products & Projects",
   "products.subtitle":
     "The projects, products, and studios we build — and what each one does.",

@@ -8,6 +8,19 @@ export interface TagCount {
   count: number;
 }
 
+/** 统计每个标签在文章集合中的出现次数（不排序）。 */
+function countByTag(
+  posts: Array<{ data: { tags?: string[] } }>,
+): Map<string, number> {
+  const counts = new Map<string, number>();
+  for (const post of posts) {
+    for (const tag of post.data.tags ?? []) {
+      counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
+
 /**
  * 汇总文章标签：去重、统计出现次数，按次数降序、同次数按名称升序。
  * 次数降序让筛选栏把高频标签排在前面；名称升序保证同频标签顺序稳定
@@ -17,15 +30,21 @@ export interface TagCount {
 export function collectTags(
   posts: Array<{ data: { tags?: string[] } }>,
 ): TagCount[] {
-  const counts = new Map<string, number>();
-  for (const post of posts) {
-    for (const tag of post.data.tags ?? []) {
-      counts.set(tag, (counts.get(tag) ?? 0) + 1);
-    }
-  }
-  return [...counts.entries()]
+  return [...countByTag(posts).entries()]
     .map(([tag, count]) => ({ tag, count }))
     .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag));
+}
+
+/**
+ * 按固定分类顺序汇总标签：标签栏始终显示全部分类，暂未使用的标签保留 0 计数。
+ * 不在 order 里的标签不显示，避免正文里写错或新造的标签悄悄混进筛选栏。
+ */
+export function collectFixedTags(
+  posts: Array<{ data: { tags?: string[] } }>,
+  order: readonly string[],
+): TagCount[] {
+  const counts = countByTag(posts);
+  return order.map((tag) => ({ tag, count: counts.get(tag) ?? 0 }));
 }
 
 /**

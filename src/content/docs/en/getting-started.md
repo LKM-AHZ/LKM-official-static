@@ -3,7 +3,7 @@ title: Getting Started
 description: A quick tour of browsing, search, sharing, and feedback on the Phientist static site
 publishDate: 2026-08-20
 image: /images/covers/getting-started.webp
-tags: [Guides]
+tags: [Official Website, Guides]
 ---
 
 The Phientist static website is designed primarily for reading and requires no account. Its

@@ -4,11 +4,12 @@ import NewsCard from "./NewsCard.astro";
 import { readingMinutes } from "./format";
 import { buildSearchText } from "./search";
 import { postSlug } from "./posts";
+import type { TagCount } from "./tags";
 import { langUrl } from "../../i18n/paths";
 
 /**
- * 文章模块：新闻与指南/文档共用同一套头部、卡片网格、空状态与分页条。
- * 搜索/标签工具条不放在这里，由页面统一渲染在两个模块之外。
+ * 文章模块：四个标签页共用同一套标签栏、卡片网格、空状态与分页条。
+ * 搜索框与左右切换放在页面层；标签栏跟随当前标签页，切换时一并更换。
  */
 interface Props {
   /** 锚点/标题 id 前缀，如 news、guides */
@@ -17,9 +18,15 @@ interface Props {
   title: string;
   subtitle: string;
   items: CollectionEntry<"docs">[];
-  kind: "news" | "guide";
-  /** 模块计数单位：新闻或文档 */
-  unit: "news" | "docs";
+  kind: "news" | "guide" | "project" | "studio";
+  /** 模块计数单位：新闻、文档、项目或工作室 */
+  unit: "news" | "docs" | "projects" | "studios";
+  /** 当前模块的标签及出现次数，渲染在左右切换下方 */
+  tags: TagCount[];
+  /** 「全部」标签文案 */
+  tagsAllLabel: string;
+  /** 标签筛选栏的无障碍名称 */
+  tagsAriaLabel: string;
   /** 每页文章数，默认 6 */
   pageSize?: number;
   /** 当前筛选下没有内容时的提示 */
@@ -34,18 +41,20 @@ const {
   items,
   kind,
   unit,
+  tags,
+  tagsAllLabel,
+  tagsAriaLabel,
   pageSize = 6,
   emptyText,
 } = Astro.props;
 
-const countTemplate =
-  unit === "news"
-    ? lang === "en"
-      ? "{n} news"
-      : "{n} 篇新闻"
-    : lang === "en"
-      ? "{n} docs"
-      : "{n} 篇文档";
+const countTemplates = {
+  news: lang === "en" ? "{n} news" : "{n} 篇新闻",
+  docs: lang === "en" ? "{n} docs" : "{n} 篇文档",
+  projects: lang === "en" ? "{n} projects" : "{n} 个项目",
+  studios: lang === "en" ? "{n} studios" : "{n} 个工作室",
+};
+const countTemplate = countTemplates[unit];
 const countText = countTemplate.replace("{n}", String(items.length));
 const prevLabel = lang === "en" ? "← Previous" : "← 上一页";
 const nextLabel = lang === "en" ? "Next →" : "下一页 →";
@@ -53,18 +62,45 @@ const pagerLabel = lang === "en" ? `${title} pagination` : `${title}分页`;
 ---
 
 <section
-  data-module
+  data-module={id}
   data-page-size={pageSize}
   aria-labelledby={`${id}-title`}
-  class="mt-14 border-t border-[var(--card-edge)] pt-12"
 >
-  <header class="mb-8 flex flex-wrap items-end justify-between gap-4">
-    <div>
-      <h2 id={`${id}-title`} class="text-2xl font-bold text-deep-text">
-        {title}
-      </h2>
-      <p class="mt-3 text-note text-text-muted">{subtitle}</p>
-    </div>
+  <h2 id={`${id}-title`} class="sr-only">{title}</h2>
+
+  {
+    tags.length > 0 && (
+      <div
+        data-module-tagbar
+        role="group"
+        aria-label={tagsAriaLabel}
+        class="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2"
+      >
+        <button
+          type="button"
+          data-tag-filter=""
+          aria-pressed="true"
+          class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
+        >
+          {tagsAllLabel}
+        </button>
+        {tags.map(({ tag, count }) => (
+          <button
+            type="button"
+            data-tag-filter={tag}
+            aria-pressed="false"
+            class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
+          >
+            {tag}
+            <span class="text-[11px] opacity-70">{count}</span>
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <header class="mb-8 mt-8 flex flex-wrap items-baseline justify-between gap-3">
+    <p class="m-0 text-note text-text-muted">{subtitle}</p>
     <span
       data-module-count
       data-count-template={countTemplate}
@@ -75,25 +111,27 @@ const pagerLabel = lang === "en" ? `${title} pagination` : `${title}分页`;
   </header>
 
   <div data-module-list class="grid gap-5 sm:grid-cols-2">
-    {items.map((doc) => (
-      <NewsCard
-        kind={kind}
-        headingLevel={3}
-        lang={lang}
-        href={langUrl(lang, `/docs/${postSlug(doc)}`)}
-        title={doc.data.title}
-        desc={doc.data.description}
-        date={doc.data.publishDate}
-        minutes={readingMinutes(doc.body ?? "")}
-        tags={doc.data.tags ?? []}
-        image={doc.data.image}
-        searchText={buildSearchText([
-          doc.data.title,
-          doc.data.description,
-          ...(doc.data.tags ?? []),
-        ])}
-      />
-    ))}
+    {
+      items.map((doc) => (
+        <NewsCard
+          kind={kind}
+          headingLevel={3}
+          lang={lang}
+          href={langUrl(lang, `/docs/${postSlug(doc)}`)}
+          title={doc.data.title}
+          desc={doc.data.description}
+          date={doc.data.publishDate}
+          minutes={readingMinutes(doc.body ?? "")}
+          tags={doc.data.tags ?? []}
+          image={doc.data.image}
+          searchText={buildSearchText([
+            doc.data.title,
+            doc.data.description,
+            ...(doc.data.tags ?? []),
+          ])}
+        />
+      ))
+    }
   </div>
 
   <p

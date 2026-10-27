@@ -1,10 +1,12 @@
 ---
 import OfficialLayout from "../../layouts/OfficialLayout.astro";
 import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
 import { t } from "../../i18n/index";
 import ArticleModule from "../../components/news/ArticleModule.astro";
 import { getNewsPosts } from "../../components/news/posts";
-import { collectTags } from "../../components/news/tags";
+import { collectFixedTags } from "../../components/news/tags";
+import type { TagCount } from "../../components/news/tags";
 
 const lang = (Astro.currentLocale ?? "zh") as string;
 const isEn = lang === "en";
@@ -12,20 +14,108 @@ const isEn = lang === "en";
 import { getStaticPathsForLang } from "../../i18n/paths";
 export const getStaticPaths = getStaticPathsForLang;
 
-// ===== 文章页：新闻与指南/文档两个模块，共用卡片、分页与整页搜索/标签 =====
+// ===== 文章页：新闻、官网与社区、项目、工作室四个标签页左右切换 =====
 const allPosts = await getCollection("docs");
-const posts = getNewsPosts(allPosts, lang);
+const langPosts = allPosts.filter((doc) => doc.id.startsWith(`${lang}/`));
+const posts = getNewsPosts(langPosts, lang);
 
-const guides = allPosts
-  .filter(
-    (doc) => doc.id.startsWith(`${lang}/`) && doc.data.category !== "news",
-  )
-  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+const byNewest = (
+  a: CollectionEntry<"docs">,
+  b: CollectionEntry<"docs">,
+): number => b.data.publishDate.getTime() - a.data.publishDate.getTime();
 
-// 标签栏放在两个模块之外，同时统计新闻与文档
-const tagCounts = collectTags([...posts, ...guides]);
+// 不填 category 的文章归入「官网与爱好者社区」；project / studio 各自成页。
+const guides = langPosts.filter((doc) => !doc.data.category).sort(byNewest);
+const projects = langPosts
+  .filter((doc) => doc.data.category === "project")
+  .sort(byNewest);
+const studios = langPosts
+  .filter((doc) => doc.data.category === "studio")
+  .sort(byNewest);
 
-// 两个模块每页都显示 6 篇；当前内容不足 7 篇时仍显示 1 / 1 的分页条
+type ViewKey = "news" | "guides" | "projects" | "studios";
+
+// 标签分类是固定的：没有文章的标签也显示（计数 0），后续新增文章直接归入。
+// 中英文各一套，与对应语言文章的 frontmatter tags 保持一致。
+const tagOrders: Record<"zh" | "en", Record<ViewKey, string[]>> = {
+  zh: {
+    news: ["官方公告", "活动", "团队招募", "募捐公示", "合作事宜"],
+    guides: ["官网", "社区", "指南", "运维", "更新", "团队招募"],
+    projects: ["lkm-bot", "科普计划", "公益计划"],
+    studios: ["全链·技术服务工作室", "星轨·全科家教工作室"],
+  },
+  en: {
+    news: [
+      "Official Announcements",
+      "Events",
+      "Team Recruitment",
+      "Donation Disclosures",
+      "Partnerships",
+    ],
+    guides: [
+      "Official Website",
+      "Community",
+      "Guides",
+      "Operations",
+      "Updates",
+      "Team Recruitment",
+    ],
+    projects: ["lkm-bot", "Science Outreach Program", "Public Benefit Program"],
+    studios: ["Full-Chain Tech Services Studio", "Star Orbit Tutoring Studio"],
+  },
+};
+const tagOrder = tagOrders[isEn ? "en" : "zh"];
+
+interface ArticleView {
+  key: ViewKey;
+  title: string;
+  subtitle: string;
+  items: CollectionEntry<"docs">[];
+  kind: "news" | "guide" | "project" | "studio";
+  unit: "news" | "docs" | "projects" | "studios";
+  tags: TagCount[];
+}
+
+const views: ArticleView[] = [
+  {
+    key: "news",
+    title: t(lang, "news.title"),
+    subtitle: t(lang, "news.subtitle"),
+    items: posts,
+    kind: "news",
+    unit: "news",
+    tags: collectFixedTags(posts, tagOrder.news),
+  },
+  {
+    key: "guides",
+    title: t(lang, "news.guides_title"),
+    subtitle: t(lang, "news.guides_subtitle"),
+    items: guides,
+    kind: "guide",
+    unit: "docs",
+    tags: collectFixedTags(guides, tagOrder.guides),
+  },
+  {
+    key: "projects",
+    title: t(lang, "news.projects_title"),
+    subtitle: t(lang, "news.projects_subtitle"),
+    items: projects,
+    kind: "project",
+    unit: "projects",
+    tags: collectFixedTags(projects, tagOrder.projects),
+  },
+  {
+    key: "studios",
+    title: t(lang, "news.studios_title"),
+    subtitle: t(lang, "news.studios_subtitle"),
+    items: studios,
+    kind: "studio",
+    unit: "studios",
+    tags: collectFixedTags(studios, tagOrder.studios),
+  },
+];
+
+// 每页文章数，默认 6；内容不足 7 篇时仍显示 1 / 1 的分页条
 const PAGE_SIZE = 6;
 ---
 
@@ -37,7 +127,9 @@ const PAGE_SIZE = 6;
   <section class="section-padding">
     <div class="container-x">
       <header class="mb-10 text-center">
-        <h1 class="title-underline font-heading text-section font-bold text-deep-text">
+        <h1
+          class="title-underline font-heading text-section font-bold text-deep-text"
+        >
           {t(lang, "news.page_title")}
         </h1>
         <p class="mx-auto mt-8 max-w-2xl text-lead text-text-muted">
@@ -45,7 +137,7 @@ const PAGE_SIZE = 6;
         </p>
       </header>
 
-      {/* 搜索与标签是整页工具条，位于两个模块之外，同时过滤新闻与文档 */}
+      {/* 搜索仍是整页工具条，同时过滤四个标签页；标签栏已移入各自面板 */}
       <div class="mx-auto w-full max-w-3xl">
         <input
           type="search"
@@ -55,68 +147,74 @@ const PAGE_SIZE = 6;
           class="w-full rounded-[var(--radius-field)] border border-[var(--card-edge)] bg-[var(--ghost-bg)] px-4 py-2.5 text-sm text-base-content transition outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_25%,transparent)]"
         />
 
-        {tagCounts.length > 0 && (
-          <div
-            data-news-tagbar
-            role="group"
-            aria-label={t(lang, "news.tags_aria")}
-            class="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2"
-          >
-            <button
-              type="button"
-              data-tag-filter=""
-              aria-pressed="true"
-              class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
-            >
-              {t(lang, "news.tags_all")}
-            </button>
-            {tagCounts.map(({ tag, count }) => (
-              <button
-                type="button"
-                data-tag-filter={tag}
-                aria-pressed="false"
-                class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
-              >
-                {tag}
-                <span class="text-[11px] opacity-70">{count}</span>
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* 命中总数：整页范围，由客户端脚本维护；模块自己的计数在模块头部 */}
+        {
+          /* 搜索命中总数：四个标签页合计，由客户端脚本维护；标签筛选的计数在模块头部 */
+        }
         <p
           data-news-count
           data-count-template={t(lang, "news.search_count")}
           hidden
           aria-live="polite"
-          class="mt-6 text-center text-sm text-text-muted"
-        ></p>
+          class="mt-4 text-center text-sm text-text-muted"
+        >
+        </p>
       </div>
 
-      <ArticleModule
-        id="news"
-        lang={isEn ? "en" : "zh"}
-        title={t(lang, "news.title")}
-        subtitle={t(lang, "news.subtitle")}
-        items={posts}
-        kind="news"
-        unit="news"
-        pageSize={PAGE_SIZE}
-        emptyText={t(lang, "news.search_empty")}
-      />
+      {/* 四个标签页左右切换；标签栏在各面板顶部，切换时一起更换 */}
+      <div class="mx-auto mt-10 w-full max-w-3xl">
+        <div
+          data-tablist
+          role="tablist"
+          aria-label={t(lang, "news.tabs_aria")}
+          class="flex items-center justify-center gap-2.5 overflow-x-auto border-b border-[var(--card-edge)] sm:gap-8"
+        >
+          {
+            views.map((view, index) => (
+              <button
+                type="button"
+                role="tab"
+                id={`${view.key}-tab`}
+                data-tab={view.key}
+                aria-selected={index === 0 ? "true" : "false"}
+                aria-controls={`${view.key}-panel`}
+                tabindex={index === 0 ? 0 : -1}
+                class="-mb-px shrink-0 whitespace-nowrap border-b-2 border-transparent px-1 pb-3 text-[15px] font-semibold text-text-muted transition-colors hover:text-deep-text aria-selected:border-[var(--primary)] aria-selected:text-deep-text sm:text-lg"
+              >
+                {view.title}
+              </button>
+            ))
+          }
+        </div>
+      </div>
 
-      <ArticleModule
-        id="guides"
-        lang={isEn ? "en" : "zh"}
-        title={t(lang, "news.guides_title")}
-        subtitle={t(lang, "news.guides_subtitle")}
-        items={guides}
-        kind="guide"
-        unit="docs"
-        pageSize={PAGE_SIZE}
-        emptyText={t(lang, "news.search_empty")}
-      />
+      <div class="mt-2">
+        {
+          views.map((view, index) => (
+            <div
+              id={`${view.key}-panel`}
+              role="tabpanel"
+              aria-labelledby={`${view.key}-tab`}
+              data-tab-panel={view.key}
+              hidden={index > 0}
+            >
+              <ArticleModule
+                id={view.key}
+                lang={isEn ? "en" : "zh"}
+                title={view.title}
+                subtitle={view.subtitle}
+                items={view.items}
+                kind={view.kind}
+                unit={view.unit}
+                tags={view.tags}
+                tagsAllLabel={t(lang, "news.tags_all")}
+                tagsAriaLabel={t(lang, "news.tags_aria")}
+                pageSize={PAGE_SIZE}
+                emptyText={t(lang, "news.search_empty")}
+              />
+            </div>
+          ))
+        }
+      </div>
     </div>
   </section>
 </OfficialLayout>
@@ -127,8 +225,15 @@ const PAGE_SIZE = 6;
 
   const input = document.querySelector<HTMLInputElement>("[data-news-search]");
   const toolbarCount = document.querySelector<HTMLElement>("[data-news-count]");
+  const tabButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-tab]"),
+  );
+  const tabPanels = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-tab-panel]"),
+  );
 
   interface ModuleState {
+    key: string;
     cards: HTMLElement[];
     count: HTMLElement | null;
     empty: HTMLElement | null;
@@ -139,6 +244,8 @@ const PAGE_SIZE = 6;
     pageSize: number;
     page: number;
     totalPages: number;
+    tagButtons: HTMLButtonElement[];
+    activeTag: string;
   }
 
   const modules: ModuleState[] = Array.from(
@@ -146,6 +253,7 @@ const PAGE_SIZE = 6;
   ).map((root) => {
     const list = root.querySelector<HTMLElement>("[data-module-list]");
     return {
+      key: root.dataset.module ?? "",
       cards: list
         ? Array.from(list.querySelectorAll<HTMLElement>("[data-card-kind]"))
         : [],
@@ -158,55 +266,48 @@ const PAGE_SIZE = 6;
       pageSize: Number(root.dataset.pageSize ?? 6) || 6,
       page: 1,
       totalPages: 1,
+      tagButtons: Array.from(
+        root.querySelectorAll<HTMLButtonElement>("[data-tag-filter]"),
+      ),
+      activeTag: "",
     };
   });
 
   if (input && modules.length > 0) {
-    const tagButtons = Array.from(
-      document.querySelectorAll<HTMLButtonElement>("[data-tag-filter]"),
-    );
+    const findModule = (key: string): ModuleState | undefined =>
+      modules.find((module) => module.key === key);
 
-    // 初始标签来自 URL（详情页点标签跳过来时带着 ?tag=）。
-    // 只认筛选栏里存在的标签，链接过期/手改 URL 时按「全部」处理，避免整页空结果。
-    let activeTag = pickTagFromSearch(location.search);
-    if (
-      activeTag &&
-      !tagButtons.some((b) => b.dataset.tagFilter === activeTag)
-    ) {
-      activeTag = "";
-    }
-
-    const syncButtons = (): void => {
-      for (const btn of tagButtons) {
+    const syncTagButtons = (module: ModuleState): void => {
+      for (const btn of module.tagButtons) {
         btn.setAttribute(
           "aria-pressed",
-          String((btn.dataset.tagFilter ?? "") === activeTag),
+          String((btn.dataset.tagFilter ?? "") === module.activeTag),
         );
       }
     };
 
-    const updateUrl = (): void => {
-      const url = new URL(location.href);
-      if (activeTag) url.searchParams.set("tag", activeTag);
-      else url.searchParams.delete("tag");
-      history.replaceState(null, "", url);
-    };
+    const defaultView = tabButtons[0]?.dataset.tab ?? modules[0].key;
+    let activeView = defaultView;
 
-    // resetPages: 搜索/标签变化时两个模块都回到第 1 页；点翻页按钮时保持当前页
+    // resetPages: 搜索变化时所有标签页都回到第 1 页；点翻页按钮时保持当前页
     const apply = (resetPages = false): void => {
       const query = input.value;
-      const filtering = query.trim() !== "" || activeTag !== "";
-      let totalShown = 0;
+      // 搜索是整页范围：命中数统计四个标签页（不受标签影响），切换标签页时不变；
+      // 标签只过滤当前标签页，具体命中数由模块头部自己的计数显示。
+      const searching = query.trim() !== "";
+      let searchTotal = 0;
 
       for (const module of modules) {
-        const matches = module.cards.filter((card) => {
+        const queryMatches = module.cards.filter((card) =>
+          matchesQuery(card.dataset.searchText ?? "", query),
+        );
+        searchTotal += queryMatches.length;
+
+        const matches = queryMatches.filter((card) => {
           const tags: string[] = card.dataset.tags
             ? (JSON.parse(card.dataset.tags) as string[])
             : [];
-          return (
-            matchesQuery(card.dataset.searchText ?? "", query) &&
-            matchesTag(tags, activeTag)
-          );
+          return matchesTag(tags, module.activeTag);
         });
 
         if (resetPages) module.page = 1;
@@ -235,21 +336,103 @@ const PAGE_SIZE = 6;
         if (module.prev) module.prev.disabled = module.page <= 1;
         if (module.next)
           module.next.disabled = module.page >= module.totalPages;
-
-        totalShown += matches.length;
       }
 
       if (toolbarCount) {
-        toolbarCount.hidden = !filtering;
-        if (filtering) {
+        toolbarCount.hidden = !searching;
+        if (searching) {
           toolbarCount.textContent = (
             toolbarCount.dataset.countTemplate ?? "{n}"
-          ).replace("{n}", String(totalShown));
+          ).replace("{n}", String(searchTotal));
         }
       }
     };
 
+    // URL 只保留非默认的切换页与当前模块的标签，刷新/分享都能回到同一状态
+    const updateUrl = (): void => {
+      const url = new URL(location.href);
+      if (activeView === defaultView) url.searchParams.delete("tab");
+      else url.searchParams.set("tab", activeView);
+
+      const current = findModule(activeView);
+      if (current?.activeTag) url.searchParams.set("tag", current.activeTag);
+      else url.searchParams.delete("tag");
+      history.replaceState(null, "", url);
+    };
+
+    const showTab = (
+      view: string,
+      moveFocus = false,
+      clearTags = false,
+    ): void => {
+      const target = tabButtons.find((tab) => tab.dataset.tab === view);
+      if (!target) return;
+
+      const changed = view !== activeView;
+      activeView = view;
+      for (const tab of tabButtons) {
+        const selected = tab === target;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      }
+      for (const panel of tabPanels) {
+        panel.hidden = panel.dataset.tabPanel !== view;
+      }
+      // 手动切换分类时清空标签筛选：标签栏是各分类自己的，避免隐藏分类的
+      // 筛选状态残留，导致切换后计数与可见卡片对不上。
+      if (clearTags && changed) {
+        for (const module of modules) {
+          module.activeTag = "";
+          module.page = 1;
+          syncTagButtons(module);
+        }
+        apply();
+      }
+      updateUrl();
+      if (moveFocus) target.focus();
+    };
+
+    for (const tab of tabButtons) {
+      tab.addEventListener("click", () => {
+        showTab(tab.dataset.tab ?? "", false, true);
+      });
+      tab.addEventListener("keydown", (event) => {
+        if (
+          event.key !== "ArrowLeft" &&
+          event.key !== "ArrowRight" &&
+          event.key !== "Home" &&
+          event.key !== "End"
+        ) {
+          return;
+        }
+        event.preventDefault();
+        const index = tabButtons.indexOf(tab);
+        const nextIndex =
+          event.key === "ArrowLeft"
+            ? (index - 1 + tabButtons.length) % tabButtons.length
+            : event.key === "ArrowRight"
+              ? (index + 1) % tabButtons.length
+              : event.key === "Home"
+                ? 0
+                : tabButtons.length - 1;
+        const next = tabButtons[nextIndex];
+        showTab(next.dataset.tab ?? "", true, true);
+      });
+    }
+
     for (const module of modules) {
+      syncTagButtons(module);
+
+      for (const btn of module.tagButtons) {
+        btn.addEventListener("click", () => {
+          module.activeTag = btn.dataset.tagFilter ?? "";
+          module.page = 1;
+          syncTagButtons(module);
+          updateUrl();
+          apply();
+        });
+      }
+
       module.prev?.addEventListener("click", () => {
         if (module.page > 1) {
           module.page -= 1;
@@ -264,22 +447,54 @@ const PAGE_SIZE = 6;
       });
     }
 
-    for (const btn of tagButtons) {
-      btn.addEventListener("click", () => {
-        activeTag = btn.dataset.tagFilter ?? "";
-        syncButtons();
-        updateUrl();
-        apply(true);
-      });
-    }
     input.addEventListener("input", () => apply(true));
 
-    syncButtons();
+    // 初始状态：?tab= 决定左右切换，?tag= 反推出标签所属模块。
+    // 标签失效（链接过期/手改 URL）时按「全部」处理，并由 updateUrl 清掉。
+    const params = new URLSearchParams(location.search);
+    const requestedView = params.get("tab") ?? "";
+    let initialView = tabButtons.some(
+      (tab) => tab.dataset.tab === requestedView,
+    )
+      ? requestedView
+      : defaultView;
+
+    const initialTag = pickTagFromSearch(location.search);
+    const requestedModule = findModule(initialView);
+    // 同一个标签可能同时出现在多个标签页里；先从 ?tab= 指定的标签页里找，
+    // 找不到再按全页标签归属推导，避免 ?tab=guides&tag=官方公告 被抢回新闻。
+    const tagOwner = initialTag
+      ? requestedModule?.tagButtons.some(
+          (btn) => btn.dataset.tagFilter === initialTag,
+        )
+        ? requestedModule
+        : modules.find((module) =>
+            module.tagButtons.some(
+              (btn) => btn.dataset.tagFilter === initialTag,
+            ),
+          )
+      : undefined;
+    if (tagOwner) {
+      tagOwner.activeTag = initialTag;
+      syncTagButtons(tagOwner);
+      initialView = tagOwner.key;
+    }
+
+    showTab(initialView);
     apply(true);
   }
 </script>
 
 <style is:global>
+  /* 窄屏时四个标签可横向滑动，隐藏滚动条，视觉上仍是一条标签栏 */
+  [data-tablist] {
+    scrollbar-width: none;
+  }
+
+  [data-tablist]::-webkit-scrollbar {
+    display: none;
+  }
+
   /* 卡片根元素带 flex 类，作者样式的 display 会盖过 UA 的 [hidden]{display:none}；
      这里显式提权，分页与搜索隐藏卡片时才真正生效。 */
   [data-module-list] > [hidden] {

@@ -3,7 +3,7 @@ title: 快速上手
 description: 从浏览、搜索到分享与反馈，一文熟悉理科迷静态官网的主要功能
 publishDate: 2026-08-20
 image: /images/covers/getting-started.webp
-tags: [指南]
+tags: [官网, 指南]
 ---
 
 PHIENTIST 独立静态官网以阅读为主，不需要注册或登录。页面由 Markdown 内容构建，

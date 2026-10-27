@@ -10,9 +10,10 @@ const docs = defineCollection({
     title: z.string(),
     description: z.string().optional(),
     publishDate: z.coerce.date(),
-    // 文章分类 / 标签：/news 文章列表按 category === "news" 严格比对，用枚举把写错大小写
-    // 或拼错的分类变成构建期报错，而不是文章被悄悄漏掉
-    category: z.enum(["news"]).optional(),
+    // 文章分类 / 标签：/news 的文章页按 category 分到不同标签页，用枚举把写错大小写
+    // 或拼错的分类变成构建期报错，而不是文章被悄悄漏掉。
+    // 不填表示官网与爱好者社区文章；news 进新闻资讯，project / studio 进对应标签页。
+    category: z.enum(["news", "project", "studio"]).optional(),
     tags: z.array(z.string()).optional(),
     // 文章配图：站内绝对路径（/images/covers/<slug>.webp）或外部 http(s) URL。
     // 站内图随构建产物一起部署，加载不受第三方图床的 302/限流/网络影响；

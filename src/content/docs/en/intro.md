@@ -3,7 +3,7 @@ title: Welcome to Phientist
 description: Meet the Phientist community, its static website, and the paths to start reading and taking part
 publishDate: 2026-08-25
 image: /images/covers/intro.webp
-tags: [Guides]
+tags: [Official Website, Guides]
 ---
 
 Phientist is a learning community for people interested in science and technology. It began in
