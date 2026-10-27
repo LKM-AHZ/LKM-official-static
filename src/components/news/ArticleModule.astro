@@ -66,38 +66,38 @@ const pagerLabel = lang === "en" ? `${title} pagination` : `${title}分页`;
   data-page-size={pageSize}
   aria-labelledby={`${id}-title`}
 >
-  <h2 id={`${id}-title`} class="sr-only">{title}</h2>
+  <h2 id={`${id}-title`} class="sr-only">
+    {title}
+  </h2>
 
-  {
-    tags.length > 0 && (
-      <div
-        data-module-tagbar
-        role="group"
-        aria-label={tagsAriaLabel}
-        class="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2"
+  {tags.length > 0 && (
+    <div
+      data-module-tagbar
+      role="group"
+      aria-label={tagsAriaLabel}
+      class="mx-auto mt-6 flex max-w-3xl flex-wrap items-center justify-center gap-2"
+    >
+      <button
+        type="button"
+        data-tag-filter=""
+        aria-pressed="true"
+        class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
       >
+        {tagsAllLabel}
+      </button>
+      {tags.map(({ tag, count }) => (
         <button
           type="button"
-          data-tag-filter=""
-          aria-pressed="true"
+          data-tag-filter={tag}
+          aria-pressed="false"
           class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
         >
-          {tagsAllLabel}
+          {tag}
+          <span class="text-[11px] opacity-70">{count}</span>
         </button>
-        {tags.map(({ tag, count }) => (
-          <button
-            type="button"
-            data-tag-filter={tag}
-            aria-pressed="false"
-            class="inline-flex items-center gap-1.5 rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-3 py-1 text-xs text-text-muted transition hover:border-[var(--primary)] hover:text-primary aria-pressed:border-[var(--primary)] aria-pressed:bg-[var(--social-hover-bg)] aria-pressed:font-medium aria-pressed:text-primary"
-          >
-            {tag}
-            <span class="text-[11px] opacity-70">{count}</span>
-          </button>
-        ))}
-      </div>
-    )
-  }
+      ))}
+    </div>
+  )}
 
   <header class="mb-8 mt-8 flex flex-wrap items-baseline justify-between gap-3">
     <p class="m-0 text-note text-text-muted">{subtitle}</p>
@@ -111,27 +111,25 @@ const pagerLabel = lang === "en" ? `${title} pagination` : `${title}分页`;
   </header>
 
   <div data-module-list class="grid gap-5 sm:grid-cols-2">
-    {
-      items.map((doc) => (
-        <NewsCard
-          kind={kind}
-          headingLevel={3}
-          lang={lang}
-          href={langUrl(lang, `/docs/${postSlug(doc)}`)}
-          title={doc.data.title}
-          desc={doc.data.description}
-          date={doc.data.publishDate}
-          minutes={readingMinutes(doc.body ?? "")}
-          tags={doc.data.tags ?? []}
-          image={doc.data.image}
-          searchText={buildSearchText([
-            doc.data.title,
-            doc.data.description,
-            ...(doc.data.tags ?? []),
-          ])}
-        />
-      ))
-    }
+    {items.map((doc) => (
+      <NewsCard
+        kind={kind}
+        headingLevel={3}
+        lang={lang}
+        href={langUrl(lang, `/docs/${postSlug(doc)}`)}
+        title={doc.data.title}
+        desc={doc.data.description}
+        date={doc.data.publishDate}
+        minutes={readingMinutes(doc.body ?? "")}
+        tags={doc.data.tags ?? []}
+        image={doc.data.image}
+        searchText={buildSearchText([
+          doc.data.title,
+          doc.data.description,
+          ...(doc.data.tags ?? []),
+        ])}
+      />
+    ))}
   </div>
 
   <p

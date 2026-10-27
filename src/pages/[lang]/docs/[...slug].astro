@@ -104,34 +104,28 @@ const tagHref = (tag: string): string => {
   type="article"
   publishedTime={doc.data.publishDate.toISOString()}
 >
-  <div
-    class="container-x gap-x-12 py-10 md:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem]"
-  >
+  <div class="container-x gap-x-12 py-10 md:py-14 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem]">
     <div class="min-w-0">
       <article class="article-prose">
-        {
-          /* 文章顶部配图。渐变始终铺底：无 image 时它本身就是占位封面，
-            有 image 时则在图片加载中/失败后接管，不会露出空白 */
-        }
+        {/* 文章顶部配图。渐变始终铺底：无 image 时它本身就是占位封面，
+            有 image 时则在图片加载中/失败后接管，不会露出空白 */}
         <div
           class="relative mb-8 aspect-[16/7] w-full overflow-hidden rounded-2xl border border-[var(--card-edge)]"
           style={{ background: coverGradient(doc.data.title) }}
         >
-          {
-            doc.data.image && (
-              <CoverImage
-                src={doc.data.image}
-                thumb={coverThumb(doc.data.image)}
-                alt=""
-                width={1200}
-                height={650}
-                loading="eager"
-                fetchpriority="high"
-                sizes="(min-width: 1024px) 856px, calc(100vw - 2rem)"
-                class="absolute inset-0 h-full w-full object-cover"
-              />
-            )
-          }
+          {doc.data.image && (
+            <CoverImage
+              src={doc.data.image}
+              thumb={coverThumb(doc.data.image)}
+              alt=""
+              width={1200}
+              height={650}
+              loading="eager"
+              fetchpriority="high"
+              sizes="(min-width: 1024px) 856px, calc(100vw - 2rem)"
+              class="absolute inset-0 h-full w-full object-cover"
+            />
+          )}
         </div>
 
         <a
@@ -145,84 +139,74 @@ const tagHref = (tag: string): string => {
           <h1 class="font-heading text-section font-bold text-deep-text">
             {doc.data.title}
           </h1>
-          <div
-            class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-muted"
-          >
+          <div class="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-text-muted">
             <time datetime={ymd}>{dateText}</time>
             <span class="h-1 w-1 rounded-full bg-[var(--surface-3)]"></span>
             <span>{metaMinutes}</span>
           </div>
           {/* 标签：跳回 /news 对应标签页并带上 ?tag= 自动筛选 */}
-          {
-            doc.data.tags && doc.data.tags.length > 0 && (
-              <div class="mt-4 flex flex-wrap items-center gap-2">
-                <span class="text-xs uppercase tracking-wide text-text-muted">
-                  {en ? "Tags" : "标签"}
-                </span>
-                {doc.data.tags.map((tag) => (
-                  <a
-                    href={tagHref(tag)}
-                    class="rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-2.5 py-0.5 text-xs text-text-muted no-underline transition hover:border-[var(--primary)] hover:text-primary"
-                  >
-                    {tag}
-                  </a>
-                ))}
-              </div>
-            )
-          }
-          {
-            doc.data.description && (
-              <p class="mt-6 text-lead text-text-muted">
-                {doc.data.description}
-              </p>
-            )
-          }
+          {doc.data.tags && doc.data.tags.length > 0 && (
+            <div class="mt-4 flex flex-wrap items-center gap-2">
+              <span class="text-xs uppercase tracking-wide text-text-muted">
+                {en ? "Tags" : "标签"}
+              </span>
+              {doc.data.tags.map((tag) => (
+                <a
+                  href={tagHref(tag)}
+                  class="rounded-full border border-[var(--card-edge)] bg-[var(--social-bg)] px-2.5 py-0.5 text-xs text-text-muted no-underline transition hover:border-[var(--primary)] hover:text-primary"
+                >
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )}
+          {doc.data.description && (
+            <p class="mt-6 text-lead text-text-muted">{doc.data.description}</p>
+          )}
         </header>
 
         <div class="prose mt-8 max-w-none">
           <Content />
         </div>
 
-        {
-          (prevHref || nextHref) && (
-            <nav
-              class="mt-14 flex flex-col gap-3 border-t border-[var(--card-edge)] pt-6 sm:flex-row sm:items-stretch sm:justify-between"
-              aria-label="Previous or next post"
-            >
-              {prevHref && prev ? (
-                <a
-                  href={prevHref}
-                  class="group inline-flex w-full flex-col gap-1 rounded-lg p-2 transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
-                >
-                  <span class="text-xs uppercase tracking-wide text-text-muted">
-                    {en ? "Older" : "上一篇"}
-                  </span>
-                  <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
-                    {prev.data.title}
-                  </span>
-                </a>
-              ) : (
-                <span class="hidden flex-1 sm:block" />
-              )}
+        {(prevHref || nextHref) && (
+          <nav
+            class="mt-14 flex flex-col gap-3 border-t border-[var(--card-edge)] pt-6 sm:flex-row sm:items-stretch sm:justify-between"
+            aria-label="Previous or next post"
+          >
+            {prevHref && prev ? (
+              <a
+                href={prevHref}
+                class="group inline-flex w-full flex-col gap-1 rounded-lg p-2 transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
+              >
+                <span class="text-xs uppercase tracking-wide text-text-muted">
+                  {en ? "Older" : "上一篇"}
+                </span>
+                <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
+                  {prev.data.title}
+                </span>
+              </a>
+            ) : (
+              <span class="hidden flex-1 sm:block" />
+            )}
 
-              {nextHref && next ? (
-                <a
-                  href={nextHref}
-                  class="group inline-flex w-full flex-col items-end gap-1 rounded-lg p-2 text-right transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
-                >
-                  <span class="text-xs uppercase tracking-wide text-text-muted">
-                    {en ? "Newer" : "下一篇"}
-                  </span>
-                  <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
-                    {next.data.title}
-                  </span>
-                </a>
-              ) : (
-                <span class="hidden flex-1 sm:block" />
-              )}
-            </nav>
-          )
-        }
+            {nextHref && next ? (
+              <a
+                href={nextHref}
+                class="group inline-flex w-full flex-col items-end gap-1 rounded-lg p-2 text-right transition-colors hover:bg-[var(--social-hover-bg)] sm:w-[calc(50%-0.75rem)]"
+              >
+                <span class="text-xs uppercase tracking-wide text-text-muted">
+                  {en ? "Newer" : "下一篇"}
+                </span>
+                <span class="text-sm font-semibold text-deep-text line-clamp-1 group-hover:text-primary">
+                  {next.data.title}
+                </span>
+              </a>
+            ) : (
+              <span class="hidden flex-1 sm:block" />
+            )}
+          </nav>
+        )}
       </article>
     </div>
 
@@ -231,9 +215,7 @@ const tagHref = (tag: string): string => {
       class="hidden lg:block"
       aria-label={en ? "Table of contents" : "阅读目录"}
     >
-      <div
-        class="article-toc sticky top-[calc(var(--nav-h)+1rem)] max-h-[calc(100vh-var(--nav-h)-2rem)] overflow-y-auto"
-      >
+      <div class="article-toc sticky top-[calc(var(--nav-h)+1rem)] max-h-[calc(100vh-var(--nav-h)-2rem)] overflow-y-auto">
         <div class="toc-heading">
           <span class="toc-heading-icon" aria-hidden="true">
             <Icon name="article" class="h-4 w-4" />
@@ -246,19 +228,17 @@ const tagHref = (tag: string): string => {
           aria-label={en ? "Article sections" : "文章章节"}
         >
           <ul>
-            {
-              tocHeadings.map((h) => (
-                <li>
-                  <a
-                    href={`#${h.slug}`}
-                    class:list={["toc-link", `toc-depth-${h.depth}`]}
-                  >
-                    <span class="toc-mark" aria-hidden="true" />
-                    <span class="toc-text">{h.text}</span>
-                  </a>
-                </li>
-              ))
-            }
+            {tocHeadings.map((h) => (
+              <li>
+                <a
+                  href={`#${h.slug}`}
+                  class:list={["toc-link", `toc-depth-${h.depth}`]}
+                >
+                  <span class="toc-mark" aria-hidden="true" />
+                  <span class="toc-text">{h.text}</span>
+                </a>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
