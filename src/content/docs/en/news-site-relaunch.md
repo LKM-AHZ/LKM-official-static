@@ -69,6 +69,10 @@ The part of the site that was built and shared by the community, along with the 
 
 That is an overview of the new website. To explore further, join us in the [Phientist QQ community](/en/about#communities).
 
+Launching is only the starting point. We will continue to add community introductions, usage guides, and maintenance documentation, and turn records of events and projects into articles that can be referenced over the long term. If you are new, start with [Getting Started](/en/docs/getting-started); if you would like to help maintain content, see the [Editing Guide](/en/docs/editing-guide).
+
+If you find a broken old link, a layout issue on a particular device, or an explanation that is not clear enough, please send the page URL and a screenshot to the maintainers. We will turn every reproducible piece of feedback into the basis for the next small improvement.
+
 Thank you for supporting Phientist, and for caring about the work we do and the ideas we stand for.
 
 We will keep working to bring science and technology enthusiasts a better experience.
