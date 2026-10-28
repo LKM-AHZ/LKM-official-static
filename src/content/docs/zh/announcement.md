@@ -66,5 +66,4 @@ PHIENTIST 独立静态官网已经从结构验证阶段进入持续维护。公�
 小文章开始参与。
 
 延伸阅读：[快速上手](/zh/docs/getting-started) ·
-[编辑文章指南](/zh/docs/editing-guide) ·
-[理科迷全新官网正式上线](/zh/docs/news-site-launch)
+[编辑文章指南](/zh/docs/editing-guide)

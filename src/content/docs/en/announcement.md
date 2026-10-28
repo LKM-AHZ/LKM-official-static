@@ -84,5 +84,4 @@ Content maintenance is not reserved for a small group. If you are willing to sta
 words and respect facts and readers, you can start with one small article.
 
 Further reading: [Getting Started](/en/docs/getting-started) ·
-[Editing Guide](/en/docs/editing-guide) ·
-[A New Phientist Website Goes Live](/en/docs/news-site-launch)
+[Editing Guide](/en/docs/editing-guide)

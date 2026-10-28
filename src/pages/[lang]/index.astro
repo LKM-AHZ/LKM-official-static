@@ -360,33 +360,35 @@ const newsPosts = getNewsPosts(allDocs, newsLang, 6);
   </section>
 
   {/* ===== 最近更新 ===== */}
-  <section id="update" class="section-padding">
-    <div class="container-x">
-      <div class="mb-14 text-center">
-        <h2 class="title-underline text-section font-bold text-deep-text">
-          {t(lang, "home.section_updates")}
-        </h2>
-        <p class="mt-8 text-text-muted">
-          {t(lang, "home.section_updates_sub")}
-        </p>
-      </div>
+  {newsPosts.length > 0 && (
+    <section id="update" class="section-padding">
+      <div class="container-x">
+        <div class="mb-14 text-center">
+          <h2 class="title-underline text-section font-bold text-deep-text">
+            {t(lang, "home.section_updates")}
+          </h2>
+          <p class="mt-8 text-text-muted">
+            {t(lang, "home.section_updates_sub")}
+          </p>
+        </div>
 
-      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {newsPosts.map((doc) => (
-          <NewsCard
-            lang={newsLang}
-            href={langUrl(lang, `/docs/${postSlug(doc)}`)}
-            title={doc.data.title}
-            desc={doc.data.description}
-            date={doc.data.publishDate}
-            minutes={readingMinutes(doc.body ?? "")}
-            tags={doc.data.tags ?? []}
-            image={doc.data.image}
-          />
-        ))}
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {newsPosts.map((doc) => (
+            <NewsCard
+              lang={newsLang}
+              href={langUrl(lang, `/docs/${postSlug(doc)}`)}
+              title={doc.data.title}
+              desc={doc.data.description}
+              date={doc.data.publishDate}
+              minutes={readingMinutes(doc.body ?? "")}
+              tags={doc.data.tags ?? []}
+              image={doc.data.image}
+            />
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   {/* ===== 未来展望 ===== */}
   <section class="section-padding">
