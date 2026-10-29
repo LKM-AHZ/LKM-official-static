@@ -25,4 +25,15 @@ describe("data/products", () => {
       if (product.href) expect(product.href.startsWith("/")).toBe(true);
     }
   });
+
+  it("工作室都有二级标签，产品都归入线上平台类", () => {
+    for (const product of products) {
+      if (product.type === "studio") {
+        expect(["tech", "education"]).toContain(product.studioFocus);
+      }
+      if (product.type === "product") {
+        expect(product.productKind).toBe("online");
+      }
+    }
+  });
 });

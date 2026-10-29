@@ -5,7 +5,12 @@
 export type ProductCategoryId =
   "content" | "community" | "platform" | "education";
 export type ProductType = "product" | "project" | "studio";
-export type ProductStatus = "live" | "ongoing" | "recruiting" | "preparing";
+export type ProductStatus =
+  "live" | "ongoing" | "recruiting" | "preparing" | "ended";
+/** 工作室的二级筛选标签。 */
+export type StudioFocus = "tech" | "education";
+/** 产品的二级筛选标签。 */
+export type ProductKind = "online";
 
 export interface LocalizedText {
   zh: string;
@@ -26,6 +31,10 @@ export interface ProductItem {
   name: LocalizedText;
   summary: LocalizedText;
   features: { zh: string[]; en: string[] };
+  /** 工作室二级标签：技术/专业相关或技能/教育相关 */
+  studioFocus?: StudioFocus;
+  /** 产品二级标签：线上平台类 */
+  productKind?: ProductKind;
   /** 站内路径（不含语言前缀）；没有独立页面的条目不填 */
   href?: string;
   linkLabel?: LocalizedText;
@@ -44,6 +53,7 @@ export const products: ProductItem[] = [
     category: "content",
     type: "product",
     status: "live",
+    productKind: "online",
     icon: "news",
     name: { zh: "科技前沿栏目", en: "Science Frontier Column" },
     summary: {
@@ -86,6 +96,7 @@ export const products: ProductItem[] = [
     category: "content",
     type: "studio",
     status: "ongoing",
+    studioFocus: "education",
     icon: "pencil",
     name: { zh: "新闻办 · 内容工作室", en: "News Office · Content Studio" },
     summary: {
@@ -108,6 +119,7 @@ export const products: ProductItem[] = [
     category: "content",
     type: "studio",
     status: "ongoing",
+    studioFocus: "education",
     icon: "atom",
     name: { zh: "科普项目组", en: "Science Communication Studio" },
     summary: {
@@ -130,6 +142,7 @@ export const products: ProductItem[] = [
     category: "community",
     type: "product",
     status: "live",
+    productKind: "online",
     icon: "users",
     name: { zh: "QQ 社群体系", en: "QQ Community Network" },
     summary: {
@@ -216,6 +229,7 @@ export const products: ProductItem[] = [
     category: "community",
     type: "studio",
     status: "ongoing",
+    studioFocus: "education",
     icon: "confetti",
     name: {
       zh: "活动策划部 · 活动工作室",
@@ -241,6 +255,7 @@ export const products: ProductItem[] = [
     category: "platform",
     type: "product",
     status: "live",
+    productKind: "online",
     icon: "worldWww",
     name: { zh: "官方网站", en: "Official Website" },
     summary: {
@@ -267,6 +282,7 @@ export const products: ProductItem[] = [
     category: "platform",
     type: "product",
     status: "live",
+    productKind: "online",
     icon: "fileText",
     name: { zh: "博客与文章系统", en: "Blog & Article System" },
     summary: {
@@ -349,6 +365,7 @@ export const products: ProductItem[] = [
     category: "platform",
     type: "studio",
     status: "ongoing",
+    studioFocus: "tech",
     icon: "code",
     name: {
       zh: "技术委员会 · 技术工作室",
@@ -374,6 +391,7 @@ export const products: ProductItem[] = [
     category: "education",
     type: "studio",
     status: "ongoing",
+    studioFocus: "education",
     icon: "book",
     name: { zh: "教材项目组 · 教材工作室", en: "Textbook Studio" },
     summary: {
