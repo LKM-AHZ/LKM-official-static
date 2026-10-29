@@ -228,6 +228,7 @@ export const en = {
   "products.studio_focus_education": "Skills & Education",
   "products.kind_online": "Online Platforms",
   "products.status_live": "Live",
+  "products.status_offline": "Not Live",
   "products.status_ongoing": "Ongoing",
   "products.status_recruiting": "Recruiting",
   "products.status_preparing": "Preparing",

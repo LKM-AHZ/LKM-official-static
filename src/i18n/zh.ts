@@ -211,6 +211,7 @@ export const zh = {
   "products.studio_focus_education": "技能/教育相关",
   "products.kind_online": "线上平台类",
   "products.status_live": "已上线",
+  "products.status_offline": "未上线",
   "products.status_ongoing": "进行中",
   "products.status_recruiting": "招募中",
   "products.status_preparing": "筹备中",
