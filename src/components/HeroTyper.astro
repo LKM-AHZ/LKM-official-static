@@ -44,10 +44,7 @@ const typingTexts = [title, subtitle].filter(Boolean);
   <div class="hero-fade pointer-events-none absolute inset-0 z-0"></div>
 
   <div class="container-x relative z-10 px-4 text-center" data-hero-inner>
-    <p
-      class="animate-fadeInUp mb-5 text-sm tracking-[.35em] text-[var(--primary)]"
-      style="animation-delay:.05s"
-    >
+    <p class="mb-5 text-sm tracking-[.35em] text-[var(--primary)]">
       PHIENTIST · SCIENCE COMMUNITY
     </p>
     <h1 class="hero-title text-shadow mb-6 text-display font-bold text-deep-text">
@@ -63,19 +60,11 @@ const typingTexts = [title, subtitle].filter(Boolean);
         <span class="typing-cursor">|</span>
       </span>
     </h1>
-    <p
-      class="animate-fadeInUp mx-auto mb-4 max-w-2xl text-lead text-text-muted"
-      style="animation-delay:.2s"
-    >
-      {lead}
-    </p>
-    <p
-      class="animate-fadeInUp mx-auto mb-10 text-sm tracking-widest text-text-muted"
-      style="animation-delay:.3s"
-    >
+    <p class="mx-auto mb-4 max-w-2xl text-lead text-text-muted">{lead}</p>
+    <p class="mx-auto mb-10 text-sm tracking-widest text-text-muted">
       SCIENCE · TECHNOLOGY · FUTURE
     </p>
-    <div class="animate-fadeInUp" style="animation-delay:.4s">
+    <div>
       {ctaHref ? (
         <a href={ctaHref} class="btn btn-primary btn-lg">
           {ctaLabel ?? t(lang, "home.cta_communities")}
@@ -110,29 +99,21 @@ const typingTexts = [title, subtitle].filter(Boolean);
       background: var(--hero-fade);
       transition: background 0.4s ease;
     }
-    .animate-fadeInUp {
-      animation: fadeInUp 0.8s ease-out forwards;
-    }
     .typing-cursor {
       display: inline-block;
-      animation: blink 0.7s infinite;
       color: var(--primary);
     }
     .bounce-soft {
+      transform: translateX(-50%);
+    }
+    .hero-motion-ready .typing-cursor {
+      animation: blink 0.7s infinite;
+    }
+    .hero-motion-ready .bounce-soft {
       animation: bounceSoft 2s ease-in-out infinite;
     }
   }
 
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(40px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
   @keyframes blink {
     0%,
     100% {
@@ -185,6 +166,8 @@ const typingTexts = [title, subtitle].filter(Boolean);
 </style>
 
 <script>
+  import { afterFirstInteraction } from "../lib/after-interaction";
+
   const hero = document.querySelector<HTMLElement>("[data-hero]");
   const inner = document.querySelector<HTMLElement>("[data-hero-inner]");
   const target = document.querySelector<HTMLElement>("[data-typing-content]");
@@ -201,78 +184,79 @@ const typingTexts = [title, subtitle].filter(Boolean);
 
     if (reduced || texts.length === 0) {
       el.textContent = texts[0] ?? "";
-    } else {
-      // SSR 文案先完整显示；700ms 后从“删除”开始，避免首帧 H1 被清空。
-      // 这样 LCP 不会因为打字机先清空、再逐字重打而延后。
-      let index = 0;
-      let char = texts[0].length;
-      let deleting = true;
-      el.textContent = texts[0];
+    } else
+      afterFirstInteraction(() => {
+        // 初始文案完整、稳定显示；用户开始浏览后再启动装饰性轮播。
+        hero.classList.add("hero-motion-ready");
+        let index = 0;
+        let char = texts[0].length;
+        let deleting = true;
+        el.textContent = texts[0];
 
-      function schedule(delay: number): void {
-        window.clearTimeout(timer);
-        timer = window.setTimeout(() => {
-          timer = 0;
-          if (!visible || document.hidden) {
-            paused = true;
-            return;
-          }
-          tick();
-        }, delay);
-      }
-
-      function tick(): void {
-        const text = texts[index];
-        if (deleting) {
-          char -= 1;
-          el.textContent = text.slice(0, char);
-          if (char <= 0) {
-            deleting = false;
-            index = (index + 1) % texts.length;
-            schedule(600);
-            return;
-          }
-          schedule(45);
-        } else {
-          char += 1;
-          el.textContent = text.slice(0, char);
-          if (char >= text.length) {
-            deleting = true;
-            schedule(2000);
-            return;
-          }
-          schedule(90);
-        }
-      }
-
-      // Hero 滚出视口或标签页进后台时停掉定时器：文字不再重排，
-      // 也避免长页面上一直为一个看不见的标题做 layout。
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(
-          (entries) => {
-            visible = entries.some((entry) => entry.isIntersecting);
-            if (visible && paused) {
-              paused = false;
-              schedule(600);
-            }
-          },
-          { threshold: 0 },
-        ).observe(hero);
-      }
-
-      document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
+        function schedule(delay: number): void {
           window.clearTimeout(timer);
-          timer = 0;
-          paused = true;
-        } else if (visible) {
-          paused = false;
-          schedule(600);
+          timer = window.setTimeout(() => {
+            timer = 0;
+            if (!visible || document.hidden) {
+              paused = true;
+              return;
+            }
+            tick();
+          }, delay);
         }
-      });
 
-      schedule(700);
-    }
+        function tick(): void {
+          const text = texts[index];
+          if (deleting) {
+            char -= 1;
+            el.textContent = text.slice(0, char);
+            if (char <= 0) {
+              deleting = false;
+              index = (index + 1) % texts.length;
+              schedule(600);
+              return;
+            }
+            schedule(45);
+          } else {
+            char += 1;
+            el.textContent = text.slice(0, char);
+            if (char >= text.length) {
+              deleting = true;
+              schedule(2000);
+              return;
+            }
+            schedule(90);
+          }
+        }
+
+        // Hero 滚出视口或标签页进后台时停掉定时器：文字不再重排，
+        // 也避免长页面上一直为一个看不见的标题做 layout。
+        if ("IntersectionObserver" in window) {
+          new IntersectionObserver(
+            (entries) => {
+              visible = entries.some((entry) => entry.isIntersecting);
+              if (visible && paused) {
+                paused = false;
+                schedule(600);
+              }
+            },
+            { threshold: 0 },
+          ).observe(hero);
+        }
+
+        document.addEventListener("visibilitychange", () => {
+          if (document.hidden) {
+            window.clearTimeout(timer);
+            timer = 0;
+            paused = true;
+          } else if (visible) {
+            paused = false;
+            schedule(600);
+          }
+        });
+
+        schedule(700);
+      });
 
     // 首屏随滚动渐隐（背景的滚动响应统一由 TechBackground 写 --scroll-progress）
     let lastProgress = -1;

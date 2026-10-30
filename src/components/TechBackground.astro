@@ -8,7 +8,7 @@
  * - day / night 两套调色板，跟随 <html data-theme>
  * - 底色/网格/极光/暗角/噪点仍由 tech.css 的静态层承担：它们每帧不重绘，
  *   是合成器缓存层，也是 WebGL2 不可用/只有软件光栅化时的兜底
- * - 减少动态效果/省流量/2G 使用 CSS；空闲时加载，最多 200 万像素，后台暂停
+ * - 减少动态效果/省流量/2G 使用 CSS；首次交互后空闲加载，最多 200 万像素，后台暂停
  * - 30fps + 时间步长：背景是慢动画，没必要占满 60/120Hz
  *
  * 移植自「理科迷官网-源代码」的 TechBackground.vue，后改为 WebGL2。
@@ -20,6 +20,8 @@
 <div class="bg-overlay" aria-hidden="true"></div>
 
 <script>
+  import { afterFirstInteraction } from "../lib/after-interaction";
+
   const canvas = document.getElementById(
     "tech-canvas",
   ) as HTMLCanvasElement | null;
@@ -38,7 +40,7 @@
   if (force === "css" || (force !== "webgl" && constrained)) {
     canvas?.remove();
   } else if (canvas) {
-    // 首屏、字体与交互就绪后才下载并编译装饰性 WebGL 着色器。
+    // 首屏使用完整 CSS 背景；首次交互后再下载和编译装饰性 WebGL 着色器。
     const load = async (): Promise<void> => {
       if (document.hidden) {
         document.addEventListener(
@@ -57,21 +59,8 @@
         canvas.remove();
       }
     };
-    const schedule = (): void => {
-      if ("requestIdleCallback" in window) {
-        window.requestIdleCallback(
-          () => {
-            void load();
-          },
-          { timeout: 2000 },
-        );
-      } else {
-        setTimeout(() => {
-          void load();
-        }, 200);
-      }
-    };
-    if (document.readyState === "complete") schedule();
-    else window.addEventListener("load", schedule, { once: true });
+    afterFirstInteraction(() => {
+      void load();
+    });
   }
 </script>
