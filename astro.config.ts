@@ -54,6 +54,8 @@ const ROOT_PATH = base === "/" ? "/" : `${base}/`;
 export default defineConfig({
   // 纯静态输出：构建产物只含静态 HTML/CSS/JS
   output: "static",
+  // 目录式产物直接使用带斜杠的 URL，导航和预取都无需再跟随补斜杠的 301。
+  trailingSlash: "always",
   site,
   // 子路径部署前缀（默认 "/" 即域名根）。站内链接/资源都经 i18n/paths 的
   // withBase() 拼上此前缀；import.meta.env.BASE_URL 也由它派生。
@@ -82,7 +84,7 @@ export default defineConfig({
       fallbackType: "redirect",
     },
   },
-  // Markdown 正文里手写的站内绝对链接（/zh/news 之类）由该集成在构建后补部署前缀
+  // Markdown 内链在构建后统一目录 URL，并在子路径部署时补前缀。
   integrations: [
     baseLinks(base),
     ...(site

@@ -160,8 +160,9 @@ cd deploy && docker compose up -d --build static     # 只重建静态站；证�
 
 **项目页必须带子路径前缀。** Astro 产出的资源与 canonical 由框架自动加前缀；`langUrl()` /
 `publicUrl()` 负责组件里的链接；Markdown 正文里作者手写的 `/zh/...` 由
-`src/integrations/base-links.ts` 在构建后统一补前缀（跳过 `<pre>` 里的代码示例）。域根部署
-（`LKM_BASE_PATH` 为空）时该集成为 no-op，nginx 产物与之前逐字节一致。
+`src/integrations/base-links.ts` 在构建后统一补前缀（跳过 `<pre>` 里的代码示例）。域根与
+子路径部署都会把语言页面链接统一为带末尾斜杠的目录 URL，避免导航和预取产生额外 301；
+查询串、锚点和静态资源文件名保持不变。
 
 **以后要绑自定义域名**（如 `lkm.example.com`）：把工作流的 `LKM_BASE_PATH` 删掉、
 `LKM_SITE_DOMAIN` 改成正式域名，再把 CNAME 文件放进 `public/`（构建时会复制到产物根），

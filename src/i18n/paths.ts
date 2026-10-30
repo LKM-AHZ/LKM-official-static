@@ -66,6 +66,15 @@ export function stripLangPrefix(pathname: string): string {
 /** 外部引用：带 scheme(mailto:、tel:、data:…)或协议相对(//cdn.example.com) 的都不是站内路径。 */
 const EXTERNAL_RE = /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i;
 
+/** 目录式页面的末尾斜杠放在查询串/锚点之前；文件、外链和纯锚点保持原样。 */
+export function withTrailingSlash(url: string): string {
+  if (EXTERNAL_RE.test(url)) return url;
+  const end = url.search(/[?#]/);
+  const path = end < 0 ? url : url.slice(0, end);
+  if (!path || path.endsWith("/") || /\.[^/]+$/.test(path)) return url;
+  return `${path}/${end < 0 ? "" : url.slice(end)}`;
+}
+
 /** 构建产物里的静态资源目录：不加语言前缀（按段边界匹配，/imagesFoo.png 不落入）。 */
 const ASSET_PREFIXES = ["/images", "/_astro"];
 
@@ -75,7 +84,7 @@ function isAssetPath(path: string): boolean {
 
 /**
  * 把内部站点路径(如 /team)转为当前语言、带部署前缀的绝对路径
- * （域名根下是 /zh/team，GitHub Pages 项目页下是 /repo/zh/team）。
+ * （域名根下是 /zh/team/，GitHub Pages 项目页下是 /repo/zh/team/）。
  * 锚点 / 外链原样返回；静态资源(/_astro、/images)不加语言前缀，但仍要带部署前缀；
  * 语言不在支持列表内时回退默认语言，避免拼出 /undefined/team 这类坏链接。
  */
@@ -93,5 +102,5 @@ export function langUrl(lang: string, path: string): string {
     : DEFAULT_LANG;
   // 去掉多余前导斜杠后统一拼："team" 也要得到 /zh/team 而不是 /zhteam
   const p = neutral.replace(/^\/+/, "");
-  return withBase(p ? `/${safeLang}/${p}` : `/${safeLang}`);
+  return withBase(withTrailingSlash(p ? `/${safeLang}/${p}` : `/${safeLang}`));
 }

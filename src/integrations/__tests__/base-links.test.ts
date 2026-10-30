@@ -8,7 +8,7 @@ describe("rewriteHtmlBaseLinks", () => {
   it("给 Markdown 正文里手写的站内链接补部署前缀", () => {
     const html = '<p><a href="/zh/news">新闻</a></p>';
     expect(rewriteHtmlBaseLinks(html, BASE)).toBe(
-      `<p><a href="${BASE}/zh/news">新闻</a></p>`,
+      `<p><a href="${BASE}/zh/news/">新闻</a></p>`,
     );
   });
 
@@ -16,13 +16,13 @@ describe("rewriteHtmlBaseLinks", () => {
     const html =
       '<a href="/zh/about#communities">社群</a><img src="/images/a.webp">';
     expect(rewriteHtmlBaseLinks(html, BASE)).toBe(
-      `<a href="${BASE}/zh/about#communities">社群</a>` +
+      `<a href="${BASE}/zh/about/#communities">社群</a>` +
         `<img src="${BASE}/images/a.webp">`,
     );
   });
 
   it("已带前缀的链接保持幂等，不会叠加两层前缀", () => {
-    const html = `<a href="${BASE}/zh/news">x</a>`;
+    const html = `<a href="${BASE}/zh/news/">x</a>`;
     expect(rewriteHtmlBaseLinks(html, BASE)).toBe(html);
     // 连跑两次结果不变
     expect(rewriteHtmlBaseLinks(rewriteHtmlBaseLinks(html, BASE), BASE)).toBe(
@@ -37,9 +37,10 @@ describe("rewriteHtmlBaseLinks", () => {
     expect(rewriteHtmlBaseLinks(html, BASE)).toBe(html);
   });
 
-  it("root 前缀（base 为 /）不动", () => {
+  it("域根部署同样规范化页面链接", () => {
     const html = '<a href="/zh/news">x</a>';
-    expect(rewriteHtmlBaseLinks(html, "")).toBe(html);
+    expect(rewriteHtmlBaseLinks(html, "")).toBe('<a href="/zh/news/">x</a>');
+    expect(rewriteHtmlBaseLinks(html, "/")).toBe('<a href="/zh/news/">x</a>');
   });
 
   it("<pre> 里的代码示例不被改写", () => {
@@ -50,7 +51,7 @@ describe("rewriteHtmlBaseLinks", () => {
     expect(
       out.startsWith('<pre><code>&lt;a href="/zh/news"&gt;</code></pre>'),
     ).toBe(true);
-    expect(out).toContain(`<p><a href="${BASE}/zh/news">真实链接</a></p>`);
+    expect(out).toContain(`<p><a href="${BASE}/zh/news/">真实链接</a></p>`);
   });
 
   it("只改 href/src，不动 content 等其它属性里的路径", () => {

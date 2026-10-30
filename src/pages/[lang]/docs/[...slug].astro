@@ -248,6 +248,8 @@ const tagHref = (tag: string): string => {
 </OfficialLayout>
 
 <script>
+  import { trackActiveSection } from "../../../lib/active-section";
+
   // 目录链接已在构建期渲染，这里只做滚动高亮（原生锚点负责跳转）
   const initToc = () => {
     const list = document.querySelector(
@@ -265,39 +267,19 @@ const tagHref = (tag: string): string => {
       );
     if (entries.length === 0) return;
 
-    let activeIndex = -1;
-    const setActive = (idx: number) => {
-      if (idx === activeIndex) return;
-      activeIndex = idx;
-      entries.forEach(({ a }, i) => {
-        const active = i === idx;
-        a.classList.toggle("toc-active", active);
-        if (active) a.setAttribute("aria-current", "location");
-        else a.removeAttribute("aria-current");
-      });
-    };
-
-    let ticking = false;
-    const pick = () => {
-      ticking = false;
-      let cur = 0;
-      for (let i = 0; i < entries.length; i++) {
-        if (entries[i].el.getBoundingClientRect().top <= 96) cur = i;
-        else break;
-      }
-      setActive(cur);
-    };
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!ticking) {
-          ticking = true;
-          requestAnimationFrame(pick);
-        }
+    trackActiveSection(
+      entries.map(({ el }) => el),
+      96,
+      (idx) => {
+        entries.forEach(({ a }, i) => {
+          const active = i === idx;
+          a.classList.toggle("toc-active", active);
+          if (active) a.setAttribute("aria-current", "location");
+          else a.removeAttribute("aria-current");
+        });
       },
-      { passive: true },
+      0,
     );
-    pick();
   };
 
   // 模块脚本通常先于 DOMContentLoaded 执行；但开发态/慢网络下 DCL 可能已经

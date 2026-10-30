@@ -8,14 +8,17 @@
  * 不补前缀就会整篇 404。放在构建后统一处理，内容作者不必感知部署方式。
  *
  * 只改 href / src 两个属性，跳过 <pre> 区块（文档里展示链接语法的代码示例
- * 不能被改写），外链与锚点由 applyBase 原样放过。域根部署（base 为 "/"）时
- * 整个集成是 no-op。
+ * 不能被改写），外链与锚点由 applyBase 原样放过。语言页面链接同时统一末尾斜杠，
+ * 域根部署也运行这一步，避免 Markdown 内链产生额外的目录重定向。
  */
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { join } from "node:path";
 import type { AstroIntegration } from "astro";
-import { applyBase } from "../i18n/paths";
+import { applyBase, removeBase, withTrailingSlash } from "../i18n/paths";
+import { SUPPORTED_LANGS } from "../i18n/index";
+
+const PAGE_RE = new RegExp(`^/(?:${SUPPORTED_LANGS.join("|")})(?=/|[?#]|$)`);
 
 /** href/src 属性；引号内即 URL，交给 applyBase 决定是否补前缀。 */
 const ATTR_RE = /\b(href|src)="([^"]*)"/g;
@@ -25,18 +28,21 @@ const PRE_RE = /(<pre\b[\s\S]*?<\/pre>)/g;
 
 /** 纯函数，便于单测：给 HTML 里的站内 href/src 补部署前缀。 */
 export function rewriteHtmlBaseLinks(html: string, base: string): string {
-  if (!base) return html;
+  const prefix = base === "/" ? "" : base;
   // split 保留分隔符：偶数下标是普通片段，奇数下标是 <pre> 片段
   return html
     .split(PRE_RE)
     .map((part, index) =>
       index % 2 === 1
         ? part
-        : part.replace(
-            ATTR_RE,
-            (_match, attr: string, url: string) =>
-              `${attr}="${applyBase(base, url)}"`,
-          ),
+        : part.replace(ATTR_RE, (_match, attr: string, url: string) => {
+            const path = removeBase(prefix, url);
+            const normalized =
+              attr === "href" && PAGE_RE.test(path)
+                ? withTrailingSlash(path)
+                : path;
+            return `${attr}="${applyBase(prefix, normalized)}"`;
+          }),
     )
     .join("");
 }
@@ -54,8 +60,6 @@ export default function baseLinksIntegration(base: string): AstroIntegration {
     name: "lkm-base-links",
     hooks: {
       "astro:build:done": async ({ dir, logger }) => {
-        // 域根部署无需任何处理
-        if (base === "/" || base === "") return;
         const root = fileURLToPath(dir);
         const files = await collectHtmlFiles(root);
         let rewritten = 0;
@@ -68,7 +72,7 @@ export default function baseLinksIntegration(base: string): AstroIntegration {
           }
         }
         logger.info(
-          `补部署前缀 ${base}：改写了 ${rewritten}/${files.length} 个 HTML 文件`,
+          `规范化站内链接（base=${base}）：改写了 ${rewritten}/${files.length} 个 HTML 文件`,
         );
       },
     },

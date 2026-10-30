@@ -30,6 +30,7 @@
     }
   ).connection;
   const constrained =
+    window.matchMedia("(max-width: 767px) and (pointer: coarse)").matches ||
     window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
     connection?.saveData ||
     /^(slow-)?2g$/.test(connection?.effectiveType ?? "");

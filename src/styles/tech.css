@@ -418,6 +418,15 @@
     color: var(--primary);
   }
 
+  /* 手机上保留配色与轮廓，用实色底避免滚动内容背后的持续模糊合成。 */
+  @media (max-width: 767px) and (pointer: coarse) {
+    .nav-shell,
+    .back-top {
+      backdrop-filter: none;
+      background: var(--card-bg);
+    }
+  }
+
   .theme-toggle {
     display: inline-flex;
     align-items: center;

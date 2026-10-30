@@ -107,6 +107,8 @@ const {
 </OfficialLayout>
 
 <script>
+  import { trackActiveSection } from "../lib/active-section";
+
   // ── 移动端侧栏抽屉 ──
   // 手机上没有常驻侧栏的空间：默认移出画外（正文占满整宽），点左下角按钮滑入。
   // 状态放在 html.sidebar-open 上，CSS 只管画法与位移，JS 只管状态与无障碍属性。
@@ -145,7 +147,10 @@ const {
     });
     // 点了抽屉里的锚点就收起：否则跳过去的区块会被抽屉盖住
     drawer.addEventListener("click", (event) => {
-      if ((event.target as Element | null)?.closest("a")) setDrawer(false);
+      if ((event.target as Element | null)?.closest("a")) {
+        // 先完成链接的原生默认动作；同步设 inert 会让浏览器取消本次锚点跳转。
+        setTimeout(() => setDrawer(false), 0);
+      }
     });
     // 跨断点（旋转屏幕/拖动窗口）时复位，避免桌面态残留 sidebar-open
     mobile.addEventListener("change", () => setDrawer(false));
@@ -163,38 +168,18 @@ const {
       ? Array.from(content.querySelectorAll<HTMLElement>("section[id]"))
       : [];
 
-    function updateActive(): void {
-      let current = "";
-      for (const sec of sections) {
-        const rect = sec.getBoundingClientRect();
-        if (rect.top <= 140) current = sec.id;
-      }
+    // 只在活动项变化时更新样式和无障碍状态。
+    trackActiveSection(sections, 140, (index) => {
+      const current = sections[index]?.id ?? "";
       links.forEach((a) => {
         const li = a.closest("li");
         if (!li) return;
         const active = li.id === `side-${current}`;
         li.classList.toggle("pg-active", active);
+        if (active) a.setAttribute("aria-current", "location");
+        else a.removeAttribute("aria-current");
       });
-    }
-
-    // 锚点点击不做 preventDefault：交给浏览器原生跳转，URL hash 才会更新（深链/后退可用）、
-    // 键盘/读屏焦点也会落到目标区块；平滑滚动由 tech.css 的 html{scroll-behavior:smooth}
-    // 提供，并在 prefers-reduced-motion 下自动降级为瞬时跳转。
-    let ticking = false;
-    window.addEventListener(
-      "scroll",
-      () => {
-        // 滚动事件成串触发：同一帧内只排队一次，否则一次爆发会排入多次全量扫描
-        if (ticking) return;
-        ticking = true;
-        requestAnimationFrame(() => {
-          updateActive();
-          ticking = false;
-        });
-      },
-      { passive: true },
-    );
-    updateActive();
+    });
   });
 </script>
 

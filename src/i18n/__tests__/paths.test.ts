@@ -1,6 +1,12 @@
 // src/i18n/__tests__/paths.test.ts
 import { describe, expect, it } from "vitest";
-import { applyBase, langUrl, removeBase, stripLangPrefix } from "../paths";
+import {
+  applyBase,
+  langUrl,
+  removeBase,
+  stripLangPrefix,
+  withTrailingSlash,
+} from "../paths";
 
 describe("部署前缀", () => {
   it("applyBase 给站点绝对路径补前缀", () => {
@@ -44,9 +50,9 @@ describe("部署前缀", () => {
 describe("langUrl", () => {
   // vitest 下 BASE_URL 为 "/"，这里覆盖的是域根部署的既有行为
   it("站内路径加语言前缀", () => {
-    expect(langUrl("zh", "/team")).toBe("/zh/team");
-    expect(langUrl("en", "team")).toBe("/en/team");
-    expect(langUrl("zh", "/")).toBe("/zh");
+    expect(langUrl("zh", "/team")).toBe("/zh/team/");
+    expect(langUrl("en", "team")).toBe("/en/team/");
+    expect(langUrl("zh", "/")).toBe("/zh/");
   });
 
   it("外链、锚点原样返回", () => {
@@ -63,7 +69,7 @@ describe("langUrl", () => {
   });
 
   it("未支持的语言回退默认语言，不拼出 /undefined/", () => {
-    expect(langUrl("de", "/team")).toBe("/zh/team");
+    expect(langUrl("de", "/team")).toBe("/zh/team/");
   });
 });
 
@@ -73,5 +79,29 @@ describe("stripLangPrefix", () => {
     expect(stripLangPrefix("/en")).toBe("/");
     expect(stripLangPrefix("/zh/")).toBe("/");
     expect(stripLangPrefix("/404")).toBe("/404");
+  });
+});
+
+describe("目录 URL", () => {
+  it("保留查询串、转义字符与锚点，并且重复规范化不改变 URL", () => {
+    for (const [input, expected] of [
+      [
+        "/zh/news?tab=guides&tag=%E5%AE%98%E7%BD%91#list",
+        "/zh/news/?tab=guides&tag=%E5%AE%98%E7%BD%91#list",
+      ],
+      ["/en/about#communities", "/en/about/#communities"],
+      ["/zh", "/zh/"],
+      ["/zh/", "/zh/"],
+      ["/fonts/inter.woff2", "/fonts/inter.woff2"],
+      ["#faq", "#faq"],
+      ["?tab=news", "?tab=news"],
+      ["https://example.com/page", "https://example.com/page"],
+      ["//cdn.example.com/image", "//cdn.example.com/image"],
+    ]) {
+      expect(withTrailingSlash(input)).toBe(expected);
+      expect(withTrailingSlash(expected)).toBe(expected);
+    }
+    expect(langUrl("en", "/about#communities")).toBe("/en/about/#communities");
+    expect(langUrl("zh", "/news?tab=guides")).toBe("/zh/news/?tab=guides");
   });
 });
