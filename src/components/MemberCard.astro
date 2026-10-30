@@ -1,6 +1,8 @@
 ---
 import avatarMap from "../data/avatar-map.json";
 import { publicUrl } from "../lib/assets";
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 /**
  * 团队成员卡。
@@ -38,6 +40,22 @@ const avatarName = avatarKey
 const avatarSrc = avatarName
   ? publicUrl(`/images/avatars/${avatarName}`)
   : undefined;
+// 小卡片在手机/桌面显示为 40/64px，大卡片为 64/96px；按 DPR 选图。
+// 原始 192px 文件保留给高密度屏及加载失败回退，不改同步脚本生成的文件。
+const avatars = import.meta.glob<{ default: ImageMetadata }>(
+  "/public/images/avatars/*.webp",
+);
+const localImage = avatarName
+  ? avatars[`/public/images/avatars/${avatarName}`]
+  : undefined;
+const optimized = localImage
+  ? await getImage({
+      src: localImage(),
+      width: isLg ? 64 : 40,
+      widths: isLg ? [64, 96, 128] : [40, 64, 80, 128],
+      format: "webp",
+    })
+  : undefined;
 
 // avatar-map.json 由 scripts/sync-team-avatars.mts 生成，与 team-data.ts 容易漂移；
 // 只在开发期提示，避免线上构建因为一个头像文件缺失就中断
@@ -61,13 +79,29 @@ const avatarSize = isLg
     <div class="shrink-0 sm:mb-3">
       {avatarSrc ? (
         <img
-          src={avatarSrc}
+          src={optimized?.src ?? avatarSrc}
+          srcset={
+            optimized
+              ? `${optimized.srcSet.attribute}, ${avatarSrc} 192w`
+              : undefined
+          }
+          sizes={
+            optimized
+              ? `auto, (min-width: 640px) ${isLg ? 96 : 64}px, ${isLg ? 64 : 40}px`
+              : undefined
+          }
           alt=""
           width={192}
           height={192}
           class={`${avatarSize} rounded-full object-cover`}
           loading="lazy"
           decoding="async"
+          data-fallback-src={optimized ? avatarSrc : undefined}
+          onerror={
+            optimized
+              ? "this.removeAttribute('onerror');this.removeAttribute('srcset');this.src=this.dataset.fallbackSrc"
+              : undefined
+          }
         />
       ) : (
         <div
