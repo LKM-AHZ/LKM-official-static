@@ -3,13 +3,15 @@
  * 带降级路径的封面图。
  *
  * 加载策略：
- * - `thumb` 提供同源 800w 缩略图时输出 `srcset`，由浏览器按 `sizes` 选择；
- *   列表页在 1x/2x 下都不会去拉 1200w 主图。
+ * - 本地封面在构建期补充 400w / 600w WebP，复用现有 800w / 1200w 文件；
+ *   浏览器按布局宽度与 DPR 选择，避免小卡片下载大图。
  * - 缩略图 404/损坏时先回退到主图；主图也失败才隐藏 img，露出父容器的
  *   标题渐变占位，避免页面上出现破图图标。
  * - 尺寸属性始终显式给出，配合 CSS 的固定高度避免 CLS。
  */
 import { publicUrl } from "../lib/assets";
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
 
 interface Props {
   src: string;
@@ -40,7 +42,23 @@ const {
 // public/ 下的图片必须带部署前缀，否则子路径部署（GitHub Pages 项目页）会 404
 const mainSrc = publicUrl(src);
 const thumbSrc = thumb && thumb !== src ? publicUrl(thumb) : undefined;
-const srcset = thumbSrc ? `${thumbSrc} 800w, ${mainSrc} 1200w` : undefined;
+// 只在构建期处理原图；原有 public 文件继续作为加载失败时的降级路径。
+const covers = import.meta.glob<{ default: ImageMetadata }>([
+  "/public/images/covers/*.webp",
+  "!/public/images/covers/*-800w.webp",
+]);
+const localImage = thumbSrc ? covers[`/public${src}`] : undefined;
+const optimized = localImage
+  ? await getImage({
+      src: localImage(),
+      width: 400,
+      widths: [400, 600],
+      format: "webp",
+    })
+  : undefined;
+const srcset = thumbSrc
+  ? `${optimized ? `${optimized.srcSet.attribute}, ` : ""}${thumbSrc} 800w, ${mainSrc} 1200w`
+  : undefined;
 
 // 第一次失败回退到主图，第二次失败隐藏自身：父容器已铺好标题渐变，
 // 隐藏后该区域仍是完整色块而不是浏览器默认的破图图标。
@@ -49,7 +67,7 @@ const onError =
 ---
 
 <img
-  src={thumbSrc ?? mainSrc}
+  src={optimized?.src ?? thumbSrc ?? mainSrc}
   srcset={srcset}
   sizes={srcset ? (loading === "lazy" ? `auto, ${sizes}` : sizes) : undefined}
   alt={alt}
