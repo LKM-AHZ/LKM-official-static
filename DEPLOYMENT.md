@@ -117,7 +117,7 @@ docker compose exec certbot certbot certificates
 docker compose exec static nginx -t
 ```
 
-抽查页面：首页 `/`（会跳转到 `/zh/`）、`/zh/`、`/en/`、`robots.txt`、`sitemap-index.xml`、一个不存在的路径（应 404）。
+抽查页面：首页 `/`（HTTP / HTTPS 都应直接 301 到 HTTPS `/zh/`，查询参数保留）、`/zh/`、`/en/`、`robots.txt`、`sitemap-index.xml`、一个不存在的路径（应 404）。ACME 校验路径继续通过 HTTP 直接返回文件。
 
 ## 七、证书续期
 

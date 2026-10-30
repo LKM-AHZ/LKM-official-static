@@ -134,6 +134,30 @@ const closeLabel = t(lang, "common.aria.close");
   </>
 )}
 
+<style>
+  @layer theme, base, components, utilities;
+
+  @layer components {
+    .lightbox::backdrop {
+      background: var(--lightbox-backdrop);
+      backdrop-filter: blur(6px);
+    }
+    .lightbox[open] {
+      animation: fadeIn 0.25s ease-out;
+    }
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
 <script>
   const lightbox = document.querySelector<HTMLDialogElement>(
     "[data-gallery-lightbox]",

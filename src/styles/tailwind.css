@@ -307,14 +307,8 @@
       filter var(--duration-base) var(--ease),
       box-shadow var(--duration-base) var(--ease);
   }
-  .btn-xs {
-    @apply min-h-[1.5rem] px-2 text-xs;
-  }
   .btn-sm {
     @apply min-h-[2rem] px-3 text-sm;
-  }
-  .btn-md {
-    @apply min-h-[2.5rem] px-4 text-sm;
   }
   .btn-lg {
     @apply min-h-[3rem] px-6 text-base;
@@ -346,52 +340,6 @@
   }
   [data-theme="night"] .btn-primary:hover {
     box-shadow: 0 18px 42px rgba(91, 184, 255, 0.3);
-  }
-  .btn-secondary {
-    @apply bg-[var(--secondary)] text-[var(--on-secondary)]
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-neutral {
-    /* 文字色走 --neutral-content（day #ffffff / night #050a14）：写死 text-white 时，
-       夜间主题下白字压浅色 --neutral 的对比度只有约 2.8:1 */
-    @apply bg-[var(--neutral)] text-[var(--neutral-content)]
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-link {
-    @apply bg-transparent text-[var(--primary)] underline underline-offset-4
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-accent {
-    @apply bg-[var(--primary)] text-[var(--on-primary)]
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-success {
-    @apply bg-[var(--success)] text-[var(--on-success)]
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-info {
-    @apply bg-[var(--info)] text-[var(--on-info)]
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-warning {
-    @apply bg-[var(--warning)] text-[var(--on-warning)]
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-error {
-    @apply bg-[var(--error)] text-[var(--on-error)]
-           hover:brightness-110 active:brightness-90;
-  }
-  .btn-ghost {
-    @apply bg-transparent text-[var(--text-muted)]
-           hover:bg-[var(--page-bg)] active:bg-[var(--surface-3)];
-  }
-  .btn-outline {
-    @apply bg-transparent border border-[var(--text-muted)] text-[var(--text-muted)]
-           hover:bg-[var(--text-muted)] hover:text-[var(--deep-text)]
-           active:bg-[var(--text-muted)] active:text-[var(--deep-text)];
-  }
-  .btn-disabled {
-    @apply opacity-50 pointer-events-none;
   }
 }
 

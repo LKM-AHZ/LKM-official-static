@@ -50,6 +50,7 @@ src/content/docs/
 ## 性能约定
 
 首页时间线样式只由首页加载；Typography 的 `prose.css` 只在文章、隐私和条款页加载。
+首屏动画与灯箱样式随对应组件加载；公共按钮只保留页面实际使用的变体。
 动态背景在页面 `load` 后的空闲时段才下载渲染器，手机触屏、减少动态效果、省流量或 2G 连接默认使用
 CSS 背景。WebGL 只创建一个上下文，画布最多 200 万像素；触屏 DPR 上限为 1，其他设备为
 1.5。后台暂停，上下文丢失后释放监听并回退 CSS。可用 `?bg=css` / `?bg=webgl` 手工对比。
@@ -59,8 +60,11 @@ CSS 背景。WebGL 只创建一个上下文，画布最多 200 万像素；触�
 只在布局尺寸变化后重新测量，滚动时不再逐个读取元素布局。手机导航和侧栏按钮使用实色底，
 省去背景模糊合成。
 
+文章筛选在初始化时缓存卡片的检索文本和标签，后续输入与翻页复用数据，只更新可见性变化的卡片。
+
 nginx 镜像在构建时生成文本资源的 `.gz` 文件。带内容哈希的 `/_astro/` 资源缓存一年，
 未带哈希的图片和字体缓存一天，HTML 每次校验更新；GitHub Pages 的响应头由平台控制。
+自建 nginx 的根入口直接重定向到 HTTPS `/zh/` 并保留查询参数；纯静态托管保留 HTML 跳转桩。
 
 ## 命令
 
@@ -82,6 +86,8 @@ pnpm build
 node scripts/check-cover-images.mjs
 node scripts/check-avatar-images.mjs
 ```
+
+修改 nginx 配置后，可在已安装 Docker、openssl 且本地已有 `nginx:1.27-alpine` 镜像的环境运行 `node scripts/check-nginx.mjs`。脚本使用临时容器验证重定向、ACME 与静态路由，结束后清理。
 
 构建成功后抽查首页、中文与英文内容路由、`robots.txt`、站点地图以及 404 页面。若本地
 `.env` 中配置了 `LKM_SITE_DOMAIN`，还应确认 canonical 与 sitemap 使用该域名。

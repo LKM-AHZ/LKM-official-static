@@ -223,9 +223,15 @@ const PAGE_SIZE = 6;
     document.querySelectorAll<HTMLElement>("[data-tab-panel]"),
   );
 
+  interface CardState {
+    element: HTMLElement;
+    searchText: string;
+    tags: string[];
+  }
+
   interface ModuleState {
     key: string;
-    cards: HTMLElement[];
+    cards: CardState[];
     count: HTMLElement | null;
     empty: HTMLElement | null;
     pager: HTMLElement | null;
@@ -239,6 +245,7 @@ const PAGE_SIZE = 6;
     activeTag: string;
   }
 
+  // 卡片数据构建后不再变化：只在初始化时读取和解析，输入/筛选/翻页复用。
   const modules: ModuleState[] = Array.from(
     document.querySelectorAll<HTMLElement>("[data-module]"),
   ).map((root) => {
@@ -246,7 +253,16 @@ const PAGE_SIZE = 6;
     return {
       key: root.dataset.module ?? "",
       cards: list
-        ? Array.from(list.querySelectorAll<HTMLElement>("[data-card-kind]"))
+        ? Array.from(
+            list.querySelectorAll<HTMLElement>("[data-card-kind]"),
+            (element) => ({
+              element,
+              searchText: element.dataset.searchText ?? "",
+              tags: element.dataset.tags
+                ? (JSON.parse(element.dataset.tags) as string[])
+                : [],
+            }),
+          )
         : [],
       count: root.querySelector<HTMLElement>("[data-module-count]"),
       empty: root.querySelector<HTMLElement>("[data-module-empty]"),
@@ -290,16 +306,13 @@ const PAGE_SIZE = 6;
 
       for (const module of modules) {
         const queryMatches = module.cards.filter((card) =>
-          matchesQuery(card.dataset.searchText ?? "", query),
+          matchesQuery(card.searchText, query),
         );
         searchTotal += queryMatches.length;
 
-        const matches = queryMatches.filter((card) => {
-          const tags: string[] = card.dataset.tags
-            ? (JSON.parse(card.dataset.tags) as string[])
-            : [];
-          return matchesTag(tags, module.activeTag);
-        });
+        const matches = queryMatches.filter((card) =>
+          matchesTag(card.tags, module.activeTag),
+        );
 
         if (resetPages) module.page = 1;
         module.totalPages = Math.max(
@@ -312,7 +325,10 @@ const PAGE_SIZE = 6;
         const pageCards = new Set(
           matches.slice(start, start + module.pageSize),
         );
-        for (const card of module.cards) card.hidden = !pageCards.has(card);
+        for (const card of module.cards) {
+          const hidden = !pageCards.has(card);
+          if (card.element.hidden !== hidden) card.element.hidden = hidden;
+        }
 
         if (module.count) {
           module.count.textContent = (

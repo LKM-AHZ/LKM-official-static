@@ -228,10 +228,6 @@
     padding-top: var(--nav-h);
   }
 
-  .text-shadow {
-    text-shadow: var(--hero-text-shadow);
-  }
-
   /* 标题下划线：渐变细线 + 微光 */
   .title-underline {
     position: relative;
@@ -254,21 +250,6 @@
   }
 
   /* ---------- 小组件 ---------- */
-  .icon-bubble {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 4rem;
-    height: 4rem;
-    border-radius: 9999px;
-    color: var(--primary);
-    background: var(--icon-bubble-bg);
-    border: 1px solid var(--icon-bubble-edge);
-    box-shadow:
-      inset 0 0 24px var(--icon-bubble-glow),
-      0 8px 24px var(--icon-bubble-shadow);
-  }
-
   .social-icon {
     display: inline-flex;
     align-items: center;
@@ -447,82 +428,6 @@
     transform: translateY(-1px);
     border-color: var(--primary);
     color: var(--primary);
-  }
-
-  /* ---------- 首屏遮罩 ---------- */
-  .hero-overlay {
-    background: var(--hero-overlay);
-    transition: background 0.4s ease;
-  }
-  .hero-fade {
-    background: var(--hero-fade);
-    transition: background 0.4s ease;
-  }
-
-  /* ---------- 影像灯箱 ---------- */
-  .lightbox::backdrop {
-    background: var(--lightbox-backdrop);
-    backdrop-filter: blur(6px);
-  }
-  .lightbox[open] {
-    animation: fadeIn 0.25s ease-out;
-  }
-}
-
-/* ---------- 动画 ---------- */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-@keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
-}
-@keyframes bounceSoft {
-  0%,
-  100% {
-    transform: translate(-50%, 0);
-  }
-  50% {
-    transform: translate(-50%, 10px);
-  }
-}
-
-@layer components {
-  .animate-fadeInUp {
-    animation: fadeInUp 0.8s ease-out forwards;
-  }
-  .animate-fadeIn {
-    animation: fadeIn 0.8s ease-out forwards;
-  }
-  .typing-cursor {
-    display: inline-block;
-    animation: blink 0.7s infinite;
-    color: var(--primary);
-  }
-  .bounce-soft {
-    animation: bounceSoft 2s ease-in-out infinite;
   }
 }
 

@@ -17,6 +17,11 @@ server {
         try_files $uri =404;
     }
 
+    # 根入口一步跳到最终 HTTPS 中文首页，保留查询参数。
+    location = / {
+        return 301 https://$host/zh/$is_args$args;
+    }
+
     location / {
         return 301 https://$host$request_uri;
     }
@@ -37,6 +42,12 @@ server {
 
     root /usr/share/nginx/html;
     index index.html;
+
+    # 自建部署直接发 HTTP 重定向，省去 HTML 跳转桩的下载和解析。
+    # GitHub Pages 等纯静态托管继续使用 dist/index.html 兜底。
+    location = / {
+        return 301 /zh/$is_args$args;
+    }
 
     # 默认 nginx 不压缩文本；这些静态资源都是高压缩比内容。
     # text/html 默认就在 gzip_types 里，无需重复声明；woff2 已压缩，不再二次压缩。

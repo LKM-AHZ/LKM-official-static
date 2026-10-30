@@ -95,7 +95,63 @@ const typingTexts = [title, subtitle].filter(Boolean);
   </div>
 </header>
 
-<style>
+<style is:global>
+  @layer theme, base, components, utilities;
+
+  @layer components {
+    .text-shadow {
+      text-shadow: var(--hero-text-shadow);
+    }
+    .hero-overlay {
+      background: var(--hero-overlay);
+      transition: background 0.4s ease;
+    }
+    .hero-fade {
+      background: var(--hero-fade);
+      transition: background 0.4s ease;
+    }
+    .animate-fadeInUp {
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+    .typing-cursor {
+      display: inline-block;
+      animation: blink 0.7s infinite;
+      color: var(--primary);
+    }
+    .bounce-soft {
+      animation: bounceSoft 2s ease-in-out infinite;
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  @keyframes bounceSoft {
+    0%,
+    100% {
+      transform: translate(-50%, 0);
+    }
+    50% {
+      transform: translate(-50%, 10px);
+    }
+  }
+
   /* 打字机只改文字、不改 H1 高度：sizer 把全部候选文案叠在同一格里，
      H1 高度取最长文案；切换到更长的副标题时不会把下方内容顶下去。
      contain: layout 把文字重排限制在 H1 内部，避免波及 hero 其余节点。 */
@@ -106,7 +162,8 @@ const typingTexts = [title, subtitle].filter(Boolean);
   }
 
   .hero-title-sizer,
-  .hero-title-live {
+  .hero-title-live,
+  .hero-title-sizer > span {
     grid-area: 1 / 1;
     width: 100%;
   }
@@ -120,11 +177,6 @@ const typingTexts = [title, subtitle].filter(Boolean);
     display: grid;
     visibility: hidden;
     pointer-events: none;
-  }
-
-  .hero-title-sizer > span {
-    grid-area: 1 / 1;
-    width: 100%;
   }
 
   .hero-title-sizer > span::before {
