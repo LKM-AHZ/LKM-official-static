@@ -45,6 +45,16 @@ src/content/docs/
 
 字号与行高 token 集中在 `src/styles/variables.css`（`--type-*`、`--leading-*`、`--tracking-*`），并在 `src/styles/tailwind.css` 中映射为 `text-body` / `text-lead` / `text-section` / `text-display` / `text-note` / `text-label`。中文正文行高 1.75、英文 1.68；新增页面优先复用这些工具类，不要再散写 `text-[17px]` 之类的固定字号。
 
+## 性能约定
+
+首页时间线样式只由首页加载；Typography 的 `prose.css` 只在文章、隐私和条款页加载。
+动态背景在页面 `load` 后的空闲时段才下载渲染器，减少动态效果、省流量或 2G 连接默认使用
+CSS 背景。WebGL 只创建一个上下文，画布最多 200 万像素；触屏 DPR 上限为 1，其他设备为
+1.5。后台暂停，上下文丢失后释放监听并回退 CSS。可用 `?bg=css` / `?bg=webgl` 手工对比。
+
+nginx 镜像在构建时生成文本资源的 `.gz` 文件。带内容哈希的 `/_astro/` 资源缓存一年，
+未带哈希的图片和字体缓存一天，HTML 每次校验更新；GitHub Pages 的响应头由平台控制。
+
 ## 命令
 
 | 命令           | 用途                             |

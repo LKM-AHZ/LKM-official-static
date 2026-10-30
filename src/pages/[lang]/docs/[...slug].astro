@@ -1,4 +1,5 @@
 ---
+import "../../../styles/prose.css";
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import OfficialLayout from "../../../layouts/OfficialLayout.astro";
@@ -264,7 +265,10 @@ const tagHref = (tag: string): string => {
       );
     if (entries.length === 0) return;
 
+    let activeIndex = -1;
     const setActive = (idx: number) => {
+      if (idx === activeIndex) return;
+      activeIndex = idx;
       entries.forEach(({ a }, i) => {
         const active = i === idx;
         a.classList.toggle("toc-active", active);

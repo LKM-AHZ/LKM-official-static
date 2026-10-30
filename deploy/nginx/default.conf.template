@@ -51,9 +51,24 @@ server {
         application/xml
         image/svg+xml;
     gzip_vary on;
+    # 构建时预压缩，避免每次响应都消耗 CPU；无 .gz 时仍由 gzip 动态兜底。
+    gzip_static on;
+
+    # Astro 文件名带内容哈希，内容变化会换 URL，可以安全地缓存一年。
+    location ^~ /_astro/ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    # public/ 文件名未带哈希，短缓存并保留 ETag 校验，更新不会被长期锁住。
+    location ~* \.(?:webp|png|jpe?g|svg|ico|woff2)$ {
+        try_files $uri =404;
+        add_header Cache-Control "public, max-age=86400";
+    }
 
     # 多页静态站：不做 SPA fallback，未知路径如实 404。
     location / {
         try_files $uri $uri/ =404;
+        add_header Cache-Control "no-cache";
     }
 }

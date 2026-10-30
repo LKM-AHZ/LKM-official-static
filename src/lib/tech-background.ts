@@ -1,0 +1,614 @@
+import { onThemeChange } from "./theme";
+import type { ThemeName } from "./theme";
+
+/** 只创建一个上下文；软件光栅化直接使用现有 CSS 背景。 */
+export function startTechBackground(canvas: HTMLCanvasElement): void {
+  const forced =
+    new URLSearchParams(window.location.search).get("bg") === "webgl";
+  const gl = canvas.getContext("webgl2", {
+    alpha: true,
+    antialias: false,
+    depth: false,
+    stencil: false,
+    premultipliedAlpha: true,
+    powerPreference: "low-power",
+    failIfMajorPerformanceCaveat: !forced,
+  });
+  if (!gl) {
+    canvas.remove();
+    return;
+  }
+  const debug = gl.getExtension("WEBGL_debug_renderer_info");
+  const renderer = String(
+    gl.getParameter(debug ? debug.UNMASKED_RENDERER_WEBGL : gl.RENDERER),
+  );
+  if (
+    (!forced &&
+      /swiftshader|llvmpipe|softpipe|software|basic render/i.test(renderer)) ||
+    !init(canvas, gl)
+  ) {
+    gl.getExtension("WEBGL_lose_context")?.loseContext();
+    canvas.remove();
+  }
+}
+
+function init(c: HTMLCanvasElement, g: WebGL2RenderingContext): boolean {
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // —— 时间与分辨率策略 ——
+  // 30fps 对“呼吸/漂移”这种慢动画足够；dt 用 60fps 为 1 个步长，
+  // 保证帧率变化时运动速度不变。
+  const FRAME_MS = 1000 / 30;
+  const MAX_NODES = 56;
+  const MAX_LINES = (MAX_NODES * (MAX_NODES - 1)) / 2;
+  const LINE_DISTANCE = 104;
+  const MAX_DPR = window.matchMedia("(pointer: coarse)").matches ? 1 : 1.5;
+  const MAX_PIXELS = 2_000_000;
+
+  type RGBA = readonly [number, number, number, number];
+  const rgba = (r: number, g: number, b: number, a: number): RGBA => [
+    r / 255,
+    g / 255,
+    b / 255,
+    a,
+  ];
+
+  /** 与 variables.css 的 day/night 背景 token 对应；改配色时两处一起改 */
+  const PALETTES: Record<
+    ThemeName,
+    {
+      glows: readonly [RGBA, RGBA, RGBA];
+      node: RGBA;
+      line: RGBA;
+      lineAlpha: number;
+    }
+  > = {
+    day: {
+      glows: [
+        rgba(79, 158, 255, 0.1),
+        rgba(127, 212, 255, 0.08),
+        rgba(91, 91, 214, 0.06),
+      ],
+      node: rgba(36, 84, 150, 1),
+      line: rgba(40, 100, 190, 1),
+      lineAlpha: 0.11,
+    },
+    night: {
+      glows: [
+        rgba(79, 158, 255, 0.08),
+        rgba(127, 212, 255, 0.06),
+        rgba(91, 91, 214, 0.05),
+      ],
+      node: rgba(159, 212, 255, 1),
+      line: rgba(127, 212, 255, 1),
+      lineAlpha: 0.12,
+    },
+  };
+
+  // —— 着色器 ——
+  // 全屏三角形：不需要顶点缓冲，靠 gl_VertexID 生成 (-1,-1)(3,-1)(-1,3)
+  const FULLSCREEN_VS = `#version 300 es
+void main() {
+vec2 p = vec2(float((gl_VertexID << 1) & 2), float(gl_VertexID & 2));
+gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0);
+}`;
+
+  // 三团辉光在同一个 fragment 里顺序 alpha 合成：每像素只写一次，
+  // 取代原来 3 次大半径径向渐变填充。输出预乘 alpha。
+  const GLOW_FS = `#version 300 es
+precision highp float;
+
+uniform vec2 u_size;
+uniform float u_dpr;
+uniform vec3 u_centers[3];
+uniform vec4 u_colors[3];
+
+out vec4 outColor;
+
+void main() {
+vec2 p = vec2(gl_FragCoord.x, u_size.y * u_dpr - gl_FragCoord.y) / u_dpr;
+vec4 acc = vec4(0.0);
+for (int i = 0; i < 3; i++) {
+  vec3 c = u_centers[i];
+  float d = distance(p, c.xy) / max(c.z, 1.0);
+  float a = u_colors[i].a * clamp(1.0 - d, 0.0, 1.0);
+  acc.rgb = u_colors[i].rgb * a + acc.rgb * (1.0 - a);
+  acc.a = a + acc.a * (1.0 - a);
+}
+outColor = acc;
+}`;
+
+  const POINT_VS = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec2 a_pos;
+layout(location = 1) in float a_radius;
+layout(location = 2) in float a_alpha;
+
+uniform vec2 u_size;
+uniform float u_dpr;
+
+out float v_alpha;
+
+void main() {
+vec2 clip = vec2(
+  a_pos.x / u_size.x * 2.0 - 1.0,
+  1.0 - a_pos.y / u_size.y * 2.0
+);
+gl_Position = vec4(clip, 0.0, 1.0);
+gl_PointSize = max(1.0, a_radius * 2.0 * u_dpr);
+v_alpha = a_alpha;
+}`;
+
+  const POINT_FS = `#version 300 es
+precision highp float;
+
+uniform vec4 u_color;
+in float v_alpha;
+out vec4 outColor;
+
+void main() {
+vec2 c = gl_PointCoord * 2.0 - 1.0;
+float d = length(c);
+float a = u_color.a * v_alpha * (1.0 - smoothstep(0.65, 1.0, d));
+outColor = vec4(u_color.rgb * a, a);
+}`;
+
+  // 1px 线用 instanced quad 表达：gl.LINES 在多数实现里 lineWidth 只能为 1
+  // 设备像素，高 DPR 下会比原来的 CSS 1px 更细。
+  const LINE_VS = `#version 300 es
+precision highp float;
+
+layout(location = 0) in vec2 a_p1;
+layout(location = 1) in vec2 a_p2;
+layout(location = 2) in float a_alpha;
+
+uniform vec2 u_size;
+
+out float v_alpha;
+out float v_edge;
+
+void main() {
+vec2 delta = a_p2 - a_p1;
+float len = length(delta);
+vec2 dir = len > 0.0001 ? delta / len : vec2(1.0, 0.0);
+vec2 nrm = vec2(-dir.y, dir.x);
+
+float along = (gl_VertexID & 1) == 0 ? -1.0 : 1.0;
+float side = gl_VertexID < 2 ? -1.0 : 1.0;
+float halfWidth = 0.5;
+
+vec2 base = mix(a_p1, a_p2, (along + 1.0) * 0.5);
+vec2 pos =
+  base + nrm * (side * halfWidth) + dir * (along * halfWidth);
+
+vec2 clip = vec2(
+  pos.x / u_size.x * 2.0 - 1.0,
+  1.0 - pos.y / u_size.y * 2.0
+);
+gl_Position = vec4(clip, 0.0, 1.0);
+v_alpha = a_alpha;
+v_edge = side;
+}`;
+
+  const LINE_FS = `#version 300 es
+precision highp float;
+
+uniform vec4 u_color;
+in float v_alpha;
+in float v_edge;
+out vec4 outColor;
+
+void main() {
+float edge = 1.0 - smoothstep(0.8, 1.0, abs(v_edge));
+float a = u_color.a * v_alpha * edge;
+outColor = vec4(u_color.rgb * a, a);
+}`;
+
+  function compile(type: number, source: string): WebGLShader | null {
+    const shader = g.createShader(type);
+    if (!shader) return null;
+    g.shaderSource(shader, source);
+    g.compileShader(shader);
+    if (!g.getShaderParameter(shader, g.COMPILE_STATUS)) {
+      if (import.meta.env.DEV) {
+        console.warn("[TechBackground] shader:", g.getShaderInfoLog(shader));
+      }
+      g.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+
+  function link(vsSource: string, fsSource: string): WebGLProgram | null {
+    const vs = compile(g.VERTEX_SHADER, vsSource);
+    const fs = compile(g.FRAGMENT_SHADER, fsSource);
+    if (!vs || !fs) return null;
+    const program = g.createProgram();
+    if (!program) return null;
+    g.attachShader(program, vs);
+    g.attachShader(program, fs);
+    g.linkProgram(program);
+    g.deleteShader(vs);
+    g.deleteShader(fs);
+    if (!g.getProgramParameter(program, g.LINK_STATUS)) {
+      if (import.meta.env.DEV) {
+        console.warn("[TechBackground] program:", g.getProgramInfoLog(program));
+      }
+      g.deleteProgram(program);
+      return null;
+    }
+    return program;
+  }
+
+  const glowProgram = link(FULLSCREEN_VS, GLOW_FS);
+  const pointProgram = link(POINT_VS, POINT_FS);
+  const lineProgram = link(LINE_VS, LINE_FS);
+  if (!glowProgram || !pointProgram || !lineProgram) return false;
+
+  const glowSize = g.getUniformLocation(glowProgram, "u_size");
+  const glowDpr = g.getUniformLocation(glowProgram, "u_dpr");
+  const glowCentersLoc = g.getUniformLocation(glowProgram, "u_centers[0]");
+  const glowColorsLoc = g.getUniformLocation(glowProgram, "u_colors[0]");
+
+  const pointSize = g.getUniformLocation(pointProgram, "u_size");
+  const pointDpr = g.getUniformLocation(pointProgram, "u_dpr");
+  const pointColor = g.getUniformLocation(pointProgram, "u_color");
+
+  const lineSize = g.getUniformLocation(lineProgram, "u_size");
+  const lineColor = g.getUniformLocation(lineProgram, "u_color");
+
+  const nodeBuffer = g.createBuffer();
+  const lineBuffer = g.createBuffer();
+  const nodeVao = g.createVertexArray();
+  const lineVao = g.createVertexArray();
+  if (!nodeBuffer || !lineBuffer || !nodeVao || !lineVao) return false;
+
+  const nodeData = new Float32Array(MAX_NODES * 4);
+  const lineData = new Float32Array(MAX_LINES * 5);
+
+  g.bindBuffer(g.ARRAY_BUFFER, nodeBuffer);
+  g.bufferData(g.ARRAY_BUFFER, nodeData.byteLength, g.DYNAMIC_DRAW);
+  g.bindVertexArray(nodeVao);
+  g.bindBuffer(g.ARRAY_BUFFER, nodeBuffer);
+  g.enableVertexAttribArray(0);
+  g.vertexAttribPointer(0, 2, g.FLOAT, false, 16, 0);
+  g.enableVertexAttribArray(1);
+  g.vertexAttribPointer(1, 1, g.FLOAT, false, 16, 8);
+  g.enableVertexAttribArray(2);
+  g.vertexAttribPointer(2, 1, g.FLOAT, false, 16, 12);
+  g.bindVertexArray(null);
+
+  g.bindBuffer(g.ARRAY_BUFFER, lineBuffer);
+  g.bufferData(g.ARRAY_BUFFER, lineData.byteLength, g.DYNAMIC_DRAW);
+  g.bindVertexArray(lineVao);
+  g.bindBuffer(g.ARRAY_BUFFER, lineBuffer);
+  g.enableVertexAttribArray(0);
+  g.vertexAttribPointer(0, 2, g.FLOAT, false, 20, 0);
+  g.vertexAttribDivisor(0, 1);
+  g.enableVertexAttribArray(1);
+  g.vertexAttribPointer(1, 2, g.FLOAT, false, 20, 8);
+  g.vertexAttribDivisor(1, 1);
+  g.enableVertexAttribArray(2);
+  g.vertexAttribPointer(2, 1, g.FLOAT, false, 20, 16);
+  g.vertexAttribDivisor(2, 1);
+  g.bindVertexArray(null);
+
+  g.disable(g.DEPTH_TEST);
+  g.disable(g.CULL_FACE);
+  g.enable(g.BLEND);
+  g.blendFunc(g.ONE, g.ONE_MINUS_SRC_ALPHA);
+  g.clearColor(0, 0, 0, 0);
+
+  interface BNode {
+    x: number;
+    y: number;
+    vx: number;
+    vy: number;
+    r: number;
+    a: number;
+    depth: number;
+  }
+
+  let w = 0;
+  let h = 0;
+  let dpr = 1;
+  let raf = 0;
+  let running = !document.hidden;
+  let lastFrame = 0;
+  let t = 0;
+  let nodes: BNode[] = [];
+  const pointer = { x: 0, y: 0 };
+  const view: { x: number; y: number }[] = [];
+  const glowCenters = new Float32Array(9);
+  const glowColors = new Float32Array(12);
+
+  let theme: ThemeName =
+    document.documentElement.dataset.theme === "night" ? "night" : "day";
+  let palette = PALETTES[theme];
+
+  function applyGlowColors(): void {
+    for (let i = 0; i < 3; i++) {
+      glowColors.set(palette.glows[i], i * 4);
+    }
+  }
+
+  applyGlowColors();
+
+  // —— 滚动视差状态 ——
+  let impulse = 0;
+  let drift = 0;
+  let driftTarget = 0;
+  let lastScrollY = window.scrollY;
+  let lastProgress = -1;
+
+  /** 循环回绕：让节点在视差偏移后仍铺满屏幕 */
+  function wrap(v: number, min: number, max: number): number {
+    const span = max - min;
+    let x = (v - min) % span;
+    if (x < 0) x += span;
+    return min + x;
+  }
+
+  function resize(): void {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    dpr = Math.min(
+      window.devicePixelRatio || 1,
+      MAX_DPR,
+      Math.sqrt(MAX_PIXELS / (w * h)),
+    );
+    c.width = Math.floor(w * dpr);
+    c.height = Math.floor(h * dpr);
+    g.viewport(0, 0, c.width, c.height);
+
+    // 密度与速度都往下调：背景只该在余光里，连着线的星座网最抢注意力
+    const count = Math.max(
+      26,
+      Math.min(MAX_NODES, Math.floor((w * h) / 40000)),
+    );
+    nodes = Array.from({ length: count }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.09,
+      vy: (Math.random() - 0.5) * 0.09,
+      r: Math.random() * 1.5 + 0.5,
+      a: Math.random() * 0.34 + 0.2,
+      depth: Math.random() * 0.65 + 0.35,
+    }));
+    view.length = 0;
+
+    if (reduced) draw(1);
+  }
+
+  function draw(step: number): void {
+    t += 0.004 * step;
+
+    // 冲量衰减 + 滚动位移缓动跟随（下沉/上升）。
+    // 用幂函数按步长换算，掉帧或 30fps 时观感与 60fps 一致。
+    impulse *= Math.pow(0.92, step);
+    drift += (driftTarget - drift) * (1 - Math.pow(1 - 0.08, step));
+    const parallax = drift * 0.5 + impulse * 16;
+
+    // 呼吸辉光：三团光随滚动进度对冲迁移（flow 0→1 时 A 下沉、B 上升、C 常驻），
+    // 长页面滚动时便有了"穿过不同光区"的层次，而不是定格在同一张背景图上
+    const flow = Math.min(drift / (h * 0.42), 1);
+    const glowShift = parallax * 0.12;
+
+    glowCenters[0] = w * 0.22 + Math.sin(t * 0.7) * w * 0.04 + pointer.x * 12;
+    glowCenters[1] = wrap(
+      h * (0.12 + flow * 0.6) +
+        Math.cos(t * 0.5) * h * 0.05 +
+        pointer.y * 8 -
+        glowShift,
+      -h * 0.3,
+      h * 1.3,
+    );
+    glowCenters[2] = Math.max(w, h) * 0.48;
+
+    glowCenters[3] = w * 0.78 + Math.cos(t * 0.6) * w * 0.03 - pointer.x * 10;
+    glowCenters[4] = wrap(
+      h * (0.78 - flow * 0.54) +
+        Math.sin(t * 0.45) * h * 0.04 -
+        pointer.y * 6 -
+        glowShift * 0.7,
+      -h * 0.3,
+      h * 1.3,
+    );
+    glowCenters[5] = Math.max(w, h) * 0.42;
+
+    glowCenters[6] = w * 0.5 + Math.sin(t * 0.32) * w * 0.06;
+    glowCenters[7] = wrap(
+      h * 0.46 + Math.cos(t * 0.28) * h * 0.05 - glowShift * 0.4,
+      -h * 0.3,
+      h * 1.3,
+    );
+    glowCenters[8] = Math.max(w, h) * 0.55;
+
+    // 节点（深度越深，随滚动沉浮越明显）
+    const count = nodes.length;
+    for (let i = 0; i < count; i++) {
+      const n = nodes[i];
+      n.x += n.vx * step;
+      n.y += n.vy * step;
+      if (n.x < -20) n.x = w + 20;
+      if (n.x > w + 20) n.x = -20;
+      if (n.y < -20) n.y = h + 20;
+      if (n.y > h + 20) n.y = -20;
+      const sy = wrap(n.y - parallax * n.depth, -24, h + 24);
+      const slot = view[i] ?? (view[i] = { x: 0, y: 0 });
+      slot.x = n.x;
+      slot.y = sy;
+
+      const o = i * 4;
+      nodeData[o] = n.x;
+      nodeData[o + 1] = sy;
+      nodeData[o + 2] = n.r;
+      nodeData[o + 3] = n.a;
+    }
+
+    // 连线（接缝处自然断开）：先比较平方距离，只有真正要画的线才开方
+    const max2 = LINE_DISTANCE * LINE_DISTANCE;
+    let lineCount = 0;
+    for (let i = 0; i < count; i++) {
+      const p1 = view[i];
+      for (let j = i + 1; j < count; j++) {
+        const p2 = view[j];
+        const dx = p1.x - p2.x;
+        const dy = p1.y - p2.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < max2) {
+          const o = lineCount * 5;
+          lineData[o] = p1.x;
+          lineData[o + 1] = p1.y;
+          lineData[o + 2] = p2.x;
+          lineData[o + 3] = p2.y;
+          lineData[o + 4] =
+            (1 - Math.sqrt(d2) / LINE_DISTANCE) * palette.lineAlpha;
+          lineCount++;
+        }
+      }
+    }
+
+    // —— 绘制：辉光一个 pass，节点 points，连线 instanced quads ——
+    g.clear(g.COLOR_BUFFER_BIT);
+
+    g.useProgram(glowProgram);
+    g.uniform2f(glowSize, w, h);
+    g.uniform1f(glowDpr, dpr);
+    g.uniform3fv(glowCentersLoc, glowCenters);
+    g.uniform4fv(glowColorsLoc, glowColors);
+    g.drawArrays(g.TRIANGLES, 0, 3);
+
+    if (count > 0) {
+      g.useProgram(pointProgram);
+      g.uniform2f(pointSize, w, h);
+      g.uniform1f(pointDpr, dpr);
+      g.uniform4f(
+        pointColor,
+        palette.node[0],
+        palette.node[1],
+        palette.node[2],
+        1,
+      );
+      g.bindVertexArray(nodeVao);
+      g.bindBuffer(g.ARRAY_BUFFER, nodeBuffer);
+      g.bufferSubData(g.ARRAY_BUFFER, 0, nodeData, 0, count * 4);
+      g.drawArrays(g.POINTS, 0, count);
+      g.bindVertexArray(null);
+    }
+
+    if (lineCount > 0) {
+      g.useProgram(lineProgram);
+      g.uniform2f(lineSize, w, h);
+      g.uniform4f(
+        lineColor,
+        palette.line[0],
+        palette.line[1],
+        palette.line[2],
+        1,
+      );
+      g.bindVertexArray(lineVao);
+      g.bindBuffer(g.ARRAY_BUFFER, lineBuffer);
+      g.bufferSubData(g.ARRAY_BUFFER, 0, lineData, 0, lineCount * 5);
+      g.drawArraysInstanced(g.TRIANGLE_STRIP, 0, 4, lineCount);
+      g.bindVertexArray(null);
+    }
+  }
+
+  function frame(now: number): void {
+    if (!running) return;
+    raf = requestAnimationFrame(frame);
+    if (now - lastFrame < FRAME_MS - 0.5) return;
+    const dt = lastFrame === 0 ? FRAME_MS : Math.min(now - lastFrame, 100);
+    lastFrame = now;
+    draw(dt / (1000 / 60));
+  }
+
+  function onMove(e: PointerEvent): void {
+    pointer.x = e.clientX / window.innerWidth - 0.5;
+    pointer.y = e.clientY / window.innerHeight - 0.5;
+  }
+
+  let scrollHeight = document.documentElement.scrollHeight;
+  const resizeObserver = new ResizeObserver(() => {
+    scrollHeight = document.documentElement.scrollHeight;
+  });
+  resizeObserver.observe(document.body);
+
+  function onScroll(): void {
+    const y = window.scrollY;
+    const dy = y - lastScrollY;
+    lastScrollY = y;
+    // 视差基准直接取滚动位置即可，但按视口高度截断，避免超长页面上漂移量无界增长；
+    // 节点位置本身会被 wrap 回绕，截断后观感不变
+    driftTarget = Math.min(y, h * 3) * 0.14;
+    if (!reduced) {
+      // 冲量只由真实滚动增量驱动。此前 wheel 事件也叠加一次同方向冲量，
+      // 同一次手势被计两遍，很快把 ±6 钳位打满、失去纵深层次
+      impulse = Math.max(-6, Math.min(6, impulse + dy * 0.02));
+    }
+    // 全局滚动进度（0→1）：供 tech.css 的极光层消费，让每个页面而不只是首页 Hero
+    // 的背景对滚动有响应。写 CSS 变量会触发一次样式重算，故按 1% 变化阈值节流
+    const maxY = scrollHeight - h;
+    const progress = maxY > 0 ? Math.min(y / maxY, 1) : 0;
+    if (Math.abs(progress - lastProgress) >= 0.01) {
+      lastProgress = progress;
+      document.documentElement.style.setProperty(
+        "--scroll-progress",
+        progress.toFixed(3),
+      );
+    }
+  }
+
+  function onVisibility(): void {
+    const shouldRun = !document.hidden;
+    if (running === shouldRun) return;
+    running = shouldRun;
+    if (running) {
+      // 从后台回来时不要拿一个巨大的 dt，直接按一个 30fps 帧起步
+      lastFrame = 0;
+      raf = requestAnimationFrame(frame);
+    } else {
+      cancelAnimationFrame(raf);
+    }
+  }
+
+  const offTheme = onThemeChange((next) => {
+    theme = next;
+    palette = PALETTES[theme];
+    applyGlowColors();
+    if (reduced) draw(1);
+  });
+
+  // 上下文丢失（驱动重置、移动端切后台等）后隐藏画布，退回 CSS 静态背景
+  c.addEventListener("webglcontextlost", (event) => {
+    event.preventDefault();
+    running = false;
+    cancelAnimationFrame(raf);
+    document.removeEventListener("visibilitychange", onVisibility);
+    window.removeEventListener("resize", resize);
+    window.removeEventListener("pointermove", onMove);
+    window.removeEventListener("scroll", onScroll);
+    resizeObserver.disconnect();
+    offTheme();
+    c.style.display = "none";
+  });
+
+  resize();
+  window.addEventListener("resize", resize);
+  window.addEventListener("pointermove", onMove, { passive: true });
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  if (reduced) {
+    // 静态帧：只画一次，不做任何循环
+    running = false;
+    draw(1);
+  } else {
+    document.addEventListener("visibilitychange", onVisibility);
+    if (running) raf = requestAnimationFrame(frame);
+  }
+
+  onScroll();
+  return true;
+}

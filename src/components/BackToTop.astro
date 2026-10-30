@@ -21,8 +21,11 @@ const lang = (Astro.currentLocale ?? "zh") as Lang;
 <script>
   const btn = document.querySelector<HTMLElement>("[data-back-top]");
   if (btn) {
+    let wasVisible: boolean | undefined;
     const sync = (): void => {
       const visible = window.scrollY > 300;
+      if (visible === wasVisible) return;
+      wasVisible = visible;
       btn.classList.toggle("opacity-0", !visible);
       btn.classList.toggle("translate-y-20", !visible);
       btn.classList.toggle("pointer-events-none", !visible);

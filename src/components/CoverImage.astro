@@ -49,9 +49,9 @@ const onError =
 ---
 
 <img
-  src={thumbSrc ?? src}
+  src={thumbSrc ?? mainSrc}
   srcset={srcset}
-  sizes={srcset ? sizes : undefined}
+  sizes={srcset ? (loading === "lazy" ? `auto, ${sizes}` : sizes) : undefined}
   alt={alt}
   width={width}
   height={height}

@@ -159,8 +159,12 @@ const brandLabel = lang === "en" ? "PHIENTIST" : t(lang, "common.brand");
   const panel = document.querySelector<HTMLElement>("[data-nav-panel]");
 
   if (shell) {
+    let wasScrolled: boolean | undefined;
     const onScroll = (): void => {
-      shell.classList.toggle("is-scrolled", window.scrollY > 50);
+      const scrolled = window.scrollY > 50;
+      if (scrolled === wasScrolled) return;
+      wasScrolled = scrolled;
+      shell.classList.toggle("is-scrolled", scrolled);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();

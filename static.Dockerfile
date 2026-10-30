@@ -18,6 +18,8 @@ COPY src/ ./src/
 COPY public/ ./public/
 COPY astro.config.ts tsconfig.json ./
 RUN corepack enable && pnpm install --frozen-lockfile && pnpm run build
+# 只在镜像内生成旁路 .gz：不影响 GitHub Pages，也不在请求路径上重复压缩。
+RUN find dist -type f \( -name '*.html' -o -name '*.css' -o -name '*.js' -o -name '*.json' -o -name '*.xml' -o -name '*.svg' -o -name '*.txt' \) -size +1024c -exec gzip -9 -k {} \;
 
 # 仅取构建产物, 用 nginx 直接 serve 静态文件
 FROM nginx:1.27-alpine

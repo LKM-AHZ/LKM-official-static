@@ -223,8 +223,11 @@ const typingTexts = [title, subtitle].filter(Boolean);
     }
 
     // 首屏随滚动渐隐（背景的滚动响应统一由 TechBackground 写 --scroll-progress）
+    let lastProgress = -1;
     const onScroll = (): void => {
       const p = Math.min(window.scrollY / (window.innerHeight * 0.72), 1);
+      if (p === lastProgress) return;
+      lastProgress = p;
       inner.style.opacity = String(1 - p * 0.55);
       if (!reduced) {
         inner.style.transform = `translateY(${p * -26}px)`;
