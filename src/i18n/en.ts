@@ -138,7 +138,7 @@ export const en = {
   "team.events_title": "July Team · Events Department",
   "team.events_desc":
     "This department runs events across platforms from planning through execution, and oversees the Professional Committee, bringing richer activities and experiences so everyone truly learns. It welcomes members with inspiration, creativity, and the drive to make it happen.",
-  "team.news_title": "July Team News Department",
+  "team.news_title": "July Team · News Department",
   "team.news_desc":
     "This department runs official promotion accounts on various platforms and handles diplomacy, sustaining outreach and influence. It produces science-promotion content for the public. It oversees a science project group and a translation project group to share knowledge across languages and break down information barriers.",
   "team.advisors_title": "Advisors",
