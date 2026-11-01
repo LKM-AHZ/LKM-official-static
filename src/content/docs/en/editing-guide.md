@@ -85,7 +85,7 @@ one or more of the closest tags — but do not invent new ones:
   Partnerships
 - **Website & Community**: Official Website, Community, Guides, Operations, Updates,
   Team Recruitment
-- **Projects**: lkm-bot, Science Outreach Program, Public Benefit Program
+- **Projects**: Phientist Bot, Science Outreach Program, Public Benefit Program
 - **Studios**: Full-Chain Tech Services Studio, Star Orbit Tutoring Studio
 
 ### Cover Images

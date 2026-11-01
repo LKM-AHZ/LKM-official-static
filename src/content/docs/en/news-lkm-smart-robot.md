@@ -3,7 +3,7 @@ title: Phientist Smart Robot
 description: A smart bot that can be stationed in every community is in development, with a launch planned across a dozen-plus community groups.
 publishDate: 2026-11-01
 category: project
-tags: [lkm-bot]
+tags: [Phientist Bot]
 image: /images/covers/lkm-tech-frontier.webp
 backTo: /products
 backLabel: Back to projects
