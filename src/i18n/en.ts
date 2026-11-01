@@ -47,7 +47,7 @@ export const en = {
   "seo.products":
     "Phientist projects, studios, and products — what we build and what each one does.",
   "seo.team":
-    "Meet the Phientist management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
+    "Meet the Phientist management team: General Affairs, Community Affairs, Events Department, News Department, Advisors and committees.",
   "seo.team_projects":
     "Meet the Phientist project teams: the Textbook Project and Science Communication Project.",
   "seo.communities":
@@ -118,8 +118,8 @@ export const en = {
   "team.sidebar_founder": "Founder",
   "team.sidebar_general": "General Affairs",
   "team.sidebar_affairs": "Community Affairs",
-  "team.sidebar_events": "Event Planning",
-  "team.sidebar_news": "News Office",
+  "team.sidebar_events": "Events Department",
+  "team.sidebar_news": "News Department",
   "team.sidebar_advisors": "Advisors",
   "team.sidebar_professional": "Professional Committee",
   "team.sidebar_tech": "Technical Committee",
@@ -135,10 +135,10 @@ export const en = {
   "team.affairs_title": "July Team · Community Affairs",
   "team.affairs_desc":
     "This department maintains order across community platforms, reads the mood of the groups, and keeps an active, productive learning discussion atmosphere, handling issues promptly. It suits members who are active in a platform community and have good crisis-response skills.",
-  "team.events_title": "July Team · Event Planning",
+  "team.events_title": "July Team · Events Department",
   "team.events_desc":
     "This department runs events across platforms from planning through execution, and oversees the Professional Committee, bringing richer activities and experiences so everyone truly learns. It welcomes members with inspiration, creativity, and the drive to make it happen.",
-  "team.news_title": "News Office",
+  "team.news_title": "July Team News Department",
   "team.news_desc":
     "This department runs official promotion accounts on various platforms and handles diplomacy, sustaining outreach and influence. It produces science-promotion content for the public. It oversees a science project group and a translation project group to share knowledge across languages and break down information barriers.",
   "team.advisors_title": "Advisors",

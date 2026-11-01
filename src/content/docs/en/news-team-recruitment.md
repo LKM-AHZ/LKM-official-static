@@ -1,6 +1,6 @@
 ---
 title: Phientist Team Restructuring and Recruitment Announcement
-description: Phientist is recruiting for its new team structure — General Affairs, Event Planning, the Professional Committee, IT Support, the News Office, and the Advisory Group.
+description: Phientist is recruiting for its new team structure — General Affairs, Events Department, the Professional Committee, Technology Committee, the News Office, and the Advisory Group.
 publishDate: 2026-10-28
 category: news
 tags: [Team Recruitment]
@@ -9,15 +9,15 @@ image: /images/covers/lkm-team-activity.webp
 
 Phientist is entering a new phase of building. To make the organization clearer, divide responsibilities more effectively, and help more people who want to contribute find the right place, we have restructured the team and opened long-term recruitment.
 
-The smallest unit in the new structure is the group. The structure consists of "three departments, one office, and one advisory group": General Affairs, Event Planning, IT Support, the News Office, and the Advisory Group. It also includes the Community Affairs Group and the Professional Committee.
+The smallest unit in the new structure is the group. The structure consists of "three departments, one office, and one advisory group": General Affairs, Events Department, Technology Committee, the News Office, and the Advisory Group. It also includes the Community Affairs Group and the Professional Committee.
 
 ## 1. The new structure
 
 - **General Affairs Department**: the core of Phientist, coordinating all working and professional groups, setting the overall direction, and holding the highest decision-making and deployment authority.
 - **Community Affairs Group**: a reserve and coordination force for General Affairs, responsible for managing community platforms, setting the tone, and keeping discussions healthy. Platforms include QQ groups, Tieba, Zhihu, and others; when a platform needs dedicated management, it can be split into a platform-specific group.
-- **Event Planning Department**: plans, prepares, and runs events. Its core is the Standing Planning Group, which coordinates events across Phientist's platforms and QQ groups and guides the Professional Committee. In the future it will work with the Professional Committee and News Office on translations of frontier science content.
+- **Events Department**: plans, prepares, and runs events. Its core is the Standing Planning Group, which coordinates events across Phientist's platforms and QQ groups and guides the Professional Committee. In the future it will work with the Professional Committee and News Office on translations of frontier science content.
 - **Professional Committee**: focused on professional expertise, science communication, and content output. It produces explainer videos, open classes, articles, and other formats that bring knowledge to a wider audience. As a field or workload grows, it can be divided into professional and working groups.
-- **IT Support Department**: provides technical support and builds and maintains the website. When conditions allow, it will run external learning and exchange forums or develop Phientist's own software. If the team is short-handed, it will sit under the Advisory Group's technical support group.
+- **Technology Committee**: provides technical support and builds and maintains the website. When conditions allow, it will run external learning and exchange forums or develop Phientist's own software. If the team is short-handed, it will sit under the Advisory Group's technical support group.
 - **News Office**: handles external communication, public relations, and promotion, including graphic design, posters, photography, and video editing. It will later take on offline development and science communication, and may expand into publishing.
 - **Advisory Group**: evolved from the former advisory group, with internal and external advisors who provide technical support and consultation, legal advice, and suggestions on external exchange and learning. As it grows, it can be divided into specialist advisory, legal advisory, and other groups.
 
@@ -43,7 +43,7 @@ All applicants should:
 
 ## 4. Open roles
 
-### Event Planning Department
+### Events Department
 
 We are looking for people who:
 
@@ -52,7 +52,7 @@ We are looking for people who:
 
 > University students with more flexible time are preferred. Middle and high school students can start by planning a weekend activity independently.
 
-**Assessment**: independently plan, prepare, and run one online event. This can connect with the group adoption program. The organization will provide help and examples, so it does not need to be intimidating. After passing, you will become a standing member of the Event Planning Department and share the current planning lead's work.
+**Assessment**: independently plan, prepare, and run one online event. This can connect with the group adoption program. The organization will provide help and examples, so it does not need to be intimidating. After passing, you will become a standing member of the Events Department and share the current planning lead's work.
 
 We encourage teams of two or three to try different directions. The organization will train new members until they can handle the whole process, from an idea to preparation, planning, and execution.
 
@@ -76,9 +76,9 @@ We care about the quality of the Professional Committee's output, not age or yea
 
 Work from the Semi-professional and Non-professional Groups is reviewed and guided by the Professional Group before publication.
 
-The simplest way to join is to stay active in the community, answer questions in your area, show your expertise, and take part in events planned or collected by the Event Planning Department. The organization will invite suitable people directly, and self-recommendations are welcome.
+The simplest way to join is to stay active in the community, answer questions in your area, show your expertise, and take part in events planned or collected by the Events Department. The organization will invite suitable people directly, and self-recommendations are welcome.
 
-### IT Support Department
+### Technology Committee
 
 We are looking for people who:
 

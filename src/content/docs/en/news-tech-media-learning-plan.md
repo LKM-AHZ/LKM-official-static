@@ -1,5 +1,5 @@
 ---
-title: Tech Media Learning Plan
+title: "Tech Media Learning & Exchange Plan"
 description: Experienced media creators teach people who want to learn, while the program recruits News Office members and invites science and learning creators to exchange and connect.
 publishDate: 2026-11-01
 category: project
@@ -9,7 +9,7 @@ backLabel: Back to projects
 unlisted: true
 ---
 
-The Tech Media Learning Plan is currently underway and recruiting.
+The Tech Media Learning & Exchange Plan is currently underway and recruiting.
 
 We plan to have people with media experience act as teachers for those who want to learn the craft. Through this program, we also hope to bring more people into the Phientist July Team News Office to take charge of promotion and operations.
 

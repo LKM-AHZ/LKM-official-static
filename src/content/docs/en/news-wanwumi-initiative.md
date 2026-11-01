@@ -33,7 +33,7 @@ Many others spend enormous enthusiasm on grades and rankings for the entrance ex
 
 ## 3. When ideal meets reality
 
-The intertwining of ideal and reality, love and pain, is something every enthusiast goes through. Whether in STEM or not, we ask: is the meaning of sport worth it? Is this choice necessary? Did the patience we struggled through still mean anything?
+The intertwining of ideal and reality, love and pain, is something every enthusiast goes through. Whether in STEM or not, we ask: is the meaning of learning worth it? Is this choice necessary? Did the patience we struggled through still mean anything?
 
 So I believe we should bring enthusiasts together. Whether or not they are in STEM, they can rediscover their interests here and keep them alive; give every enthusiast a voice, close information gaps, and let all knowledge be shared.
 

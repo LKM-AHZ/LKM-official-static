@@ -49,29 +49,6 @@ export const productCategories: ProductCategory[] = [
 
 export const products: ProductItem[] = [
   {
-    id: "tech-frontier",
-    category: "content",
-    type: "product",
-    status: "live",
-    productKind: "online",
-    icon: "news",
-    name: { zh: "科技前沿栏目", en: "Science Frontier Column" },
-    summary: {
-      zh: "聚焦前沿科学与技术，把研究进展、背景和边界讲清楚。",
-      en: "A column that explains frontier science and technology — the progress, the context, and the limits.",
-    },
-    features: {
-      zh: ["选题策划与资料整理", "科普写作与审稿", "原始论文与延伸阅读"],
-      en: [
-        "Topic planning and source gathering",
-        "Explainer writing and review",
-        "Primary papers and further reading",
-      ],
-    },
-    href: "/news",
-    linkLabel: { zh: "阅读栏目", en: "Read the column" },
-  },
-  {
     id: "qq-community",
     category: "community",
     type: "product",
@@ -199,8 +176,8 @@ export const products: ProductItem[] = [
     status: "recruiting",
     icon: "video",
     name: {
-      zh: "科技自媒体学习计划",
-      en: "Tech Media Learning Plan",
+      zh: "科技自媒体学习交流计划",
+      en: "Tech Media Learning & Exchange Plan",
     },
     summary: {
       zh: "由有自媒体经验的成员担任老师，教授想学习自媒体的人，同时为新闻部门招募宣传与运营成员，并邀请各平台科技与学习 UP 主交流建联。",
