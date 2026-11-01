@@ -193,6 +193,35 @@ export const products: ProductItem[] = [
     linkLabel: { zh: "了解详情", en: "Learn more" },
   },
   {
+    id: "tech-media-learning",
+    category: "content",
+    type: "project",
+    status: "recruiting",
+    icon: "video",
+    name: {
+      zh: "科技自媒体学习计划",
+      en: "Tech Media Learning Plan",
+    },
+    summary: {
+      zh: "由有自媒体经验的成员担任老师，教授想学习自媒体的人，同时为新闻部门招募宣传与运营成员，并邀请各平台科技与学习 UP 主交流建联。",
+      en: "Experienced media creators teach people who want to learn, while the program recruits News Office members and invites science and learning creators to exchange and connect.",
+    },
+    features: {
+      zh: [
+        "自媒体经验教学",
+        "新闻部门宣传与运营招募",
+        "跨平台 UP 主交流与建联",
+      ],
+      en: [
+        "Media skills teaching",
+        "News Office recruitment",
+        "Cross-platform creator exchange",
+      ],
+    },
+    href: "/docs/news-tech-media-learning-plan",
+    linkLabel: { zh: "了解详情", en: "Learn more" },
+  },
+  {
     id: "full-chain-studio",
     category: "platform",
     type: "studio",
