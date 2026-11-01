@@ -222,6 +222,35 @@ export const products: ProductItem[] = [
     linkLabel: { zh: "了解详情", en: "Learn more" },
   },
   {
+    id: "science-outreach-construction",
+    category: "content",
+    type: "project",
+    status: "recruiting",
+    icon: "atom",
+    name: {
+      zh: "理科迷科普建设",
+      en: "Phientist Science Outreach Initiative",
+    },
+    summary: {
+      zh: "面向青少年与大众，以及科技爱好者开展差异化科普内容，欢迎民间科普团队一起参与建设。",
+      en: "Differentiated science outreach for young people and the general public, as well as tech enthusiasts, with civil science teams welcome to join.",
+    },
+    features: {
+      zh: [
+        "面向青少年与大众的科普",
+        "面向科技爱好者的深度内容",
+        "联合民间科普团队共建",
+      ],
+      en: [
+        "Outreach for young people and the public",
+        "In-depth content for tech enthusiasts",
+        "Co-building with civil science teams",
+      ],
+    },
+    href: "/docs/news-science-outreach-construction",
+    linkLabel: { zh: "了解详情", en: "Learn more" },
+  },
+  {
     id: "full-chain-studio",
     category: "platform",
     type: "studio",
