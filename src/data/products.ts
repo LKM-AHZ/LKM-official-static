@@ -336,4 +336,34 @@ export const products: ProductItem[] = [
     href: "/team",
     linkLabel: { zh: "团队介绍", en: "Meet the team" },
   },
+  {
+    id: "star-orbit-tutoring",
+    category: "education",
+    type: "studio",
+    status: "preparing",
+    studioFocus: "education",
+    icon: "school",
+    name: {
+      zh: "星轨·全科家教工作室",
+      en: "Star Orbit Tutoring Studio",
+    },
+    summary: {
+      zh: "面向多个年级阶段与多个学科的定制化家教服务，根据学生能力与提升需要规划成长路线。",
+      en: "Customized tutoring across grade levels and subjects, with growth plans based on each student's ability and goals.",
+    },
+    features: {
+      zh: [
+        "多年级、多学科定制辅导",
+        "能力评估与成长路线规划",
+        "教师、渠道与线上家教对接",
+      ],
+      en: [
+        "Tutoring across grades and subjects",
+        "Ability assessment and growth planning",
+        "Teacher, channel, and online tutoring matching",
+      ],
+    },
+    href: "/docs/news-star-orbit-tutoring",
+    linkLabel: { zh: "了解详情", en: "Learn more" },
+  },
 ];
