@@ -16,7 +16,9 @@ export const getStaticPaths = getStaticPathsForLang;
 
 // ===== 文章页：新闻、官网与社区、项目、工作室四个标签页左右切换 =====
 const allPosts = await getCollection("docs");
-const langPosts = allPosts.filter((doc) => doc.id.startsWith(`${lang}/`));
+const langPosts = allPosts.filter(
+  (doc) => doc.id.startsWith(`${lang}/`) && !doc.data.unlisted,
+);
 const posts = getNewsPosts(langPosts, lang);
 
 const byNewest = (

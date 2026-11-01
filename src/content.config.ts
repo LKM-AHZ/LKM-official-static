@@ -30,6 +30,9 @@ const docs = defineCollection({
     backTo: z.string().optional(),
     // 返回链接文案（不含箭头），按文章语言各写一份；不填回退到默认的「返回文章」。
     backLabel: z.string().optional(),
+    // 仅作为产品/项目卡片详情页、但不出现在资讯列表中的文章。
+    // 例如已从资讯页移除、仍需要从产品页进入阅读的项目介绍。
+    unlisted: z.boolean().optional(),
     // 可选：仅作兜底标识。实际语言由 collection entry 的路径前缀 (<lang>/) 推导，故不再
     // 补默认值 "zh"（否则 en 目录下漏写 lang 的条目会被当成中文），并用枚举让 lang: EN
     // 这类写法直接构建失败。
