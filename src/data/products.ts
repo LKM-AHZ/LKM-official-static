@@ -218,8 +218,6 @@ export const products: ProductItem[] = [
         "Cross-platform creator exchange",
       ],
     },
-    href: "/docs/news-tech-media-learning-plan",
-    linkLabel: { zh: "了解详情", en: "Learn more" },
   },
   {
     id: "full-chain-studio",

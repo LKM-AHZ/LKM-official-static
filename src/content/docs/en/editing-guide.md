@@ -86,7 +86,7 @@ one or more of the closest tags — but do not invent new ones:
 - **Website & Community**: Official Website, Community, Guides, Operations, Updates,
   Team Recruitment
 - **Projects**: Phientist Bot, Science Outreach Program, Starry Public Benefit Initiative,
-  Content & Science, Wanwumi Initiative, Learning Center
+  Wanwumi Initiative, Learning Center
 - **Studios**: Full-Chain Tech Services Studio, Star Orbit Tutoring Studio
 
 ### Cover Images

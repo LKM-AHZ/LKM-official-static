@@ -41,7 +41,7 @@ export const zh = {
   "seo.home":
     "理科迷 (PHIENTIST) —— 创立于 2014 年的科技爱好者社区，让科学回归每一个人。",
   "seo.news": "理科迷官方公告、社区动态、项目与工作室文章。",
-  "seo.products": "理科迷的产品、项目与工作室：了解我们承接的业务与产品功能。",
+  "seo.products": "理科迷的项目、工作室与产品：了解我们承接的业务与产品功能。",
   "seo.team":
     "认识理科迷管理团队：总务部、群务部、活动策划部、新闻办、顾问团、专业委员会与技术委员会。",
   "seo.team_projects":
@@ -179,7 +179,7 @@ export const zh = {
   "communities.sidebar_events": "常驻活动",
   "communities.sidebar_legacy": "原始老群",
   "news.title": "新闻资讯",
-  "news.page_title": "文章",
+  "news.page_title": "资讯",
   "news.page_subtitle": "新闻、官网、社区、项目与工作室，按分类与主题整理",
   "news.tabs_aria": "切换文章分类",
   "news.subtitle": "官方公告、科技新闻与科普内容",
@@ -194,9 +194,9 @@ export const zh = {
   "news.projects_subtitle": "项目进展、计划与成果",
   "news.studios_title": "工作室",
   "news.studios_subtitle": "社区工作室与专业协作",
-  "products.title": "产品与项目",
+  "products.title": "项目与工作室",
   "products.subtitle":
-    "我们做过的项目、产品与工作室，以及各自承接的业务与功能。",
+    "我们做过的项目、工作室与产品，以及各自承接的业务与功能。",
   "products.filter_aria": "按标签筛选",
   "products.tabs_aria": "切换项目、工作室与产品",
   "products.status_label": "状态",

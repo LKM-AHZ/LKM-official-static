@@ -45,7 +45,7 @@ export const en = {
   "seo.news":
     "Official announcements, community updates, projects, and studios from Phientist.",
   "seo.products":
-    "Phientist products, projects, and studios — what we build and what each one does.",
+    "Phientist projects, studios, and products — what we build and what each one does.",
   "seo.team":
     "Meet the Phientist management team: General Affairs, Community Affairs, Event Planning, News Office, Advisors and committees.",
   "seo.team_projects":
@@ -193,7 +193,7 @@ export const en = {
   "communities.sidebar_events": "Recurring Events",
   "communities.sidebar_legacy": "Legacy Groups",
   "news.title": "News & Updates",
-  "news.page_title": "Articles",
+  "news.page_title": "News",
   "news.page_subtitle":
     "News, website, community, projects, and studios, organized by category and topic",
   "news.tabs_aria": "Switch article category",
@@ -211,9 +211,9 @@ export const en = {
   "news.projects_subtitle": "Project progress, plans, and results",
   "news.studios_title": "Studios",
   "news.studios_subtitle": "Community studios and specialist collaboration",
-  "products.title": "Products & Projects",
+  "products.title": "Projects & Studios",
   "products.subtitle":
-    "The projects, products, and studios we build — and what each one does.",
+    "The projects, studios, and products we build — and what each one does.",
   "products.filter_aria": "Filter by tag",
   "products.tabs_aria": "Switch between projects, studios, and products",
   "products.status_label": "Status",
