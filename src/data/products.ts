@@ -72,26 +72,6 @@ export const products: ProductItem[] = [
     linkLabel: { zh: "阅读栏目", en: "Read the column" },
   },
   {
-    id: "science-video",
-    category: "content",
-    type: "project",
-    status: "ongoing",
-    icon: "video",
-    name: { zh: "科普视频系列", en: "Science Video Series" },
-    summary: {
-      zh: "把学科知识、实验和前沿话题做成可观看的视频内容。",
-      en: "Subject knowledge, experiments, and frontier topics turned into watchable video.",
-    },
-    features: {
-      zh: ["脚本与分镜", "录制与剪辑", "平台发布与运营"],
-      en: [
-        "Scripts and storyboards",
-        "Recording and editing",
-        "Publishing and channel operations",
-      ],
-    },
-  },
-  {
     id: "news-office",
     category: "content",
     type: "studio",
@@ -159,70 +139,6 @@ export const products: ProductItem[] = [
     },
     href: "/about#communities",
     linkLabel: { zh: "查看社群", en: "View groups" },
-  },
-  {
-    id: "holiday-events",
-    category: "community",
-    type: "project",
-    status: "ongoing",
-    icon: "calendarStar",
-    name: { zh: "寒暑假活动", en: "Holiday Events" },
-    summary: {
-      zh: "每年寒暑假的线上活动，包含讲座、研讨和趣味环节。",
-      en: "Online events each winter and summer, with talks, discussions, and playful sessions.",
-    },
-    features: {
-      zh: ["主题与日程策划", "报名与通知", "志愿者组织与复盘"],
-      en: [
-        "Theme and schedule planning",
-        "Registration and updates",
-        "Volunteer coordination and review",
-      ],
-    },
-    href: "/news",
-    linkLabel: { zh: "阅读活动文章", en: "Read event posts" },
-  },
-  {
-    id: "subject-seminars",
-    category: "community",
-    type: "project",
-    status: "ongoing",
-    icon: "presentation",
-    name: { zh: "学科研讨会", en: "Subject Seminars" },
-    summary: {
-      zh: "围绕具体学科话题的专题分享与讨论。",
-      en: "Focused talks and discussions around a specific subject.",
-    },
-    features: {
-      zh: ["主题邀请", "主持与记录", "延伸阅读整理"],
-      en: [
-        "Speaker and topic invitations",
-        "Hosting and notes",
-        "Further reading curation",
-      ],
-    },
-    href: "/team",
-    linkLabel: { zh: "团队介绍", en: "Meet the team" },
-  },
-  {
-    id: "knowledge-quiz",
-    category: "community",
-    type: "project",
-    status: "ongoing",
-    icon: "trophy",
-    name: { zh: "知识竞赛", en: "Knowledge Quizzes" },
-    summary: {
-      zh: "线上学科知识竞赛，用轻量方式检验和巩固知识。",
-      en: "Online subject quizzes that test and reinforce knowledge in a light format.",
-    },
-    features: {
-      zh: ["命题与赛制", "报名与分组", "结果公布与复盘"],
-      en: [
-        "Question design and rules",
-        "Registration and grouping",
-        "Results and review",
-      ],
-    },
   },
   {
     id: "event-office",
@@ -375,6 +291,29 @@ export const products: ProductItem[] = [
     linkLabel: { zh: "团队介绍", en: "Meet the team" },
   },
   {
+    id: "full-chain-studio",
+    category: "platform",
+    type: "studio",
+    status: "preparing",
+    studioFocus: "tech",
+    icon: "heartHandshake",
+    name: { zh: "全链技术服务工作室", en: "Full-Chain Tech Services Studio" },
+    summary: {
+      zh: "覆盖前端、后端、测试与运维的全链技术服务，承接各类需求与外包，收入与开销全部公开。",
+      en: "Full-chain technical services covering frontend, backend, testing, and operations — taking orders and outsourcing work, with all income and expenses made public.",
+    },
+    features: {
+      zh: ["前端、后端、测试与运维", "各类需求接单与外包", "收益与开销公开"],
+      en: [
+        "Frontend, backend, testing, and operations",
+        "Order intake and outsourcing",
+        "Transparent income and expenses",
+      ],
+    },
+    href: "/docs/news-lkm-full-chain-studio",
+    linkLabel: { zh: "了解详情", en: "Learn more" },
+  },
+  {
     id: "textbook-studio",
     category: "education",
     type: "studio",
@@ -396,45 +335,5 @@ export const products: ProductItem[] = [
     },
     href: "/team",
     linkLabel: { zh: "团队介绍", en: "Meet the team" },
-  },
-  {
-    id: "science-journal",
-    category: "education",
-    type: "project",
-    status: "preparing",
-    icon: "clipboardList",
-    name: { zh: "科技期刊", en: "Science Journal" },
-    summary: {
-      zh: "汇集社区一年内的文章、科普与创作成果。",
-      en: "Collects a year of community articles, explainers, and creative work.",
-    },
-    features: {
-      zh: ["期刊策划与栏目", "编辑、审校与排版", "发布与归档"],
-      en: [
-        "Journal planning and sections",
-        "Editing, review, and layout",
-        "Publishing and archiving",
-      ],
-    },
-  },
-  {
-    id: "translation-exchange",
-    category: "education",
-    type: "project",
-    status: "preparing",
-    icon: "language",
-    name: { zh: "中外交流与翻译", en: "Translation & Exchange" },
-    summary: {
-      zh: "翻译和搬运中外优质科技内容，做双向输入输出。",
-      en: "Translates and shares quality science content between Chinese and other languages.",
-    },
-    features: {
-      zh: ["论文与文章翻译", "视频字幕与校对", "双语内容维护"],
-      en: [
-        "Paper and article translation",
-        "Video subtitles and proofreading",
-        "Bilingual content maintenance",
-      ],
-    },
   },
 ];
