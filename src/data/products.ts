@@ -72,52 +72,6 @@ export const products: ProductItem[] = [
     linkLabel: { zh: "阅读栏目", en: "Read the column" },
   },
   {
-    id: "news-office",
-    category: "content",
-    type: "studio",
-    status: "ongoing",
-    studioFocus: "education",
-    icon: "pencil",
-    name: { zh: "新闻办 · 内容工作室", en: "News Office · Content Studio" },
-    summary: {
-      zh: "负责官网与社群的内容策划、采编、发布与归档。",
-      en: "Plans, writes, publishes, and archives content for the website and community.",
-    },
-    features: {
-      zh: ["新闻采编与公告撰写", "栏目策划与排期", "内容校对与归档"],
-      en: [
-        "Reporting and announcement writing",
-        "Editorial planning and scheduling",
-        "Proofreading and archiving",
-      ],
-    },
-    href: "/team",
-    linkLabel: { zh: "团队介绍", en: "Meet the team" },
-  },
-  {
-    id: "science-communication",
-    category: "content",
-    type: "studio",
-    status: "ongoing",
-    studioFocus: "education",
-    icon: "atom",
-    name: { zh: "科普项目组", en: "Science Communication Studio" },
-    summary: {
-      zh: "把专业知识转化为通俗内容，负责科普征集与传播。",
-      en: "Turns specialist knowledge into accessible content and runs science communication submissions.",
-    },
-    features: {
-      zh: ["科普选题与作者联络", "内容审核与编辑", "跨平台传播"],
-      en: [
-        "Topic selection and contributor outreach",
-        "Content review and editing",
-        "Cross-platform distribution",
-      ],
-    },
-    href: "/team",
-    linkLabel: { zh: "团队介绍", en: "Meet the team" },
-  },
-  {
     id: "qq-community",
     category: "community",
     type: "product",
@@ -139,32 +93,6 @@ export const products: ProductItem[] = [
     },
     href: "/about#communities",
     linkLabel: { zh: "查看社群", en: "View groups" },
-  },
-  {
-    id: "event-office",
-    category: "community",
-    type: "studio",
-    status: "ongoing",
-    studioFocus: "education",
-    icon: "confetti",
-    name: {
-      zh: "活动策划部 · 活动工作室",
-      en: "Event Planning Office · Events Studio",
-    },
-    summary: {
-      zh: "统筹社区活动从策划到复盘的完整流程。",
-      en: "Runs community events end to end, from planning to retrospective.",
-    },
-    features: {
-      zh: ["活动策划与排期", "志愿者分工", "报名、通知与复盘"],
-      en: [
-        "Event planning and scheduling",
-        "Volunteer roles",
-        "Registration, updates, and review",
-      ],
-    },
-    href: "/team",
-    linkLabel: { zh: "团队介绍", en: "Meet the team" },
   },
   {
     id: "official-website",
@@ -265,39 +193,13 @@ export const products: ProductItem[] = [
     linkLabel: { zh: "了解详情", en: "Learn more" },
   },
   {
-    id: "tech-committee",
-    category: "platform",
-    type: "studio",
-    status: "ongoing",
-    studioFocus: "tech",
-    icon: "code",
-    name: {
-      zh: "技术委员会 · 技术工作室",
-      en: "Technology Committee · Tech Studio",
-    },
-    summary: {
-      zh: "负责官网、工具链、服务器与技术支持。",
-      en: "Builds and maintains the website, toolchain, servers, and technical support.",
-    },
-    features: {
-      zh: ["网站与前端开发", "服务器与部署运维", "工具与自动化支持"],
-      en: [
-        "Web and frontend development",
-        "Servers and deployment",
-        "Tools and automation",
-      ],
-    },
-    href: "/team",
-    linkLabel: { zh: "团队介绍", en: "Meet the team" },
-  },
-  {
     id: "full-chain-studio",
     category: "platform",
     type: "studio",
     status: "preparing",
     studioFocus: "tech",
     icon: "heartHandshake",
-    name: { zh: "全链技术服务工作室", en: "Full-Chain Tech Services Studio" },
+    name: { zh: "全链·技术服务工作室", en: "Full-Chain Tech Services Studio" },
     summary: {
       zh: "覆盖前端、后端、测试与运维的全链技术服务，承接各类需求与外包，收入与开销全部公开。",
       en: "Full-chain technical services covering frontend, backend, testing, and operations — taking orders and outsourcing work, with all income and expenses made public.",
@@ -312,29 +214,6 @@ export const products: ProductItem[] = [
     },
     href: "/docs/news-lkm-full-chain-studio",
     linkLabel: { zh: "了解详情", en: "Learn more" },
-  },
-  {
-    id: "textbook-studio",
-    category: "education",
-    type: "studio",
-    status: "ongoing",
-    studioFocus: "education",
-    icon: "book",
-    name: { zh: "教材项目组 · 教材工作室", en: "Textbook Studio" },
-    summary: {
-      zh: "编写高质量理科教材，整合知识体系。",
-      en: "Writes high-quality science textbooks and organizes knowledge into a coherent system.",
-    },
-    features: {
-      zh: ["教材大纲与章节编写", "习题与配套材料", "审校与排版"],
-      en: [
-        "Outlines and chapter writing",
-        "Exercises and companion material",
-        "Review and typesetting",
-      ],
-    },
-    href: "/team",
-    linkLabel: { zh: "团队介绍", en: "Meet the team" },
   },
   {
     id: "star-orbit-tutoring",
