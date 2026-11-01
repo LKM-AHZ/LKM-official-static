@@ -87,6 +87,10 @@ const docLink = (e: CollectionEntry<"docs"> | null) =>
 const prevHref = docLink(prev);
 const nextHref = docLink(next);
 
+// 左上角「返回」：默认回文章列表；frontmatter 的 backTo/backLabel 可指回项目页等入口
+const backHref = langUrl(lang, doc.data.backTo ?? "/news");
+const backLabel = doc.data.backLabel ?? (en ? "Back to posts" : "返回文章");
+
 // 标签跳回 /news 的对应标签页：新闻是默认页，不带 tab；其余分类带 tab。
 const tagTab = doc.data.category
   ? { news: "news", project: "projects", studio: "studios" }[doc.data.category]
@@ -130,10 +134,10 @@ const tagHref = (tag: string): string => {
         </div>
 
         <a
-          href={langUrl(lang, "/news")}
+          href={backHref}
           class="inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
         >
-          {en ? "← Back to posts" : "← 返回文章"}
+          {`← ${backLabel}`}
         </a>
 
         <header class="mt-6">

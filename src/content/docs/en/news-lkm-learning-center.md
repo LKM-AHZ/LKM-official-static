@@ -5,6 +5,8 @@ publishDate: 2026-11-01
 category: project
 tags: [Learning Center]
 image: /images/covers/lkm-tech-frontier.webp
+backTo: /products
+backLabel: Back to projects
 ---
 
 The project will be a place where everyone can study knowledge of all kinds and show what they have learned in the community. It is still being planned, so please look forward to it.

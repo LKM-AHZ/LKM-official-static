@@ -304,7 +304,7 @@ export const products: ProductItem[] = [
     id: "learning-center",
     category: "platform",
     type: "project",
-    status: "recruiting",
+    status: "preparing",
     icon: "school",
     name: { zh: "理科迷·学习中心", en: "Phientist Learning Center" },
     summary: {
@@ -324,6 +324,28 @@ export const products: ProductItem[] = [
       ],
     },
     href: "/docs/news-lkm-learning-center",
+    linkLabel: { zh: "了解详情", en: "Learn more" },
+  },
+  {
+    id: "smart-robot",
+    category: "platform",
+    type: "project",
+    status: "ongoing",
+    icon: "robot",
+    name: { zh: "理科迷·智能机器人", en: "Phientist Smart Robot" },
+    summary: {
+      zh: "我们将开发，在每一个社群都能够驻场的小机器人，之后将上线在十几个社群当中，为大家提供便捷的服务。还请大家敬请期待哦。",
+      en: "We are building a small bot that can be stationed in every community, and it will go live in more than a dozen community groups to offer convenient services. Please look forward to it.",
+    },
+    features: {
+      zh: ["驻场社群的小机器人", "计划上线十几个社群", "为大家提供便捷服务"],
+      en: [
+        "A small bot stationed in each community",
+        "Rolling out to a dozen-plus groups",
+        "Convenient services for everyone",
+      ],
+    },
+    href: "/docs/news-lkm-smart-robot",
     linkLabel: { zh: "了解详情", en: "Learn more" },
   },
   {

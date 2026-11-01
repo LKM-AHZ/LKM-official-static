@@ -25,6 +25,11 @@ const docs = defineCollection({
         "image 必须是以 / 开头的站内路径或 http(s) URL",
       )
       .optional(),
+    // 文章页左上角「返回」链接：站内路径（不含语言前缀）。默认回 /news 文章列表；
+    // 从项目页进入的文章可指向 /products，返回时回到「项目」整页。
+    backTo: z.string().optional(),
+    // 返回链接文案（不含箭头），按文章语言各写一份；不填回退到默认的「返回文章」。
+    backLabel: z.string().optional(),
     // 可选：仅作兜底标识。实际语言由 collection entry 的路径前缀 (<lang>/) 推导，故不再
     // 补默认值 "zh"（否则 en 目录下漏写 lang 的条目会被当成中文），并用枚举让 lang: EN
     // 这类写法直接构建失败。

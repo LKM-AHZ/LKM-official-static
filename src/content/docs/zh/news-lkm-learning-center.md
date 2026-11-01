@@ -5,6 +5,8 @@ publishDate: 2026-11-01
 category: project
 tags: [学习中心]
 image: /images/covers/lkm-tech-frontier.webp
+backTo: /products
+backLabel: 返回项目
 ---
 
 该项目将用于大家进行学习各种各样知识，并且将自己学习成果将展示在社区。该项目还在统筹规划当中，还请大家敬请期待哦。
