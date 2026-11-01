@@ -206,7 +206,9 @@ const filterChipClass =
                 class={filterChipClass}
               >
                 {t(lang, "products.all")}
-                <span class="text-[11px] opacity-70">{view.items.length}</span>
+                <span data-product-tag-count class="text-[11px] opacity-70">
+                  {view.items.length}
+                </span>
               </button>
               {view.tags.map((tag) => (
                 <button
@@ -216,7 +218,9 @@ const filterChipClass =
                   class={filterChipClass}
                 >
                   {tag.label}
-                  <span class="text-[11px] opacity-70">{tag.count}</span>
+                  <span data-product-tag-count class="text-[11px] opacity-70">
+                    {tag.count}
+                  </span>
                 </button>
               ))}
             </div>
@@ -236,7 +240,9 @@ const filterChipClass =
                 class={filterChipClass}
               >
                 {t(lang, "products.all")}
-                <span class="text-[11px] opacity-70">{view.items.length}</span>
+                <span data-product-status-count class="text-[11px] opacity-70">
+                  {view.items.length}
+                </span>
               </button>
               {view.statusDefs.map((status) => (
                 <button
@@ -246,7 +252,10 @@ const filterChipClass =
                   class={filterChipClass}
                 >
                   {status.label}
-                  <span class="text-[11px] opacity-70">
+                  <span
+                    data-product-status-count
+                    class="text-[11px] opacity-70"
+                  >
                     {
                       view.items.filter((p) => view.statusFor(p) === status.id)
                         .length
@@ -423,7 +432,40 @@ const filterChipClass =
       }
     };
 
+    const updateCounts = (state: PanelState): void => {
+      for (const btn of state.tagButtons) {
+        const tag = btn.dataset.productTag ?? "";
+        const count = state.cards.filter((card) => {
+          const tagHit = tag === "" || card.dataset.category === tag;
+          const statusHit =
+            state.activeStatus === "" ||
+            card.dataset.status === state.activeStatus;
+          return tagHit && statusHit;
+        }).length;
+        const countEl = btn.querySelector<HTMLElement>(
+          "[data-product-tag-count]",
+        );
+        if (countEl) countEl.textContent = String(count);
+      }
+
+      for (const btn of state.statusButtons) {
+        const status = btn.dataset.productStatus ?? "";
+        const count = state.cards.filter((card) => {
+          const statusHit = status === "" || card.dataset.status === status;
+          const tagHit =
+            state.activeTag === "" || card.dataset.category === state.activeTag;
+          return statusHit && tagHit;
+        }).length;
+        const countEl = btn.querySelector<HTMLElement>(
+          "[data-product-status-count]",
+        );
+        if (countEl) countEl.textContent = String(count);
+      }
+    };
+
     const applyPanel = (state: PanelState): void => {
+      updateCounts(state);
+
       let shown = 0;
       for (const card of state.cards) {
         const tagHit =
